@@ -26,6 +26,7 @@ button
 {
 	font: 8pt Verdana;
 	white-space: nowrap;
+	padding: 2px 5px;
 }
 
 /*****************************************************************************************************/
@@ -112,13 +113,13 @@ button
 .menuWrapper
 {
 	margin: 20px;
-	border: 1px solid black;
 	height: 0;
 }
 
 .menuItem
 {
 	width: 100%;
+	padding: 2px 5px;
 }
 
 /*****************************************************************************************************/
@@ -208,4 +209,9 @@ button
 .commandSet
 {
 	margin: 5px;
+}
+
+.commandSet-Command
+{
+	padding: 2px 5px;
 }

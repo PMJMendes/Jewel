@@ -75,6 +75,7 @@ public class CommandSet
 		{
 			lbtnAux = new IDButton(i);
 			lbtnAux.setText(parrActions[i].mstrCaption);
+			lbtnAux.setStylePrimaryName("commandSet-Command");
 			mtblPanel.add(lbtnAux);
 
 			lbtnAux.addClickHandler(new ClickHandler()
