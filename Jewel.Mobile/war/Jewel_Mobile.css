@@ -1,0 +1,211 @@
+/*****************************************************************************************************/
+/* Generic                                                                                           */
+/*****************************************************************************************************/
+
+html
+{
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+}
+
+body
+{
+	overflow: hidden;
+	font: 8pt Verdana;
+	margin: 0;
+	padding: 0;
+}
+
+img
+{
+	display: block;
+}
+
+button
+{
+	font: 8pt Verdana;
+	white-space: nowrap;
+}
+
+/*****************************************************************************************************/
+/* Login screen                                                                                      */
+/*****************************************************************************************************/
+
+.loginWrapper
+{
+	margin: 20px;
+	border: 1px solid black;
+	height: 0;
+	width: 0;
+}
+
+.loginError
+{
+	width: 214px;
+	text-align: center;
+	color: Red;
+	padding: 10px 0 5px 0;
+	margin: auto;
+}
+
+.loginForm
+{
+	margin: 5px;
+}
+
+.loginLabel
+{
+	width: 100px;
+}
+
+.loginInput
+{
+	width: 100px;
+	font: 8pt Verdana;
+}
+
+.loginDomains
+{
+	width: 100%;
+	font: 8pt Verdana;
+}
+
+.loginButton
+{
+	height: 0;
+	text-align: center;
+	padding: 5px 0 10px 0;
+}
+
+/*****************************************************************************************************/
+/* Error popup                                                                                       */
+/*****************************************************************************************************/
+
+.errorPopup
+{
+}
+
+.errorPopup-Glass
+{
+	background-color: #87cefa;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+
+.errorPopup-MessageWrapper
+{
+	border: 1px solid black;
+	padding: 10px;
+	background-color: white;
+}
+
+.errorPopup-Message
+{
+	color: red;
+}
+
+/*****************************************************************************************************/
+/* Menu screen                                                                                       */
+/*****************************************************************************************************/
+
+.menuWrapper
+{
+	margin: 20px;
+	border: 1px solid black;
+	height: 0;
+}
+
+.menuItem
+{
+	width: 100%;
+}
+
+/*****************************************************************************************************/
+/* Single form screen                                                                                */
+/*****************************************************************************************************/
+
+.singleForm
+{
+	margin: 20px;
+	border: 1px solid black;
+	height: 0;
+}
+
+.singleForm-HeaderWrapper
+{
+}
+
+.singleForm-Header
+{
+	width: 100%;
+}
+
+.singleForm-LabelWrapper
+{
+	vertical-align: middle !important;
+}
+
+.singleForm-Label
+{
+	margin: 2px;
+}
+
+.singleForm-CloseButtonWrapper
+{
+	width: 0;
+}
+
+.singleForm-CloseButton
+{
+	cursor: pointer;
+	margin: 2px;
+}
+
+.singleForm-FormWrapper
+{
+}
+
+.singleForm-CommandsWrapper
+{
+}
+
+/*****************************************************************************************************/
+/* Simple form                                                                                       */
+/*****************************************************************************************************/
+
+.simpleForm
+{
+	border-width: 1px 0;
+	border-style: solid;
+	border-color: black;
+	padding: 0 0 5px;
+}
+
+.simpleForm-LabelWrapper
+{
+	padding: 5px 5px 2px;
+}
+
+.simpleForm-Label
+{
+}
+
+.simpleForm-ControlWrapper
+{
+	padding: 0 5px;
+}
+
+.formControl
+{
+	width: 190px;
+}
+
+/*****************************************************************************************************/
+/* Command set                                                                                       */
+/*****************************************************************************************************/
+
+.commandSet
+{
+	margin: 5px;
+}
