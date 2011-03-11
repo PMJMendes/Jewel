@@ -1,0 +1,134 @@
+package Jewel.Engine.SysObjects;
+
+import java.io.*;
+import java.nio.charset.*;
+
+public class FileXfer
+{
+	private static final int SIZEOFINT = 4;
+
+	protected int mlngLen;
+	protected String mstrContentType;
+	protected String mstrFileName;
+	protected byte[] marrData;
+
+	public FileXfer(int plngLen, String pstrContentType, String pstrFileName, InputStream prefData)
+		throws IOException
+	{
+        int llngRead, llngAux;
+
+		mlngLen = plngLen;
+		mstrContentType = pstrContentType;
+		mstrFileName = pstrFileName;
+		marrData = new byte[mlngLen];
+
+        llngRead = 0;
+        while (llngRead < mlngLen)
+        {
+            llngAux = prefData.read(marrData, llngRead, mlngLen - llngRead);
+            llngRead += llngAux;
+            if (llngAux == 0)
+                break;
+        }
+	}
+
+	public FileXfer(byte[] parrData)
+	{
+		LoadFromVarData(parrData);
+	}
+
+	public byte[] GetVarData()
+	{
+		Charset lobjEncoder;
+		byte[] larrAux, larrContentType, larrFileName;
+        int llngStart;
+
+		lobjEncoder = Charset.forName("US-ASCII");
+		larrContentType = mstrContentType.getBytes(lobjEncoder);
+		larrFileName = mstrFileName.getBytes(lobjEncoder);
+		larrAux = new byte[mlngLen + 3*SIZEOFINT + larrContentType.length + larrFileName.length];
+        llngStart = 0;
+
+        System.arraycopy(new byte[] {(byte)mlngLen, (byte)(mlngLen >>> 8), (byte)(mlngLen >>> 16), (byte)(mlngLen >>> 24)},
+        		0, larrAux, llngStart, SIZEOFINT);
+        llngStart += SIZEOFINT;
+
+        System.arraycopy(new byte[] {(byte)larrContentType.length, (byte)(larrContentType.length >>> 8),
+        		(byte)(larrContentType.length >>> 16), (byte)(larrContentType.length >>> 24)},
+        		0, larrAux, llngStart, SIZEOFINT);
+        llngStart += SIZEOFINT;
+        System.arraycopy(larrContentType, 0, larrAux, llngStart, larrContentType.length);
+        llngStart += larrContentType.length;
+
+        System.arraycopy(new byte[] {(byte)larrFileName.length, (byte)(larrFileName.length >>> 8),
+        		(byte)(larrFileName.length >>> 16), (byte)(larrFileName.length >>> 24)},
+        		0, larrAux, llngStart, SIZEOFINT);
+        llngStart += SIZEOFINT;
+        System.arraycopy(larrFileName, 0, larrAux, llngStart, larrFileName.length);
+        llngStart += larrFileName.length;
+
+        System.arraycopy(marrData, 0, larrAux, llngStart, mlngLen);
+        llngStart += mlngLen;
+
+		return larrAux;
+	}
+
+	public void LoadFromVarData(byte[] parrData)
+	{
+		Charset lobjEncoder;
+		byte[] larrAux;
+		int llngTypeLen, llngNameLen, llngStart;
+
+		lobjEncoder = Charset.forName("US-ASCII");
+        llngStart = 0;
+
+		larrAux = new byte[SIZEOFINT];
+		System.arraycopy(parrData, llngStart, larrAux, 0, SIZEOFINT);
+        llngStart += SIZEOFINT;
+		mlngLen = ((larrAux[3] & 0xFF) << 24) + ((larrAux[2] & 0xFF) << 16) + ((larrAux[1] & 0xFF) << 8) + (larrAux[0] & 0xFF);
+
+		larrAux = new byte[SIZEOFINT];
+		System.arraycopy(parrData, llngStart, larrAux, 0, SIZEOFINT);
+        llngStart += SIZEOFINT;
+        llngTypeLen = (larrAux[3] << 24) + ((larrAux[2] & 0xFF) << 16) + ((larrAux[1] & 0xFF) << 8) + (larrAux[0] & 0xFF);
+
+		larrAux = new byte[llngTypeLen];
+		System.arraycopy(parrData, llngStart, larrAux, 0, llngTypeLen);
+        llngStart += llngTypeLen;
+        mstrContentType = new String(larrAux, lobjEncoder);
+
+		larrAux = new byte[SIZEOFINT];
+		System.arraycopy(parrData, llngStart, larrAux, 0, SIZEOFINT);
+        llngStart += SIZEOFINT;
+        llngNameLen = (larrAux[3] << 24) + ((larrAux[2] & 0xFF) << 16) + ((larrAux[1] & 0xFF) << 8) + (larrAux[0] & 0xFF);
+
+        larrAux = new byte[llngNameLen];
+        System.arraycopy(parrData, llngStart, larrAux, 0, llngNameLen);
+        llngStart += llngNameLen;
+		mstrFileName = new String(larrAux, lobjEncoder);
+
+		marrData = new byte[mlngLen];
+		System.arraycopy(parrData, llngStart, marrData, 0, mlngLen);
+        llngStart += mlngLen;
+    }
+
+	public String getContentType()
+	{
+		return mstrContentType;
+	}
+
+	public String getFileName()
+	{
+		return mstrFileName;
+	}
+
+	public int getLength()
+	{
+		return mlngLen;
+	}
+
+	public byte[] getData()
+	{
+		return marrData;
+	}
+}
