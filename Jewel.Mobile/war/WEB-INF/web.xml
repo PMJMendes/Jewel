@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  	<!-- Listeners -->
+	<listener>
+		<listener-class>Jewel.Mobile.server.Global</listener-class>
+	</listener>
+	<listener>
+    	<listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>
+	</listener>
+
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>LoginServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.LoginServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>MenuServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.MenuServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SimpleFormServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.SimpleFormServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>CommandSetServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.CommandSetServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SingleFormServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.SingleFormServiceImpl</servlet-class>
+	</servlet>
+
+	<!-- Servlet Mappings -->
+	<servlet-mapping>
+		<servlet-name>LoginServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/login</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MenuServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/menu</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SimpleFormServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/simpleform</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CommandSetServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/commandset</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SingleFormServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/singleform</url-pattern>
+	</servlet-mapping>
+
+<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>Jewel_Mobile.html</welcome-file>
+	</welcome-file-list>
+
+<!-- Forcing SSL -->
+<!--
+	<security-constraint> 
+		<web-resource-collection> 
+			<web-resource-name>Entire Application</web-resource-name> 
+			<url-pattern>/*</url-pattern> 
+		</web-resource-collection> 
+		<user-data-constraint> 
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee> 
+		</user-data-constraint> 
+	</security-constraint>
+-->
+</web-app>
