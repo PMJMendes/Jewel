@@ -1,14 +1,12 @@
 package Jewel.Mobile.client.controls;
 
 import Jewel.Mobile.client.*;
-import Jewel.Mobile.client.events.*;
-//import Jewel.Mobile.client.popups.*;
+import Jewel.Mobile.client.popups.*;
 import Jewel.Mobile.interfaces.*;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.Style.*;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -17,7 +15,7 @@ public class FileCtl
 	extends Composite
 	implements IJewelMobileCtl
 {
-//	private FileServiceAsync fileSvc;
+	private FileServiceAsync fileSvc;
 
 	private String mstrValue;
 
@@ -25,9 +23,7 @@ public class FileCtl
 	private Button mbtnAttach;
 	private Button mbtnView;
 	private Button mbtnClear;
-//	private FilePopup mdlgPopup;
-
-	private HandlerManager mrefEventMgr;
+	private FilePopup mdlgPopup;
 
 	public FileCtl()
 	{
@@ -64,7 +60,7 @@ public class FileCtl
 		{
 			public void onClick(ClickEvent event)
 	        {
-//				DoPopup();
+				DoPopup();
 	        }
 	     });
 		mbtnView.addClickHandler(new ClickHandler()
@@ -81,17 +77,15 @@ public class FileCtl
 				setJValue(null);
 	        }
 	     });
-
-		mrefEventMgr = new HandlerManager(this);
 	}
 
-//	private FileServiceAsync getService()
-//	{
-//		if ( fileSvc == null )
-//			fileSvc = GWT.create(FileService.class);
+	private FileServiceAsync getService()
+	{
+		if ( fileSvc == null )
+			fileSvc = GWT.create(FileService.class);
 
-//		return fileSvc;
-//	}
+		return fileSvc;
+	}
 
 	public void DiscardValue()
 	{
@@ -120,7 +114,7 @@ public class FileCtl
         if ( mstrValue == null )
         	return;
 
-//    	getService().Discard(mstrValue, callback);
+    	getService().Discard(mstrValue, callback);
 	}
 
 	private void internalSetValue(String pstrValue)
@@ -165,16 +159,16 @@ public class FileCtl
 		mtxtDisplay.getElement().getStyle().setWidth(plngWidth-175, Unit.PX);
 	}
 
-//	private void DoPopup()
-//	{
-//		if ( mdlgPopup == null )
-//		{
-//			mdlgPopup = new FilePopup(this);
-//			mdlgPopup.setText("File Upload");
-//			mdlgPopup.center();
-//		}
+	private void DoPopup()
+	{
+		if ( mdlgPopup == null )
+		{
+			mdlgPopup = new FilePopup(this);
+			mdlgPopup.setText("File Upload");
+			mdlgPopup.center();
+		}
 
-//		mdlgPopup.SetKey(mstrValue);
-//		mdlgPopup.show();
-//	}
+		mdlgPopup.SetKey(mstrValue);
+		mdlgPopup.show();
+	}
 }

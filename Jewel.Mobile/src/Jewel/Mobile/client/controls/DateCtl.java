@@ -1,9 +1,8 @@
 package Jewel.Mobile.client.controls;
 
 import Jewel.Mobile.client.*;
-//import Jewel.Mobile.client.popups.*;
+import Jewel.Mobile.client.popups.*;
 
-import com.google.gwt.dom.client.Style.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -12,7 +11,7 @@ public class DateCtl
 	implements IJewelMobileCtl
 {
 	private TextBox mtxtDisplay;
-//	private DatePopup mdlgPopup;
+	private DatePopup mdlgPopup;
 
 	public DateCtl()
 	{
@@ -38,11 +37,11 @@ public class DateCtl
 		{
 			public void onClick(ClickEvent event)
 	        {
-//				DoPopup();
+				DoPopup();
 	        }
 	     });
 
-//		mdlgPopup = null;
+		mdlgPopup = null;
 	}
 
 	public String getJValue()
@@ -58,16 +57,16 @@ public class DateCtl
 		mtxtDisplay.setText(pstrValue);
 	}
 
-//	public void DoPopup()
-//	{
-//		if ( mdlgPopup == null )
-//		{
-//			mdlgPopup = new DatePopup(this);
-//			mdlgPopup.setText("Calendar");
-//			mdlgPopup.center();
-//		}
+	public void DoPopup()
+	{
+		if ( mdlgPopup == null )
+		{
+			mdlgPopup = new DatePopup(this);
+			mdlgPopup.setText("Calendar");
+			mdlgPopup.center();
+		}
 
-//		mdlgPopup.InitPopup(getJValue());
-//		mdlgPopup.show();
-//	}
+		mdlgPopup.InitPopup(getJValue());
+		mdlgPopup.show();
+	}
 }
