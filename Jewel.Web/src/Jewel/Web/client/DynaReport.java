@@ -105,7 +105,8 @@ public class DynaReport
 			{
 				if (result != null)
 				{
-					Window.open(GWT.getModuleBaseURL() + "report?rptid=" + result, null, null);
+					Window.open(GWT.getModuleBaseURL() + "report?rptid=" + result, null,
+							"menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes");
 				}
 				else
 				{
