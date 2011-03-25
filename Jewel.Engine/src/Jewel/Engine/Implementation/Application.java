@@ -166,6 +166,8 @@ public class Application
 
 			for ( i = 0; i < larrAux.size(); i++ )
 			{
+				if ( larrAux.get(i) == null )
+					continue;
 				lobjEntity = Entity.GetInstance(larrAux.get(i).getKey());
 				if ( lobjEntity == null )
 					continue;
