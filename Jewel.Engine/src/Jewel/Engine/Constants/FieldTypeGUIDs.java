@@ -14,4 +14,5 @@ public final class FieldTypeGUIDs
 	public static final UUID FT_Lookup  = UUID.fromString("BDB764AC-A397-4FE6-95D6-12FA48D68580");
     public static final UUID FT_File    = UUID.fromString("376A167F-8EDC-4B2D-AF33-FCECA9E1AA7A");
     public static final UUID FT_Passwd  = UUID.fromString("1C7ED4A2-13AA-4C0E-A3DE-0F407B9EFCB0");
+    public static final UUID FT_Value   = UUID.fromString("80691651-A4B8-4DC7-82DC-9EB500EEB739");
 }

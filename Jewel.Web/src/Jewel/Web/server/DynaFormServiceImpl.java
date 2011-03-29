@@ -123,6 +123,13 @@ public class DynaFormServiceImpl
         	return lobjAux;
         }
 
+        if (FieldTypeGUIDs.FT_Value.equals(prefField.getType()))
+        {
+    		lobjAux = new FormCtlObj();
+        	lobjAux.mlngType = FormCtlObj.VALUELOOKUP;
+        	return lobjAux;
+        }
+
 		return null;
 	}
 	

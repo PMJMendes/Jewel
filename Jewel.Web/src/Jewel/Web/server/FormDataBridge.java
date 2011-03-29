@@ -442,6 +442,9 @@ public class FormDataBridge
         if (FieldTypeGUIDs.FT_Passwd.equals(prefField.getType()))
         	return new Password(pstrValue, false);
 
+        if (FieldTypeGUIDs.FT_Value.equals(prefField.getType()))
+        	return UUID.fromString(pstrValue);
+
 		return null;
 	}
 
@@ -507,6 +510,9 @@ public class FormDataBridge
 
         if (FieldTypeGUIDs.FT_Passwd.equals(prefField.getType()))
         	return "";
+
+        if (FieldTypeGUIDs.FT_Value.equals(prefField.getType()))
+        	return ((UUID)pobjValue).toString();
 
 		throw new JewelWebException("Unimplemented form field type in BuildValue.");
 	}

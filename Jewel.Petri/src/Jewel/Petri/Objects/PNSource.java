@@ -1,13 +1,43 @@
 package Jewel.Petri.Objects;
 
-import java.util.UUID;
+import java.sql.*;
+import java.util.*;
 
+import Jewel.Engine.*;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
+import Jewel.Petri.Interfaces.*;
 
 public class PNSource
 	extends ObjectBase
+	implements ISource
 {
+    public static PNSource GetInstance(UUID pidNameSpace, UUID pidKey)
+		throws JewelPetriException
+	{
+	    try
+	    {
+			return (PNSource)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNSource), pidKey);
+		}
+	    catch (Throwable e)
+	    {
+	    	throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	public static PNSource GetInstance(UUID pidNameSpace, ResultSet prsObject)
+		throws JewelPetriException
+	{
+	    try
+	    {
+			return (PNSource)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNSource), prsObject);
+		}
+	    catch (Throwable e)
+	    {
+	    	throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
 	public void Initialize()
 		throws JewelEngineException
 	{
@@ -41,10 +71,10 @@ public class PNSource
     	return (UUID)getAt(0);
     }
 
-    public PNOperation GetOperation()
+    public IOperation GetOperation()
     	throws JewelPetriException
     {
-		return PNOperation.GetInstance(getNameSpace(), GetOperationID());
+		return (IOperation)PNOperation.GetInstance(getNameSpace(), GetOperationID());
     }
 
     public UUID GetControllerID()
@@ -52,9 +82,9 @@ public class PNSource
     	return (UUID)getAt(1);
     }
 
-    public PNController GetController()
+    public IController GetController()
     	throws JewelPetriException
     {
-		return PNController.GetInstance(getNameSpace(), GetControllerID());
+		return (IController)PNController.GetInstance(getNameSpace(), GetControllerID());
     }
 }

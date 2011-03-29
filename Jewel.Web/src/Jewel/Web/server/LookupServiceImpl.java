@@ -27,9 +27,9 @@ public class LookupServiceImpl
 		{
 			lrefEntity = Entity.GetInstance(UUID.fromString(pstrEntity));
 			lobjRes.mstrFormID = lrefEntity.getDefaultSearchForm().getKey().toString();
-			lobjRes.mstrNSpaceID = lrefEntity.getNameSpace().toString();
+			lobjRes.mstrNSpaceID = lrefEntity.getMemberOf().getKey().toString();
 			lobjRes.mstrFormName = lrefEntity.getDefaultSearchForm().getName();
-			lobjRes.mstrNSpaceName = NameSpace.GetInstance(lrefEntity.getNameSpace()).getName();
+			lobjRes.mstrNSpaceName = lrefEntity.getMemberOf().getName();
 		}
 		catch (Throwable e)
 		{

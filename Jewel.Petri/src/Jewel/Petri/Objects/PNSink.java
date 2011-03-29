@@ -1,13 +1,43 @@
 package Jewel.Petri.Objects;
 
-import java.util.UUID;
+import java.sql.ResultSet;
+import java.util.*;
 
+import Jewel.Engine.Engine;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
+import Jewel.Petri.Interfaces.*;
 
 public class PNSink
 	extends ObjectBase
+	implements ISink
 {
+    public static PNSink GetInstance(UUID pidNameSpace, UUID pidKey)
+		throws JewelPetriException
+	{
+	    try
+	    {
+			return (PNSink)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNSink), pidKey);
+		}
+	    catch (Throwable e)
+	    {
+	    	throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	public static PNSink GetInstance(UUID pidNameSpace, ResultSet prsObject)
+		throws JewelPetriException
+	{
+	    try
+	    {
+			return (PNSink)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNSink), prsObject);
+		}
+	    catch (Throwable e)
+	    {
+	    	throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
 	public void Initialize()
 		throws JewelEngineException
 	{
@@ -41,10 +71,10 @@ public class PNSink
     	return (UUID)getAt(0);
     }
 
-    public PNController GetController()
+    public IController GetController()
     	throws JewelPetriException
     {
-		return PNController.GetInstance(getNameSpace(), GetControllerID());
+		return (IController)PNController.GetInstance(getNameSpace(), GetControllerID());
     }
 
     public UUID GetOperationID()
@@ -52,9 +82,9 @@ public class PNSink
     	return (UUID)getAt(1);
     }
 
-    public PNOperation GetOperation()
+    public IOperation GetOperation()
     	throws JewelPetriException
     {
-		return PNOperation.GetInstance(getNameSpace(), GetOperationID());
+		return (IOperation)PNOperation.GetInstance(getNameSpace(), GetOperationID());
     }
 }
