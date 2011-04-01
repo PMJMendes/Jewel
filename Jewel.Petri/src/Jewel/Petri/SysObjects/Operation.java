@@ -3,6 +3,9 @@ package Jewel.Petri.SysObjects;
 import java.io.*;
 import java.util.*;
 
+import Jewel.Engine.Engine;
+import Jewel.Petri.Objects.PNProcess;
+
 public abstract class Operation
 	implements Serializable
 {
@@ -21,6 +24,23 @@ public abstract class Operation
 	public final void Execute()
 		throws JewelPetriException
 	{
+		PNProcess lrefProcess;
+
+		lrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
+
+		while ( !lrefProcess.Lock() )
+		{
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e)
+			{
+			}
+		}
+
 		Run();
+
+		lrefProcess.Unlock();
 	}
 }

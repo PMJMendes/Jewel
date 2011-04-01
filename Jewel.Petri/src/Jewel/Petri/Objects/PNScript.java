@@ -107,6 +107,7 @@ public class PNScript
 	{
     	UUID lidNSpace;
 		UUID lidData;
+		UUID lidParent;
 		MasterDB ldb;
 		ObjectBase lobjData;
 		PNProcess lobjProc;
@@ -119,9 +120,14 @@ public class PNScript
 		if ( (parrParams == null) || (parrParams.length < 4) || (parrParams[3] == null) || !(parrParams[3] instanceof UUID))
 			throw new JewelPetriException("Invalid Argument: Name Space to start up in is null or not an identifier.");
 		lidNSpace = (UUID)parrParams[3];
-		if ( (parrParams == null) || (parrParams.length < 5) || (parrParams[4] == null) || !(parrParams[4] instanceof UUID))
-			throw new JewelPetriException("Invalid Argument: Key to Data Object is null or not an identifier.");
-		lidData = (UUID)parrParams[4];
+		if ( (parrParams.length >= 5) && (parrParams[4] != null) && (parrParams[4] instanceof UUID))
+			lidData = (UUID)parrParams[4];
+		else
+			lidData = null;
+		if ( (parrParams.length >= 6) && (parrParams[5] != null) && (parrParams[5] instanceof UUID))
+			lidParent = (UUID)parrParams[5];
+		else
+			lidParent = null;
 
 		try
 		{
@@ -146,15 +152,22 @@ public class PNScript
 		{
 			lobjData = Engine.GetWorkInstance(Engine.FindEntity(lidNSpace, (UUID)getAt(2)), lidData);
 
-			lobjProc = PNProcess.GetInstance(lidNSpace, null);
+			lobjProc = (PNProcess)Engine.GetWorkInstance(Engine.FindEntity(lidNSpace, Constants.ObjID_PNProcess), (UUID)null);
 			lobjProc.setAt(0, getKey());
 			lobjProc.setAt(1, lidData);
 			lobjProc.setAt(2, Engine.getCurrentUser());
-			lobjProc.setAt(3, null);
+			lobjProc.setAt(3, lidParent);
 			lobjProc.SaveToDb(ldb);
 
 			lobjData.setAt(0, lobjProc.getKey());
 			lobjData.SaveToDb(ldb);
+
+			if ( lidData == null )
+			{
+				lidData = lobjData.getKey();
+				lobjProc.setAt(1, lidData);
+				lobjProc.SaveToDb(ldb);
+			}
 
 			for ( i = 0; i < marrControllers.length; i++ )
 			{
