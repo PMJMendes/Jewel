@@ -8,5 +8,6 @@ public interface IUser
 	IProfile getProfile();
     String getFullName();
     String getDisplayName();
+    String getUserName();
     boolean CheckPassword(Password pobjPwd);
 }

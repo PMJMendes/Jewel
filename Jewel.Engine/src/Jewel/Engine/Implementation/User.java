@@ -55,6 +55,11 @@ public class User
             return (String)getAt(1);
     }
 
+	public String getUserName()
+	{
+        return (String)getAt(1);
+	}
+
     public boolean CheckPassword(Password pobjPwd)
     {
         if (getAt(2) != null)
