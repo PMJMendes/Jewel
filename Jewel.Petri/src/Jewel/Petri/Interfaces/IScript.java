@@ -1,7 +1,7 @@
 package Jewel.Petri.Interfaces;
 
 import Jewel.Engine.Interfaces.*;
-import Jewel.Petri.*;
+import Jewel.Petri.SysObjects.*;
 
 public interface IScript
 	extends IJewelBase

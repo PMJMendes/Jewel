@@ -7,6 +7,7 @@ import Jewel.Engine.Engine;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
 import Jewel.Petri.Interfaces.*;
+import Jewel.Petri.SysObjects.JewelPetriException;
 
 public class PNSink
 	extends ObjectBase

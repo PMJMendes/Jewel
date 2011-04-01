@@ -10,6 +10,7 @@ import Jewel.Engine.Interfaces.*;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
 import Jewel.Petri.Interfaces.*;
+import Jewel.Petri.SysObjects.JewelPetriException;
 
 public class PNScript
 	extends ObjectBase
@@ -107,6 +108,7 @@ public class PNScript
     	UUID lidNSpace;
 		UUID lidData;
 		MasterDB ldb;
+		ObjectBase lobjData;
 		PNProcess lobjProc;
 		int i, j;
 		IController[] larrControllers;
@@ -142,13 +144,18 @@ public class PNScript
 
 		try
 		{
+			lobjData = Engine.GetWorkInstance(Engine.FindEntity(lidNSpace, (UUID)getAt(2)), lidData);
+
 			lobjProc = PNProcess.GetInstance(lidNSpace, null);
 			lobjProc.setAt(0, getKey());
 			lobjProc.setAt(1, lidData);
 			lobjProc.setAt(2, Engine.getCurrentUser());
 			lobjProc.setAt(3, null);
 			lobjProc.SaveToDb(ldb);
-			
+
+			lobjData.setAt(0, lobjProc.getKey());
+			lobjData.SaveToDb(ldb);
+
 			for ( i = 0; i < marrControllers.length; i++ )
 			{
 				lobjNode = PNNode.GetInstance(lidNSpace, null);

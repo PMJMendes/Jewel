@@ -1,4 +1,4 @@
-package Jewel.Petri;
+package Jewel.Petri.SysObjects;
 
 public class JewelPetriException
 	extends Exception

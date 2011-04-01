@@ -10,6 +10,7 @@ import Jewel.Engine.Interfaces.*;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
 import Jewel.Petri.Interfaces.*;
+import Jewel.Petri.SysObjects.JewelPetriException;
 
 public class PNOperation
 	extends ObjectBase

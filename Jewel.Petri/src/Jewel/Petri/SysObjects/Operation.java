@@ -1,4 +1,4 @@
-package Jewel.Petri;
+package Jewel.Petri.SysObjects;
 
 import java.io.*;
 import java.util.*;

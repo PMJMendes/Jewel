@@ -5,6 +5,7 @@ import java.util.*;
 import Jewel.Engine.*;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
+import Jewel.Petri.SysObjects.JewelPetriException;
 
 public class PNStep
 	extends ObjectBase

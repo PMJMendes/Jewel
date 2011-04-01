@@ -3,7 +3,7 @@ package Jewel.Petri.Objects;
 import java.util.*;
 
 import Jewel.Engine.SysObjects.*;
-import Jewel.Petri.*;
+import Jewel.Petri.SysObjects.*;
 
 public class PNLink
 	extends ObjectBase

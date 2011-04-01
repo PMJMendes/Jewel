@@ -3,7 +3,7 @@ package Jewel.Petri.Interfaces;
 import java.util.*;
 
 import Jewel.Engine.Interfaces.*;
-import Jewel.Petri.*;
+import Jewel.Petri.SysObjects.*;
 
 public interface ISink
 	extends IJewelBase
