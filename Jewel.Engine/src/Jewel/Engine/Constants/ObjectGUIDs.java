@@ -31,4 +31,6 @@ public final class ObjectGUIDs
     public static final UUID O_BatchTask        = UUID.fromString("0CD815C6-5B31-4EB8-A42C-C28C80B09F9D");
 
     public static final UUID O_Application      = UUID.fromString("51ACCAE4-EA5A-4938-8142-1CA7B5518AE4");
+
+    public static final UUID O_PostalCode       = UUID.fromString("1D8D61EA-8EA6-4A2D-B8E2-9C59CA9CD383");
 }
