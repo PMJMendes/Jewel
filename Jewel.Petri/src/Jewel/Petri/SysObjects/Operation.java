@@ -25,11 +25,16 @@ public abstract class Operation
 		throws JewelPetriException
 	{
 		PNProcess lrefProcess;
+		int i;
 
 		lrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
 
+		i = 0;
 		while ( !lrefProcess.Lock() )
 		{
+			i++;
+			if ( i>10000 )
+				throw new JewelPetriException("Erro: Processo bloquado por outro utilizador.");
 			try
 			{
 				Thread.sleep(1);
