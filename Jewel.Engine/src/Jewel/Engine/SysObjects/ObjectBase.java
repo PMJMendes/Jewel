@@ -162,8 +162,6 @@ public abstract class ObjectBase
         {
             midKey = mrefDefinition.Insert(pdb, marrMembers);
 
-            Initialize();
-
             lstrError = AfterSave();
             if (!lstrError.equals(""))
                 throw new JewelEngineException(lstrError);
