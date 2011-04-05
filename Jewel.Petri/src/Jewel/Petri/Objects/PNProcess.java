@@ -5,10 +5,12 @@ import java.util.*;
 import Jewel.Engine.*;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
+import Jewel.Petri.Interfaces.IProcess;
 import Jewel.Petri.SysObjects.JewelPetriException;
 
 public class PNProcess
 	extends ObjectBase
+	implements IProcess
 {
 	private int mlngLock;
 

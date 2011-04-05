@@ -171,7 +171,7 @@ public class PNScript
 
 			for ( i = 0; i < marrControllers.length; i++ )
 			{
-				lobjNode = PNNode.GetInstance(lidNSpace, null);
+				lobjNode = PNNode.GetInstance(lidNSpace, (UUID)null);
 				lobjNode.setAt(0, lobjProc.getKey());
 				lobjNode.setAt(1, marrControllers[i].getKey());
 				lobjNode.setAt(2, marrControllers[i].getInitialCount());
@@ -189,7 +189,7 @@ public class PNScript
 				}
 				if ( b )
 				{
-					lobjStep = PNStep.GetInstance(lidNSpace, null);
+					lobjStep = PNStep.GetInstance(lidNSpace, (UUID)null);
 					lobjStep.setAt(0, lobjProc.getKey());
 					lobjStep.setAt(1, marrOperations[i].getKey());
 					lobjStep.setAt(2, marrOperations[i].getDefaultLevel());

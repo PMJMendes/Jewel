@@ -48,60 +48,60 @@ public class PNOperation
 	public void Initialize()
 		throws JewelEngineException
 	{
-			MasterDB ldb;
-			ResultSet lrsInputs, lrsOutputs;
-			IEntity lrefSink, lrefSource;
-			int[] larrMembers;
-			java.lang.Object[] larrParams;
-			ArrayList<IController> larrAux;
+		MasterDB ldb;
+		ResultSet lrsInputs, lrsOutputs;
+		IEntity lrefSink, lrefSource;
+		int[] larrMembers;
+		java.lang.Object[] larrParams;
+		ArrayList<IController> larrAux;
 
-			larrAux = new ArrayList<IController>();
+		larrAux = new ArrayList<IController>();
 
-			larrMembers = new int[1];
-			larrMembers[0] = Constants.FKOperation_In_Sink;
-			larrParams = new java.lang.Object[1];
-			larrParams[0] = getKey();
+		larrMembers = new int[1];
+		larrMembers[0] = Constants.FKOperation_In_Sink;
+		larrParams = new java.lang.Object[1];
+		larrParams[0] = getKey();
 
-			try
-			{
-				lrefSink = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNSink));
-				ldb = new MasterDB();
-				lrsInputs = lrefSink.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-				while ( lrsInputs.next() )
-					larrAux.add(((ISink)PNSink.GetInstance(getNameSpace(), lrsInputs)).GetController());
-				lrsInputs.close();
-				ldb.Disconnect();
+		try
+		{
+			lrefSink = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNSink));
+			ldb = new MasterDB();
+			lrsInputs = lrefSink.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+			while ( lrsInputs.next() )
+				larrAux.add(((ISink)PNSink.GetInstance(getNameSpace(), lrsInputs)).GetController());
+			lrsInputs.close();
+			ldb.Disconnect();
 
-				marrInputs = larrAux.toArray(new IController[larrAux.size()]);
-			}
-			catch (Throwable e)
-			{
-				throw new JewelEngineException(e.getMessage(), e);
-			}
+			marrInputs = larrAux.toArray(new IController[larrAux.size()]);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelEngineException(e.getMessage(), e);
+		}
 
-			larrAux = new ArrayList<IController>();
+		larrAux = new ArrayList<IController>();
 
-			larrMembers = new int[1];
-			larrMembers[0] = Constants.FKOperation_In_Source;
-			larrParams = new java.lang.Object[1];
-			larrParams[0] = getKey();
+		larrMembers = new int[1];
+		larrMembers[0] = Constants.FKOperation_In_Source;
+		larrParams = new java.lang.Object[1];
+		larrParams[0] = getKey();
 
-			try
-			{
-				lrefSource = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNSource));
-				ldb = new MasterDB();
-				lrsOutputs = lrefSource.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-				while ( lrsOutputs.next() )
-					larrAux.add(((ISource)PNSource.GetInstance(getNameSpace(), lrsOutputs)).GetController());
-				lrsOutputs.close();
-				ldb.Disconnect();
+		try
+		{
+			lrefSource = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNSource));
+			ldb = new MasterDB();
+			lrsOutputs = lrefSource.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+			while ( lrsOutputs.next() )
+				larrAux.add(((ISource)PNSource.GetInstance(getNameSpace(), lrsOutputs)).GetController());
+			lrsOutputs.close();
+			ldb.Disconnect();
 
-				marrOutputs = larrAux.toArray(new IController[larrAux.size()]);
-			}
-			catch (Throwable e)
-			{
-				throw new JewelEngineException(e.getMessage(), e);
-			}
+			marrOutputs = larrAux.toArray(new IController[larrAux.size()]);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelEngineException(e.getMessage(), e);
+		}
 	}
 
     public UUID GetScriptID()
