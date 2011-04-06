@@ -10,6 +10,8 @@ import Jewel.Engine.DataAccess.MasterDB;
 import Jewel.Engine.Implementation.Entity;
 import Jewel.Engine.Interfaces.IEntity;
 import Jewel.Petri.Constants;
+import Jewel.Petri.Interfaces.IStep;
+import Jewel.Petri.Objects.PNOperation;
 import Jewel.Petri.Objects.PNProcess;
 import Jewel.Petri.Objects.PNStep;
 
@@ -33,7 +35,7 @@ public abstract class Operation
 	{
 		PNProcess lrefProcess;
 		int i;
-		PNStep lobjStep;
+		IStep lobjStep;
 
 		lrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
 
@@ -54,94 +56,12 @@ public abstract class Operation
 
 		try
 		{
-			lobjStep = GetStep();
+			lobjStep = PNOperation.GetInstance(Engine.getCurrentNameSpace(), OpID()).GetStepInProcess(midProcess);
 			Run();
 		}
 		finally
 		{
 			lrefProcess.Unlock();
 		}
-	}
-
-	private PNStep GetStep()
-		throws JewelPetriException
-	{
-		int[] larrMembers;
-		java.lang.Object[] larrParams;
-		IEntity lrefStep;
-		MasterDB ldb;
-		ResultSet lrsSteps;
-		PNStep lobjResult;
-
-		larrMembers = new int[2];
-		larrMembers[0] = Constants.FKProcess_In_Step;
-		larrMembers[1] = Constants.FKOperation_In_Step;
-		larrParams = new java.lang.Object[2];
-		larrParams[0] = midProcess;
-		larrParams[1] = OpID();
-
-		lobjResult = null;
-
-		try
-		{
-			lrefStep = Entity.GetInstance(Engine.FindEntity(Engine.getCurrentNameSpace(), Constants.ObjID_PNStep));
-			ldb = new MasterDB();
-		}
-		catch (Throwable e)
-		{
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			lrsSteps = lrefStep.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Disconnect(); } catch (SQLException e1) {}
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			if ( lrsSteps.next() )
-			{
-				lobjResult = PNStep.GetInstance(Engine.getCurrentNameSpace(), lrsSteps);
-				if ( lrsSteps.next() )
-				{
-					lobjResult = null;
-				}
-			}
-		}
-		catch (Throwable e)
-		{
-			try { lrsSteps.close(); } catch (SQLException e1) {}
-			try { ldb.Disconnect(); } catch (SQLException e1) {}
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			lrsSteps.close();
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Disconnect(); } catch (SQLException e1) {}
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			ldb.Disconnect();
-		}
-		catch (Throwable e)
-		{
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		if ( lobjResult == null )
-			throw new JewelPetriException("Database is inconsistent: Unexpected number of steps for operation in process.");
-
-		return lobjResult;
 	}
 }
