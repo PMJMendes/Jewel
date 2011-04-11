@@ -10,6 +10,7 @@ public interface GridService
 {
 	GridResponse OpenQuery(String pstrQueryID, String pstrNameSpace, boolean pbForceParam, String pstrParam,
 			String pstrFormID, ParamInfo[] parrExtParams, String pstrInitValue) throws JewelMobileException;
+	GridResponse SetPageSize(String pstrWorkspace, int plngPageSize) throws JewelMobileException;
 	GridResponse PageForward(String pstrWorkspace) throws JewelMobileException;
 	GridResponse PageBack(String pstrWorkspace) throws JewelMobileException;
 	GridResponse PageFirst(String pstrWorkspace) throws JewelMobileException;

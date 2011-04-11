@@ -41,17 +41,17 @@ public class FileCtl
 
 		mbtnAttach = new Button();
 		mbtnAttach.setText("Attach");
-		mbtnAttach.addStyleName("mFileXfer-Attach");
+		mbtnAttach.setStylePrimaryName("mFileXfer-Attach");
 		louter.add(mbtnAttach);
 		mbtnView = new Button();
 		mbtnView.setText("View");
 		mbtnView.setEnabled(false);
-		mbtnView.addStyleName("mFileXfer-View");
+		mbtnView.setStylePrimaryName("mFileXfer-View");
 		louter.add(mbtnView);
 		mbtnClear = new Button();
 		mbtnClear.setText("Clear");
 		mbtnClear.setEnabled(false);
-		mbtnClear.addStyleName("mFileXfer-Clear");
+		mbtnClear.setStylePrimaryName("mFileXfer-Clear");
 		louter.add(mbtnClear);
 
 		initWidget(louter);

@@ -42,7 +42,7 @@ public class FilePopup
 		mfrmMain.setMethod(FormPanel.METHOD_POST);
 		mfrmMain.setAction(GWT.getModuleBaseURL() + "file");
 		lvert.add(mfrmMain);
-		mfrmMain.getElement().getParentElement().addClassName("filePopup-Form-Wrapper");
+		mfrmMain.getElement().getParentElement().setClassName("filePopup-Form-Wrapper");
 
 		mfupMain = new FileUpload();
 		mfupMain.setStylePrimaryName("formControl filePopup-Upload");
@@ -53,11 +53,11 @@ public class FilePopup
 		mbtnOk = new Button();
 		mbtnOk.setText("Ok");
 		lhorz.add(mbtnOk);
-		mbtnOk.getElement().getParentElement().addClassName("filePopup-Ok-Wrapper");
+		mbtnOk.getElement().getParentElement().setClassName("filePopup-Ok-Wrapper");
 		mbtnCancel = new Button();
 		mbtnCancel.setText("Cancel");
 		lhorz.add(mbtnCancel);
-		mbtnCancel.getElement().getParentElement().addClassName("filePopup-Cancel-Wrapper");
+		mbtnCancel.getElement().getParentElement().setClassName("filePopup-Cancel-Wrapper");
 		lvert.add(lhorz);
 
 		setWidget(lvert);

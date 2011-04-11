@@ -9,5 +9,6 @@ public interface LoginService
 	extends RemoteService
 {
 	LoginDomain[] GetDomains() throws JewelMobileException;
+	String CheckLogin() throws JewelMobileException;
 	String CheckLogin(LoginResponse pobjLogin) throws JewelMobileException;
 }

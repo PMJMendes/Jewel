@@ -9,9 +9,9 @@ import Jewel.Engine.Interfaces.*;
 import Jewel.Mobile.interfaces.*;
 import Jewel.Mobile.shared.*;
 
-public class SingleFormServiceImpl
+public class EditorFormServiceImpl
 	extends EngineImplementor
-	implements SingleFormService
+	implements EditorFormService
 {
 	private static final long serialVersionUID = 1L;
 

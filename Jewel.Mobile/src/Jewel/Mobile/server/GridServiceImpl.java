@@ -97,8 +97,6 @@ public class GridServiceImpl
 			}
         }
 
-        private static final int PAGE_SIZE = 10;
-
 		private UUID mid;
         private IQueryDef mrefQuery;
         private UUID midNameSpace;
@@ -107,6 +105,7 @@ public class GridServiceImpl
 		private java.lang.Object[] marrValues;
         private ArrayList<Row> marrData;
 		private Hashtable<String, java.lang.Object> marrExternParams;
+        private int mlngPageSize = 10;
         private int mlngCurrentPage;
         private int[] marrSortOrder;
         private int mlngColCount;
@@ -126,6 +125,7 @@ public class GridServiceImpl
 			midNameSpace = UUID.fromString(pstrNameSpace);
 
 			marrSortOrder = new int[0];
+			mlngPageSize = 10;
 		}
 		
 		public UUID GetID()
@@ -265,17 +265,22 @@ public class GridServiceImpl
         	int llngSize, llngRow;
         	int i, j;
 
-        	if ( PAGE_SIZE * (mlngCurrentPage + 1) > marrData.size() )
-        		llngSize = marrData.size() - PAGE_SIZE * mlngCurrentPage;
+        	if ( mlngPageSize > 0 )
+        	{
+	        	if ( mlngPageSize * (mlngCurrentPage + 1) > marrData.size() )
+	        		llngSize = marrData.size() - mlngPageSize * mlngCurrentPage;
+	        	else
+	        		llngSize = mlngPageSize;
+        	}
         	else
-        		llngSize = PAGE_SIZE;
+        		llngSize = marrData.size();
 
         	prefResp.marrRows = new int[llngSize];
         	prefResp.marrData = new String[llngSize][];
 
         	for ( i = 0; i < llngSize; i++ )
         	{
-        		llngRow = PAGE_SIZE * mlngCurrentPage + i;
+        		llngRow = ( mlngPageSize > 0 ? mlngPageSize * mlngCurrentPage + i : i );
         		prefResp.marrRows[i] = marrData.get(llngRow).RowNum();
         		prefResp.marrData[i] = new String[marrData.get(llngRow).length()];
         		for ( j = 0; j < marrData.get(llngRow).length(); j++ )
@@ -283,14 +288,21 @@ public class GridServiceImpl
         	}
 
         	prefResp.mlngCurrPage = mlngCurrentPage;
-        	prefResp.mlngPageSize = PAGE_SIZE;
+        	prefResp.mlngPageSize = mlngPageSize;
         	prefResp.mlngRecCount = marrData.size();
-        	prefResp.mlngPageCount = (int)Math.ceil((double)marrData.size() / (double)PAGE_SIZE);
+        	prefResp.mlngPageCount = (int)Math.ceil((double)marrData.size() / (double)mlngPageSize);
+        }
+
+        public void SetPageSize(int plngSize)
+        {
+        	mlngCurrentPage = ( plngSize > 0 ? (int)((double)mlngCurrentPage / (double)plngSize * mlngPageSize) : 0);
+        	mlngPageSize = plngSize;
         }
 
         public boolean PageForward()
         {
-        	if ( (mlngCurrentPage + 1) >= (int)Math.ceil((double)marrData.size() / (double)PAGE_SIZE) )
+        	if ( (mlngPageSize < 0) ||
+        			((mlngCurrentPage + 1) >= (int)Math.ceil((double)marrData.size() / (double)mlngPageSize)) )
         		return false;
         	mlngCurrentPage++;
         	return true;
@@ -314,9 +326,10 @@ public class GridServiceImpl
 
         public boolean PageLast()
         {
-        	if ( (mlngCurrentPage + 1) >= (int)Math.ceil((double)marrData.size() / (double)PAGE_SIZE) )
+        	if ( (mlngPageSize < 0) ||
+        			((mlngCurrentPage + 1) >= (int)Math.ceil((double)marrData.size() / (double)mlngPageSize)) )
         		return false;
-        	mlngCurrentPage = (int)Math.ceil((double)marrData.size() / (double)PAGE_SIZE) - 1;
+        	mlngCurrentPage = (int)Math.ceil((double)marrData.size() / (double)mlngPageSize) - 1;
         	return true;
         }
 
@@ -359,7 +372,8 @@ public class GridServiceImpl
         	for ( i = 0; i < marrData.size(); i++ )
         		if ( pidKey.equals(marrData.get(i).getKey()) )
         		{
-                	mlngCurrentPage = (int)Math.ceil(((double)i + 0.1) / (double)PAGE_SIZE) - 1;
+        			if ( mlngPageSize > 0 )
+        				mlngCurrentPage = (int)Math.ceil(((double)i + 0.1) / (double)mlngPageSize) - 1;
         			return marrData.get(i).RowNum();
         		}
 
@@ -381,7 +395,8 @@ public class GridServiceImpl
             llngRow = marrData.size();
 			marrData.add(new Row(this, llngRow, null, larrRow));
 
-        	mlngCurrentPage = (int)Math.ceil(((double)marrData.size() + 0.1) / (double)PAGE_SIZE) - 1;
+			if ( mlngPageSize > 0 )
+				mlngCurrentPage = (int)Math.ceil(((double)marrData.size() + 0.1) / (double)mlngPageSize) - 1;
 
         	return true;
         }
@@ -421,7 +436,8 @@ public class GridServiceImpl
             }
 
             marrData.remove(i);
-        	if ( (mlngCurrentPage > 0) && (mlngCurrentPage >= (int)Math.ceil((double)marrData.size() / (double)PAGE_SIZE)) )
+        	if ( (mlngPageSize > 0) && (mlngCurrentPage > 0) &&
+        			(mlngCurrentPage >= (int)Math.ceil((double)marrData.size() / (double)mlngPageSize)) )
         		mlngCurrentPage--;
 
             return true;
@@ -617,6 +633,26 @@ public class GridServiceImpl
 			lobjAux.mlngCurrRow = -1;
 		lrefWSpace.GetCurrentPage(lobjAux);
 
+		return lobjAux;
+	}
+
+	public GridResponse SetPageSize(String pstrWorkspace, int plngPageSize)
+		throws JewelMobileException
+	{
+		GridResponse lobjAux;
+		QueryWSpace lrefWSpace;
+
+		if ( Engine.getCurrentUser() == null )
+			return null;
+
+		lrefWSpace = GetQueryWSStorage().get(UUID.fromString(pstrWorkspace));
+		if ( lrefWSpace == null )
+			throw new JewelMobileException("Unexpected: non-existant query workspace.");
+
+		lrefWSpace.SetPageSize(plngPageSize);
+
+		lobjAux = new GridResponse();
+		lrefWSpace.GetCurrentPage(lobjAux);
 		return lobjAux;
 	}
 

@@ -12,7 +12,7 @@ html
 body
 {
 	overflow: hidden;
-	font: 8pt Verdana;
+	font: 12pt Verdana;
 	margin: 0;
 	padding: 0;
 }
@@ -24,63 +24,90 @@ img
 
 button
 {
-	font: 8pt Verdana;
+	font: 12pt Verdana;
 	white-space: nowrap;
-	padding: 2px 5px;
+}
+
+input
+{
+	font: 12pt Verdana;
+	white-space: nowrap;
+}
+
+select
+{
+	font: 12pt Verdana;
+	white-space: nowrap;
 }
 
 /*****************************************************************************************************/
-/* Login screen                                                                                      */
+/* Login Screen                                                                                      */
 /*****************************************************************************************************/
 
-.loginWrapper
+.login
 {
-	margin: 20px;
-	border: 1px solid black;
 	height: 0;
 	width: 0;
 }
 
-.loginError
+.login-Error-Wrapper
 {
-	width: 214px;
+}
+
+.login-Error
+{
+	width: 315px;
 	text-align: center;
 	color: Red;
 	padding: 10px 0 5px 0;
 	margin: auto;
 }
 
-.loginForm
+.login-Form-Wrapper
+{
+}
+
+.login-Form
 {
 	margin: 5px;
 }
 
-.loginLabel
+.login-Label-Wrapper
+{
+}
+
+
+.login-Label
 {
 	width: 100px;
 }
 
-.loginInput
+.login-Field-Wrapper
 {
-	width: 100px;
-	font: 8pt Verdana;
 }
 
-.loginDomains
+.login-Field
 {
-	width: 100%;
-	font: 8pt Verdana;
+	width: 200px;
 }
 
-.loginButton
+.login-Button-Wrapper
 {
 	height: 0;
 	text-align: center;
 	padding: 5px 0 10px 0;
 }
 
+.login-Button
+{
+	height: 36px;
+	width: 315px;
+	padding: 2px 5px;
+	cursor: pointer;
+}
+
 /*****************************************************************************************************/
-/* Error popup                                                                                       */
+/* Error Popup                                                                                       */
 /*****************************************************************************************************/
 
 .errorPopup
@@ -94,7 +121,7 @@ button
 	opacity: 0.5;
 }
 
-.errorPopup-MessageWrapper
+.errorPopup-Message-Wrapper
 {
 	border: 1px solid black;
 	padding: 10px;
@@ -107,111 +134,477 @@ button
 }
 
 /*****************************************************************************************************/
-/* Menu screen                                                                                       */
+/* Lookup Popup                                                                                       */
 /*****************************************************************************************************/
 
-.menuWrapper
+.lookupPopup
 {
-	margin: 20px;
-	height: 0;
 }
 
-.menuItem
+.lookupPopup-Glass
 {
+	background-color: #87cefa;
+	filter: alpha(opacity=90);
+	opacity: 0.9;
+}
+
+/*****************************************************************************************************/
+/* Menu Screen                                                                                       */
+/*****************************************************************************************************/
+
+.menu
+{
+	margin: 5px;
+	height: 0;
+	width: 500px;
+}
+
+.menu-Item-Wrapper
+{
+}
+
+.menu-Item
+{
+	height: 36px;
 	width: 100%;
 	padding: 2px 5px;
+	cursor: pointer;
 }
 
 /*****************************************************************************************************/
-/* Single form screen                                                                                */
+/* Single Form                                                                                       */
 /*****************************************************************************************************/
 
 .singleForm
 {
-	margin: 20px;
-	border: 1px solid black;
+	width: 100%;
+	padding: 5px;
 	height: 0;
 }
 
-.singleForm-HeaderWrapper
+.singleForm-Header-Wrapper
 {
 }
 
-.singleForm-Header
+.singleForm-Form-Wrapper
+{
+}
+
+/*****************************************************************************************************/
+/* Closable Header                                                                                   */
+/*****************************************************************************************************/
+
+.closableHeader
 {
 	width: 100%;
+	margin: 0 0 5px;
 }
 
-.singleForm-LabelWrapper
+.closableHeader-Label-Wrapper
 {
-	vertical-align: middle !important;
 }
 
-.singleForm-Label
+.closableHeader-Label
 {
-	margin: 2px;
 }
 
-.singleForm-CloseButtonWrapper
+.closableHeader-CloseButton-Wrapper
 {
 	width: 0;
 }
 
-.singleForm-CloseButton
+.closableHeader-CloseButton
 {
 	cursor: pointer;
-	margin: 2px;
+	padding: 2px 5px;
+	width: 100px;
 }
 
-.singleForm-FormWrapper
+/*****************************************************************************************************/
+/* Editor Form                                                                                       */
+/*****************************************************************************************************/
+
+.editorForm
+{
+	width: 100%;
+	height: 0;
+}
+
+.editorForm-Form-Wrapper
 {
 }
 
-.singleForm-CommandsWrapper
+.editorForm-Commands-Wrapper
 {
 }
 
 /*****************************************************************************************************/
-/* Simple form                                                                                       */
+/* Simple Form                                                                                       */
 /*****************************************************************************************************/
 
 .simpleForm
 {
-	border-width: 1px 0;
-	border-style: solid;
-	border-color: black;
-	padding: 0 0 5px;
 }
 
-.simpleForm-LabelWrapper
+.simpleForm-Label-Wrapper
 {
-	padding: 5px 5px 2px;
 }
 
 .simpleForm-Label
 {
+	width: 150px;
+	white-space: nowrap;
 }
 
-.simpleForm-ControlWrapper
+.simpleForm-Control-Wrapper
 {
-	padding: 0 5px;
 }
 
 .formControl
 {
-	width: 190px;
+	width: 300px;
 }
 
 /*****************************************************************************************************/
-/* Command set                                                                                       */
+/* Lookup Control                                                                                    */
+/*****************************************************************************************************/
+
+.lookup
+{
+}
+
+.lookup-Display-Wrapper
+{
+}
+
+.lookup-Display
+{
+	width: 100%;
+}
+
+.lookup-Button-Wrapper
+{
+	width: 0;
+}
+
+.lookup-Button
+{
+	cursor: pointer;
+	padding: 2px;
+}
+
+/*****************************************************************************************************/
+/* Command Set                                                                                       */
 /*****************************************************************************************************/
 
 .commandSet
 {
-	margin: 5px;
+	margin: 5px 0 0;
 }
 
 .commandSet-Command
 {
+	cursor: pointer;
 	padding: 2px 5px;
+}
+
+/*****************************************************************************************************/
+/* Complex Screen                                                                                    */
+/*****************************************************************************************************/
+
+.complexScreen
+{
+	width: 100%;
+	padding: 5px;
+	height: 0;
+}
+
+.complexScreen-Header-Wrapper
+{
+}
+
+.complexScreen-Grid-Wrapper
+{
+}
+
+/*****************************************************************************************************/
+/* Single Grid                                                                                       */
+/*****************************************************************************************************/
+
+.singleGrid
+{
+	width: 100%;
+	height: 0;
+}
+
+.singleGird-SearchForm-Wrapper
+{
+}
+
+.singleGird-Grid-Wrapper
+{
+}
+
+.singleGird-Editor-Wrapper
+{
+}
+
+/*****************************************************************************************************/
+/* Search Form                                                                                       */
+/*****************************************************************************************************/
+
+.searchForm
+{
+	width: 100%;
+	height: 0;
+}
+
+.searchForm-Form-Wrapper
+{
+}
+
+.searchForm-Toolbar-Wrapper
+{
+}
+
+.searchForm-Toolbar
+{
+	margin: 5px 0 0;
+	width: 100%;
+}
+
+.searchForm-ClearButton-Wrapper
+{
+}
+
+.searchForm-ClearButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.searchForm-SearchButton-Wrapper
+{
+	width: 0;
+}
+
+.searchForm-SearchButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+/*****************************************************************************************************/
+/* Simple Grid                                                                                       */
+/*****************************************************************************************************/
+
+.simpleGrid
+{
+	width: 100%;
+	height: 0;
+}
+
+.simpleGrid-Toolbar-Wrapper
+{
+}
+
+.simpleGrid-Toolbar
+{
+	width: 100%;
+}
+
+.simpleGrid-SearchButton-Wrapper
+{
+}
+
+.simpleGrid-SearchButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.simpleGrid-NewButton-Wrapper
+{
+	width: 0;
+}
+
+.simpleGrid-NewButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.simpleGrid-Grid-Wrapper
+{
+}
+
+.simpleGrid-Grid
+{
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+	border-collapse: collapse;
+	cursor: pointer;
+	empty-cells: show;
+}
+
+.simpleGrid-Grid-HeaderCell
+{
+	background-color: LightGrey;
+	text-align: center;
+}
+
+.simpleGrid-Grid-Row
+{
+	border-color: Black;
+}
+
+.simpleGrid-Grid-OddRow
+{
+	background-color: White;
+}
+
+.simpleGrid-Grid-EvenRow
+{
+	background-color: LightCyan;
+}
+
+.simpleGrid-Grid-Selected
+{
+	background-color: #316ac5;
+	color: White;
+	border-color: Black;
+	cursor: default;
+}
+
+.simpleGrid-Grid-CellDiv
+{
+	white-space: nowrap;
+	overflow: hidden;
+	height: 20px;
+}
+
+.simpleGrid-Grid td
+{
+	border-width: 1px;
+	border-color: Black;
+	border-style: solid;
+}
+
+.simpleGrid-Pagebar-Wrapper
+{
+}
+
+.simpleGrid-Pagebar
+{
+	width: 100%;
+}
+
+.simpleGrid-PageButton-Wrapper
+{
+	width: 0px;
+}
+
+.simpleGrid-PageButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.simpleGrid-PageText-Wrapper
+{
+}
+
+.simpleGrid-PageText
+{
+	text-align: center;
+}
+
+/*****************************************************************************************************/
+/* Multi Editor                                                                                      */
+/*****************************************************************************************************/
+
+.multiEditor
+{
+	width: 100%;
+	height: 0;
+}
+
+.multiEditor-Toolbar-Wrapper
+{
+}
+
+.multiEditor-Toolbar
+{
+	width: 100%;
+}
+
+.multiEditor-Selector-Wrapper
+{
+}
+
+.multiEditor-Selector
+{
+}
+
+.multiEditor-Edit-Wrapper
+{
+	width: 0px;
+}
+
+.multiEditor-Edit
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.multiEditor-Save-Wrapper
+{
+	width: 0px;
+}
+
+.multiEditor-Save
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.multiEditor-Cancel-Wrapper
+{
+	width: 0px;
+}
+
+.multiEditor-Cancel
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.multiEditor-Delete-Wrapper
+{
+	width: 0px;
+}
+
+.multiEditor-Delete
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.multiEditor-Content-Wrapper
+{
+}
+
+.multiEditor-Content
+{
+	width: 100%;
 }

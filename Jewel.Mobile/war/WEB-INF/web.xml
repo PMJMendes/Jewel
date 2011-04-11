@@ -30,8 +30,24 @@
 		<servlet-class>Jewel.Mobile.server.CommandSetServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>SingleFormServiceImpls</servlet-name>
-		<servlet-class>Jewel.Mobile.server.SingleFormServiceImpl</servlet-class>
+		<servlet-name>EditorFormServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.EditorFormServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ComplexScreenServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.ComplexScreenServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>GridServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.GridServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>MultiEditorServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.MultiEditorServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>LookupServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.LookupServiceImpl</servlet-class>
 	</servlet>
 
 	<!-- Servlet Mappings -->
@@ -52,17 +68,33 @@
 		<url-pattern>/jewel_mobile/commandset</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>SingleFormServiceImpls</servlet-name>
-		<url-pattern>/jewel_mobile/singleform</url-pattern>
+		<servlet-name>EditorFormServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/editorform</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ComplexScreenServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/complexscreen</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>GridServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/grid</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MultiEditorServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/multieditor</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LookupServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/lookup</url-pattern>
 	</servlet-mapping>
 
-<!-- Default page to serve -->
+	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>Jewel_Mobile.html</welcome-file>
 	</welcome-file-list>
 
-<!-- Forcing SSL -->
-<!--
+	<!-- Forcing SSL -->
+	<!--
 	<security-constraint> 
 		<web-resource-collection> 
 			<web-resource-name>Entire Application</web-resource-name> 
@@ -72,5 +104,6 @@
 			<transport-guarantee>CONFIDENTIAL</transport-guarantee> 
 		</user-data-constraint> 
 	</security-constraint>
--->
+	-->
+
 </web-app>

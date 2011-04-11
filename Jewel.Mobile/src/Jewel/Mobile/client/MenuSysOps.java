@@ -23,23 +23,26 @@ public class MenuSysOps
 		Button lbtnBack;
 
 		lvert = new VerticalPanel();
-		lvert.setStylePrimaryName("menuWrapper");
+		lvert.setStylePrimaryName("menu");
 		lvert.setSpacing(5);
 
 		lbtnLogout = new Button();
 		lbtnLogout.setText("Logout");
-		lbtnLogout.setStylePrimaryName("menuItem");
+		lbtnLogout.setStylePrimaryName("menu-Item");
 		lvert.add(lbtnLogout);
+		lbtnLogout.getElement().getParentElement().setClassName("menu-Item-Wrapper");
 
 		lbtnChangePass = new Button();
 		lbtnChangePass.setText("Change Password");
-		lbtnChangePass.setStylePrimaryName("menuItem");
+		lbtnChangePass.setStylePrimaryName("menu-Item");
 		lvert.add(lbtnChangePass);
+		lbtnChangePass.getElement().getParentElement().setClassName("menu-Item-Wrapper");
 
 		lbtnBack = new Button();
 		lbtnBack.setText("Back");
-		lbtnBack.setStylePrimaryName("menuItem");
+		lbtnBack.setStylePrimaryName("menu-Item");
 		lvert.add(lbtnBack);
+		lbtnBack.getElement().getParentElement().setClassName("menu-Item-Wrapper");
 
 		initWidget(lvert);
 

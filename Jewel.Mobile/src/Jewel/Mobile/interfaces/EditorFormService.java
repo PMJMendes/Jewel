@@ -4,8 +4,8 @@ import Jewel.Mobile.shared.*;
 
 import com.google.gwt.user.client.rpc.*;
 
-@RemoteServiceRelativePath("singleform")
-public interface SingleFormService
+@RemoteServiceRelativePath("editorform")
+public interface EditorFormService
 	extends RemoteService
 {
 	CommandResponse DoCommand(int plngID, String pstrFormID, String pstrNameSpace, String[] parrData) throws JewelMobileException;

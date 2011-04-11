@@ -8,6 +8,7 @@ public interface GridServiceAsync
 {
 	void OpenQuery(String pstrQueryID, String pstrNameSpace, boolean pbForceParam, String pstrParam,
 			String pstrFormID, ParamInfo[] parrExtParams, String pstrInitValue, AsyncCallback<GridResponse> callback);
+	void SetPageSize(String pstrWorkspace, int plngPageSize, AsyncCallback<GridResponse> callback);
 	void PageForward(String pstrWorkspace, AsyncCallback<GridResponse> callback);
 	void PageBack(String pstrWorkspace, AsyncCallback<GridResponse> callback);
 	void PageFirst(String pstrWorkspace, AsyncCallback<GridResponse> callback);

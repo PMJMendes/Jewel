@@ -62,6 +62,22 @@ public class LoginServiceImpl
         return larrNames.toArray(new LoginDomain[larrNames.size()]);
 	}
 
+	public String CheckLogin()
+		throws JewelMobileException
+	{
+		if ( Engine.getCurrentUser() == null )
+			return null;
+
+		try
+		{
+			return User.GetInstance(Engine.getCurrentNameSpace(), Engine.getCurrentUser()).getDisplayName();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelMobileException(e.getMessage(), e);
+		}
+	}
+
 	public String CheckLogin(LoginResponse pobjResp)
 		throws JewelMobileException
 	{

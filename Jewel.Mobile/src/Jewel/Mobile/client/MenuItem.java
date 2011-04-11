@@ -24,7 +24,7 @@ public class MenuItem
 		mmnuOwner = pmnuOwner;
 
 		setText(mobjDef.mstrText);
-		setStylePrimaryName("menuItem");
+		setStylePrimaryName("menu-Item");
 		if ( (mobjDef.marrChildren == null) || (mobjDef.marrChildren.length == 0) )
 			mmnuSub = null;
 		else
@@ -87,6 +87,7 @@ public class MenuItem
 	private void ShowResult(MenuResponse pobjResp)
 	{
 		SingleForm lrefForm;
+		ComplexScreen lrefCplx;
 
 		switch ( pobjResp.mlngType )
 		{
@@ -95,20 +96,13 @@ public class MenuItem
 			lrefForm.InitForm(pobjResp.mstrID, pobjResp.mstrNSpace);
         	Jewel_Mobile.getReference().setSingleFormScreen(lrefForm);
 			break;
-/*
-		case TreeResponse.SEARCH:
-			lrefSearch = new DynaSearch();
-			lrefSearch.addJErrorHandler(new JErrorEvent.Handler()
-			{
-				public void onJError(JErrorEvent event)
-				{
-					SetError(event.getError());
-				}
-			});
-			lrefSearch.InitSearch(pobjResp.mstrID, pobjResp.mstrNSpace, null, null, null);
-			mtabs.add(lrefSearch, new ClosableTab(pobjResp.mstrTitle, mtabs, lrefSearch));
-			break;
 
+		case MenuResponse.SEARCH:
+			lrefCplx = new ComplexScreen(pobjResp.mstrTitle);
+			lrefCplx.InitScreen(pobjResp.mstrID, pobjResp.mstrNSpace, null, null, null);
+        	Jewel_Mobile.getReference().setComplexScreen(lrefCplx);
+			break;
+/*
 		case TreeResponse.REPORT:
 			lrefReport = new DynaReport();
 			lrefReport.addJErrorHandler(new JErrorEvent.Handler()

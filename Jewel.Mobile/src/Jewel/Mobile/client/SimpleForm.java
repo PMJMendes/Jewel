@@ -21,14 +21,16 @@ public class SimpleForm
 	private String[] marrTmpData;
 	private ParamInfo[] marrExtParams;
 
-	private VerticalPanel mtblForm;
+	private Grid mtblForm;
 	private IJewelMobileCtl[] marrControls;
 
 	private HandlerManager mrefEventMgr;
 
 	public SimpleForm()
 	{
-		mtblForm = new VerticalPanel();
+		mtblForm = new Grid();
+		mtblForm.setCellSpacing(5);
+		mtblForm.setCellPadding(0);
 		mtblForm.setStylePrimaryName("simpleForm");
 
 		initWidget(mtblForm);
@@ -102,6 +104,14 @@ public class SimpleForm
 			marrControls[i].setJValue(parrData[i]);
 	}
 
+	public void ClearData()
+	{
+		int i;
+
+		for ( i = 0; i < marrControls.length; i++ )
+			marrControls[i].setJValue(null);
+	}
+
 	public ParamInfo[] GetExternalParams()
 	{
 		int i;
@@ -123,6 +133,7 @@ public class SimpleForm
 		Widget lctlAux;
 
 		mtblForm.clear();
+		mtblForm.resize(parrCtls.length, 2);
 
 		marrControls = new IJewelMobileCtl[parrCtls.length];
 
@@ -153,12 +164,12 @@ public class SimpleForm
 			llblAux = new Label();
 			llblAux.setText(parrCtls[i].mstrCaption);
 			llblAux.setStylePrimaryName("simpleForm-Label");
-			mtblForm.add(llblAux);
-			llblAux.getElement().getParentElement().setClassName("simpleForm-LabelWrapper");
+			mtblForm.setWidget(i, 0, llblAux);
+			llblAux.getElement().getParentElement().setClassName("simpleForm-Label-Wrapper");
 
 			lctlAux = BuildControl(parrCtls[i], i);
-			mtblForm.add(lctlAux);
-			lctlAux.getElement().getParentElement().setClassName("simpleForm-ControlWrapper");
+			mtblForm.setWidget(i, 1, lctlAux);
+			lctlAux.getElement().getParentElement().setClassName("simpleForm-Control-Wrapper");
 		}
 	}
 
@@ -215,6 +226,9 @@ public class SimpleForm
 	public void DoClose()
 	{
 		int i;
+
+		if ( marrControls == null )
+			return;
 
 		for ( i = 0; i < marrControls.length; i++ )
 			if ( marrControls[i] instanceof FileCtl )

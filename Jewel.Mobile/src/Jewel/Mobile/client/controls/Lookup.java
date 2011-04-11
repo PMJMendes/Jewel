@@ -2,10 +2,9 @@ package Jewel.Mobile.client.controls;
 
 import Jewel.Mobile.client.*;
 import Jewel.Mobile.client.events.*;
-//import Jewel.Web.client.popups.*;
+import Jewel.Mobile.client.popups.*;
 import Jewel.Mobile.shared.*;
 
-import com.google.gwt.dom.client.Style.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.ui.*;
@@ -21,16 +20,16 @@ public class Lookup
 	private String mstrEntity;
 
 	private TextBox mtxtDisplay;
-//	private LookupPopup mdlgPopup;
+	private LookupPopup mdlgPopup;
 
 	private HandlerManager mrefEventMgr;
 
 	public Lookup(String pstrFormID, String pstrNameSpace, String pstrParentFormID)
 	{
 		HorizontalPanel louter;
-		Image limg;
+		Button lbtn;
 
-//		mdlgPopup = null;
+		mdlgPopup = null;
 
 		mstrFormID = pstrFormID;
 		mstrNameSpace = pstrNameSpace;
@@ -38,26 +37,28 @@ public class Lookup
 		mstrEntity = null;
 
 		louter = new HorizontalPanel();
+		louter.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		louter.setStylePrimaryName("formControl lookup");
 
 		mtxtDisplay = new TextBox();
 		mtxtDisplay.setReadOnly(true);
 		mtxtDisplay.setStylePrimaryName("lookup-Display");
 		louter.add(mtxtDisplay);
+		mtxtDisplay.getElement().getParentElement().setClassName("lookup-Display-Wrapper");
 
-		limg = new Image();
-		limg.setUrl("images/iconlookup.bmp");
-		limg.setStylePrimaryName("lookup-Button");
-		louter.add(limg);
+		lbtn = new Button("?");
+		lbtn.setStylePrimaryName("lookup-Button");
+		louter.add(lbtn);
+		lbtn.getElement().getParentElement().setClassName("lookup-Button-Wrapper");
 
 		initWidget(louter);
 
-		limg.addClickHandler(new ClickHandler()
+		lbtn.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 	        {
-//				if ( ((mstrFormID != null) && (mstrNameSpace != null)) || (mstrEntity != null) )
-//					DoPopup();
+				if ( ((mstrFormID != null) && (mstrNameSpace != null)) || (mstrEntity != null) )
+					DoPopup();
 	        }
 	     });
 
@@ -108,18 +109,18 @@ public class Lookup
 			mrefEventMgr.fireEvent(new JChangeEvent());
 	}
 
-//	private void DoPopup()
-//	{
-//		if ( mdlgPopup == null )
-//			mdlgPopup = new LookupPopup(this);
-//
-//		if ( mstrEntity != null )
-//			mdlgPopup.InitPopup(mstrEntity, mstrValue, mstrParentFormID, GetExtParams());
-//		else
-//			mdlgPopup.InitPopup(mstrFormID, mstrNameSpace, mstrValue, mstrParentFormID, GetExtParams());
-//
-//		mdlgPopup.show();
-//	}
+	private void DoPopup()
+	{
+		if ( mdlgPopup == null )
+			mdlgPopup = new LookupPopup(this);
+
+		if ( mstrEntity != null )
+			mdlgPopup.InitPopup(mstrEntity, mstrValue, mstrParentFormID, GetExtParams());
+		else
+			mdlgPopup.InitPopup(mstrFormID, mstrNameSpace, mstrValue, mstrParentFormID, GetExtParams());
+
+		mdlgPopup.show();
+	}
 
 	private ParamInfo[] GetExtParams()
 	{
@@ -131,8 +132,8 @@ public class Lookup
 		lrefParent = getParent();
 		while ( lrefParent != null )
 		{
-//			if ( lrefParent instanceof DynaForm )
-//				return ((DynaForm)lrefParent).GetExternalParams();
+			if ( lrefParent instanceof SimpleForm )
+				return ((SimpleForm)lrefParent).GetExternalParams();
 
 			lrefParent = lrefParent.getParent();
 		}

@@ -21,7 +21,8 @@ public class Jewel_Mobile
 	{
 		mrefCurrent = null;
 		gstrReference = this;
-		setLoginScreen();
+		RootPanel.get().clear();
+		RootPanel.get().add(new Login(false));
 	}
 
 	public void setLoginScreen()
@@ -30,13 +31,14 @@ public class Jewel_Mobile
 			mrefCurrent.DoClose();
 
 		RootPanel.get().clear();
-		RootPanel.get().add(new Login());
+		RootPanel.get().add(new Login(/*true*/false)); //TODO: !!
 	}
 
 	public void setMenuScreen(Menu pmnuCurrent)
 	{
 		if ( mrefCurrent != null )
 			mrefCurrent.DoClose();
+		mrefCurrent = null;
 
 		RootPanel.get().clear();
 		RootPanel.get().add(pmnuCurrent);
@@ -50,6 +52,16 @@ public class Jewel_Mobile
 
 		RootPanel.get().clear();
 		RootPanel.get().add(pfrmCurrent);
+	}
+
+	public void setComplexScreen(ComplexScreen pscrnCurrent)
+	{
+		if ( mrefCurrent != null )
+			mrefCurrent.DoClose();
+		mrefCurrent = pscrnCurrent;
+
+		RootPanel.get().clear();
+		RootPanel.get().add(pscrnCurrent);
 	}
 
 	public void showError(String pstrError)

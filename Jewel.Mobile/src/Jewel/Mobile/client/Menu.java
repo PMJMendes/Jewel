@@ -104,23 +104,30 @@ public class Menu
 	private void InitPanel()
 	{
 		mvert = new VerticalPanel();
-		mvert.setStylePrimaryName("menuWrapper");
+		mvert.setStylePrimaryName("menu");
 		mvert.setSpacing(5);
 		initWidget(mvert);
 	}
 
 	private void BuildItems(MenuNodeObj[] parrDef, String pstrLabel)
 	{
+		MenuItem litm;
 		Button lbBack;
 		int i;
 
 		for ( i = 0; i < parrDef.length; i++ )
-			mvert.add(new MenuItem(parrDef[i], this));
+		{
+			litm = new MenuItem(parrDef[i], this);
+			mvert.add(litm);
+			litm.getElement().getParentElement().setClassName("menu-Item-Wrapper");
+			
+		}
 
 		lbBack = new Button();
 		lbBack.setText(pstrLabel);
-		lbBack.setStylePrimaryName("menuItem");
+		lbBack.setStylePrimaryName("menu-Item");
 		mvert.add(lbBack);
+		lbBack.getElement().getParentElement().setClassName("menu-Item-Wrapper");
 
 		lbBack.addClickHandler(new ClickHandler()
 		{

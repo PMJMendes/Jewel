@@ -21,7 +21,7 @@ public class MessageBox
 		llbl.setStylePrimaryName("errorPopup-Message");
 		
 		setWidget(llbl);
-		llbl.getElement().getParentElement().setClassName("errorPopup-MessageWrapper");
+		llbl.getElement().getParentElement().setClassName("errorPopup-Message-Wrapper");
 
 		llbl.addClickHandler(new ClickHandler()
 		{
