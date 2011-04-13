@@ -1,5 +1,6 @@
 package Jewel.Petri.Objects;
 
+import java.lang.reflect.Constructor;
 import java.sql.*;
 import java.util.*;
 
@@ -11,6 +12,7 @@ import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
 import Jewel.Petri.Interfaces.*;
 import Jewel.Petri.SysObjects.JewelPetriException;
+import Jewel.Petri.SysObjects.Operation;
 
 public class PNOperation
 	extends ObjectBase
@@ -18,6 +20,8 @@ public class PNOperation
 {
 	private IController[] marrInputs;
 	private IController[] marrOutputs;
+    private Class<?> mrefClass;
+    private Constructor<?> mrefConst;
 
     public static PNOperation GetInstance(UUID pidNameSpace, UUID pidKey)
 		throws JewelPetriException
@@ -54,6 +58,9 @@ public class PNOperation
 		int[] larrMembers;
 		java.lang.Object[] larrParams;
 		ArrayList<IController> larrAux;
+
+		mrefClass = null;
+		mrefConst = null;
 
 		larrAux = new ArrayList<IController>();
 
@@ -205,5 +212,22 @@ public class PNOperation
 		}
 
 		return lobjResult;
+	}
+
+	public Operation GetNewInstance()
+		throws JewelPetriException
+	{
+		try
+		{
+			if ( mrefClass == null )
+				mrefClass = Class.forName(((String)getAt(5)).replaceAll("MADDS", "Jewel"));
+			if ( mrefConst == null )
+				mrefConst = mrefClass.getConstructor(new Class<?>[0]);
+			return (Operation)mrefConst.newInstance(new java.lang.Object[0]);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
 	}
 }

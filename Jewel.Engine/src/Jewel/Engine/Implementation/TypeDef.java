@@ -107,7 +107,12 @@ public class TypeDef
         }
 
         if (TypeDefGUIDs.T_Passwd.equals(getKey()))
-            return "N'" + ((Password)pobjValue).GetEncrypted().replace("'", "''") + "'";
+        {
+        	if (pobjValue instanceof Password)
+        		return "N'" + ((Password)pobjValue).GetEncrypted().replace("'", "''") + "'";
+        	else
+        		return "N'" + ((String)pobjValue).replace("'", "''") + "'";
+        }
 
         if (TypeDefGUIDs.T_Binary.equals(getKey()))
         {

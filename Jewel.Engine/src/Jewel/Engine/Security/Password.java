@@ -2,7 +2,7 @@ package Jewel.Engine.Security;
 
 import Jewel.Engine.SysObjects.JewelEngineException;
 
-public class Password
+public final class Password
 {
 	private String mstrPwd;
 
@@ -29,5 +29,10 @@ public class Password
     	throws JewelEngineException
     {
         return SecureFunctions.Decrypt(mstrPwd);
+    }
+    
+    public boolean equals(java.lang.Object obj)
+    {
+    	return ( (obj != null) && (obj instanceof Password) && (mstrPwd.equals(((Password)obj).mstrPwd)) );
     }
 }

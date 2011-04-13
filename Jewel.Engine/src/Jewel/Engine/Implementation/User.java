@@ -64,14 +64,12 @@ public class User
     {
         if (getAt(2) != null)
         {
-            if (((String)getAt(2)).equals(pobjPwd.GetEncrypted()))
-                return true;
-            return false;
+        	if ( getAt(2) instanceof Password )
+        		return ((Password)getAt(2)).equals(pobjPwd);
+
+            return ((String)getAt(2)).equals(pobjPwd.GetEncrypted());
         }
 
-        if (pobjPwd.GetEncrypted().equals(""))
-            return true;
-
-        return false;
+        return pobjPwd.GetEncrypted().equals("");
     }
 }
