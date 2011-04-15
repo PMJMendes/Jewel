@@ -4,9 +4,8 @@ import java.sql.ResultSet;
 import java.util.UUID;
 
 import Jewel.Engine.Engine;
-import Jewel.Engine.DataAccess.MasterDB;
+import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.Implementation.Entity;
-import Jewel.Engine.Interfaces.IEntity;
 import Jewel.Engine.SysObjects.JewelEngineException;
 import Jewel.Engine.SysObjects.ObjectBase;
 import Jewel.Petri.Constants;
@@ -55,75 +54,62 @@ public class PNStep
 	public void Initialize()
 		throws JewelEngineException
 	{
-		IController[] larrAux;
-		IEntity lrefNode;
-		MasterDB ldb;
-		int[] larrMembers;
-		java.lang.Object[] larrParams;
-		ResultSet lrsNodes;
-		int i;
-
-		larrMembers = new int[2];
-		larrMembers[0] = Constants.FKProcess_In_Node;
-		larrMembers[1] = Constants.FKController_In_Node;
-		larrParams = new java.lang.Object[2];
-		larrParams[0] = (UUID)getAt(0);
+		IController[] larrCtls;
+		INode[] larrNodes;
+		int i, j;
 
 		try
 		{
 			mrefProcess = (IProcess)PNProcess.GetInstance(getNameSpace(), (UUID)getAt(0));
 			mrefOperation = (IOperation)PNOperation.GetInstance(getNameSpace(), (UUID)getAt(1));
-			lrefNode = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode));
-
-			ldb = new MasterDB();
-
-			larrAux = mrefOperation.getInputs();
-			marrInputs = new INode[larrAux.length];
-
-			for ( i = 0; i < larrAux.length; i++ )
-			{
-				marrInputs[i] = null;
-				larrParams[1] = larrAux[i].getKey();
-				lrsNodes = lrefNode.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-				if ( lrsNodes.next() )
-				{
-					marrInputs[i] = (INode)PNNode.GetInstance(getNameSpace(), lrsNodes);
-					if ( lrsNodes.next() )
-						marrInputs[i] = null;
-				}
-				if ( marrInputs[i] == null )
-					throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
-				lrsNodes.close();
-			}
-
-			larrAux = mrefOperation.getOutputs();
-			marrOutputs = new INode[larrAux.length];
-
-			for ( i = 0; i < larrAux.length; i++ )
-			{
-				marrOutputs[i] = null;
-				larrParams[1] = larrAux[i].getKey();
-				lrsNodes = lrefNode.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-				if ( lrsNodes.next() )
-				{
-					marrOutputs[i] = (INode)PNNode.GetInstance(getNameSpace(), lrsNodes);
-					if ( lrsNodes.next() )
-						marrOutputs[i] = null;
-				}
-				if ( marrOutputs[i] == null )
-					throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
-				lrsNodes.close();
-			}
-		
-			ldb.Disconnect();
-		}
-		catch (JewelEngineException e)
-		{
-			throw e;
 		}
 		catch (Throwable e)
 		{
 			throw new JewelEngineException(e.getMessage(), e);
+		}
+
+		larrNodes = mrefProcess.GetNodes();
+
+		larrCtls = mrefOperation.getInputs();
+		marrInputs = new INode[larrCtls.length];
+		for ( i = 0; i < larrCtls.length; i++ )
+		{
+			marrInputs[i] = null;
+			for ( j = 0; j < larrNodes.length; j++ )
+			{
+				if ( larrNodes[j].GetControllerID().equals(larrCtls[i].getKey()) )
+				{
+					if ( marrInputs[i] != null )
+					{
+						marrInputs[i] = null;
+						break;
+					}
+					marrInputs[i] = larrNodes[j];
+				}
+			}
+			if ( marrInputs[i] == null )
+				throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
+		}
+
+		larrCtls = mrefOperation.getOutputs();
+		marrOutputs = new INode[larrCtls.length];
+		for ( i = 0; i < larrCtls.length; i++ )
+		{
+			marrOutputs[i] = null;
+			for ( j = 0; j < larrNodes.length; j++ )
+			{
+				if ( larrNodes[j].GetControllerID().equals(larrCtls[i].getKey()) )
+				{
+					if ( marrOutputs[i] != null )
+					{
+						marrOutputs[i] = null;
+						break;
+					}
+					marrOutputs[i] = larrNodes[j];
+				}
+			}
+			if ( marrOutputs[i] == null )
+				throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
 		}
 	}
 
@@ -155,5 +141,79 @@ public class PNStep
 	public INode[] getOutputs()
 	{
 		return marrOutputs;
+	}
+
+	public boolean IsRunnable()
+	{
+		int i;
+		boolean b;
+
+		for ( i = 0; i < marrInputs.length; i++ )
+			marrInputs[i].PrepCount();
+
+		for ( i = 0; i < marrInputs.length; i++ )
+			marrInputs[i].TryDecCount();
+
+		b = true;
+		for ( i = 0; b && i < marrInputs.length; i++ )
+			b = marrInputs[i].CheckCount();
+
+		return b;
+	}
+
+	public void DoSafeRun(SQLServer pdb)
+		throws JewelPetriException
+	{
+		int i;
+
+		for ( i = 0; i < marrInputs.length; i++ )
+			marrInputs[i].DecCount();
+
+		for ( i = 0; i < marrOutputs.length; i++ )
+			marrOutputs[i].IncCount();
+
+		for ( i = 0; i < marrInputs.length; i++ )
+			marrInputs[i].DoSafeSave(pdb);
+
+		for ( i = 0; i < marrOutputs.length; i++ )
+			marrOutputs[i].DoSafeSave(pdb);
+	}
+
+	public void RollbackSafeRun()
+	{
+		int i;
+
+		for ( i = 0; i < marrInputs.length; i++ )
+			marrInputs[i].RollbackSafeSave();
+
+		for ( i = 0; i < marrOutputs.length; i++ )
+			marrOutputs[i].RollbackSafeSave();
+	}
+
+	public void CommitSafeRun()
+	{
+		int i;
+
+		for ( i = 0; i < marrInputs.length; i++ )
+			marrInputs[i].CommitSafeSave();
+
+		for ( i = 0; i < marrOutputs.length; i++ )
+			marrOutputs[i].CommitSafeSave();
+	}
+
+	public void Delete(SQLServer pdb)
+		throws JewelPetriException
+	{
+		Entity lrefSteps;
+
+		try
+		{
+			lrefSteps = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep));
+			lrefSteps.Delete(pdb, getKey());
+		}
+		catch (Throwable e) 
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
 	}
 }

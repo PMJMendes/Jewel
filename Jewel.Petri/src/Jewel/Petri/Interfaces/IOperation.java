@@ -13,6 +13,5 @@ public interface IOperation
     public IController[] getInputs();
     public IController[] getOutputs();
     public UUID getDefaultLevel();
-    public IStep GetStepInProcess(UUID pidProcess) throws JewelPetriException;
     public Operation GetNewInstance() throws JewelPetriException;
 }

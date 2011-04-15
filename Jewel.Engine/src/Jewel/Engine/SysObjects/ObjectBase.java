@@ -113,6 +113,11 @@ public abstract class ObjectBase
         marrMembers[plngMember] = value;
     }
 
+    protected void internalSetAt(int plngMember, Object value)
+    {
+        marrMembers[plngMember] = value;
+    }
+
     public Object[] getData()
     {
         return (Object[])marrMembers.clone();

@@ -13,7 +13,8 @@ public class Constants
     public static final UUID ObjID_PNProcess    = UUID.fromString("1967E563-01AD-4683-9D66-9E1700B7DF07");
     public static final UUID ObjID_PNStep       = UUID.fromString("B4E6C433-2DA6-4E66-8F3F-9E1700B8062B");
     public static final UUID ObjID_PNNode       = UUID.fromString("FF7FA5D2-A0DB-4CB3-9918-9E1700B81F23");
-    
+    public static final UUID ObjID_PNLog        = UUID.fromString("F63454DC-B63C-44EC-9E5E-9E1A01004BDB");
+
     public static final int FKScript_In_Operation  = 1;
     public static final int FKScript_In_Controller = 1;
     public static final int FKOperation_In_Sink = 1;

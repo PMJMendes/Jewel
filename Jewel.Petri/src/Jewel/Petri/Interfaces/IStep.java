@@ -2,7 +2,9 @@ package Jewel.Petri.Interfaces;
 
 import java.util.UUID;
 
+import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.Interfaces.IJewelBase;
+import Jewel.Petri.SysObjects.JewelPetriException;
 
 public interface IStep
 	extends IJewelBase
@@ -13,4 +15,9 @@ public interface IStep
 	public IOperation GetOperation();
     public INode[] getInputs();
     public INode[] getOutputs();
+    public boolean IsRunnable();
+    public void DoSafeRun(SQLServer pdb) throws JewelPetriException;
+	public void RollbackSafeRun();
+	public void CommitSafeRun();
+    public void Delete(SQLServer pdb) throws JewelPetriException;
 }

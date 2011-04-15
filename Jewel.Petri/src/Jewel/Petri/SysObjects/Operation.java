@@ -1,46 +1,152 @@
 package Jewel.Petri.SysObjects;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.DataAccess.MasterDB;
-import Jewel.Engine.Implementation.Entity;
-import Jewel.Engine.Interfaces.IEntity;
-import Jewel.Petri.Constants;
+import Jewel.Engine.DataAccess.SQLServer;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Petri.Interfaces.IProcess;
 import Jewel.Petri.Interfaces.IStep;
-import Jewel.Petri.Objects.PNOperation;
+import Jewel.Petri.Objects.PNLog;
 import Jewel.Petri.Objects.PNProcess;
-import Jewel.Petri.Objects.PNStep;
 
 public abstract class Operation
 	implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	protected UUID midProcess;
+	private transient UUID midProcess;
+	private transient IProcess mrefProcess;
+	private transient IStep mrefStep;
+	private transient boolean mbDone;
 
 	public Operation(UUID pidProcess)
 	{
 		midProcess = pidProcess;
+		mbDone = false;
 	}
 
 	protected abstract UUID OpID();
-	protected abstract void Run() throws JewelPetriException;
+	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
 
-	public final void Execute()
+	public synchronized final void Execute()
 		throws JewelPetriException
 	{
-		PNProcess lrefProcess;
-		int i;
-		IStep lobjStep;
+		MasterDB ldb;
 
-		lrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
+		if ( mbDone )
+			throw new JewelPetriException("Error: Attempt to run operation twice.");
+
+		mrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
+
+		LockProcess();
+
+		try
+		{
+			ldb = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.BeginTrans();
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			CheckRunnable();
+			Run(ldb);
+			BuildLog(ldb);
+		}
+		catch (JewelPetriException e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			mrefStep.DoSafeRun(ldb);
+			mrefProcess.RecalcSteps(ldb);
+		}
+		catch (JewelPetriException e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			mrefStep.RollbackSafeRun();
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			mrefStep.RollbackSafeRun();
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.Commit();
+		}
+		catch (Throwable e)
+		{
+			mrefStep.RollbackSafeRun();
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		mrefStep.CommitSafeRun();
+
+		try
+		{
+			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		mrefProcess.Unlock();
+
+		mbDone = true;
+	}
+
+	private void LockProcess()
+		throws JewelPetriException
+	{
+		int i;
 
 		i = 0;
-		while ( !lrefProcess.Lock() )
+		while ( !mrefProcess.Lock() )
 		{
 			i++;
 			if ( i>10000 )
@@ -53,15 +159,83 @@ public abstract class Operation
 			{
 			}
 		}
+	}
+
+	private void CheckRunnable()
+		throws JewelPetriException
+	{
+		MasterDB ldb;
+
+		mrefStep = mrefProcess.GetOperation(OpID());
+
+		if ( mrefStep == null )
+			throw new JewelPetriException("Error: Operation not currently available in this process.");
+
+		if ( !mrefStep.IsRunnable() )
+		{
+			try
+			{
+				ldb = new MasterDB();
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				mrefProcess.RemoveStep(ldb, mrefStep);
+			}
+			catch (JewelPetriException e)
+			{
+				try { ldb.Disconnect(); } catch (Throwable e1) {}
+				throw e;
+			}
+
+			try
+			{
+				ldb.Disconnect();
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+			throw new JewelPetriException("Error: Operation not currently available in this process.");
+		}
+	}
+
+	private void BuildLog(SQLServer pdb)
+		throws JewelPetriException
+	{
+		PNLog lobjLog;
+		ByteArrayOutputStream lstream;
+		ObjectOutputStream lstreamObj;
+		FileXfer lobjFile;
+
+		lobjLog = PNLog.GetInstance(Engine.getCurrentNameSpace(), (UUID)null);
 
 		try
 		{
-			lobjStep = PNOperation.GetInstance(Engine.getCurrentNameSpace(), OpID()).GetStepInProcess(midProcess);
-			Run();
+			lstream = new ByteArrayOutputStream();
+			lstreamObj = new ObjectOutputStream(lstream);
+			lstreamObj.writeObject(this);
+			lstreamObj.close();
+			lstream.close();
+			lobjFile = new FileXfer((int)lstream.size(), "application/octet-stream", "log",
+					new ByteArrayInputStream(lstream.toByteArray()));
+
+			lobjLog.setAt(0, midProcess);
+			lobjLog.setAt(1, OpID());
+			lobjLog.setAt(2, new Timestamp(new java.util.Date().getTime()));
+			lobjLog.setAt(3, Engine.getCurrentUser());
+			lobjLog.setAt(4, (UUID)null);
+			lobjLog.setAt(5, false);
+			lobjLog.setAt(6, lobjFile);
+			lobjLog.SaveToDb(pdb);
 		}
-		finally
+		catch (Throwable e)
 		{
-			lrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
 		}
 	}
 }
