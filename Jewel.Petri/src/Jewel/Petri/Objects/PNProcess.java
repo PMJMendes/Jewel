@@ -66,7 +66,7 @@ public class PNProcess
 			larrAuxNodes = new ArrayList<INode>();
 			lrsNodes = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode))
 					.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-			if ( lrsNodes.next() )
+			while ( lrsNodes.next() )
 			{
 				larrAuxNodes.add((INode)PNNode.GetInstance(getNameSpace(), lrsNodes));
 			}
@@ -76,7 +76,7 @@ public class PNProcess
 			larrAuxSteps = new ArrayList<IStep>();
 			lrsSteps = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep))
 					.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-			if ( lrsSteps.next() )
+			while ( lrsSteps.next() )
 			{
 				larrAuxSteps.add((IStep)PNStep.GetInstance(getNameSpace(), lrsSteps));
 			}
