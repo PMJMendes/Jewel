@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.*;
 
 public class PopupGrid
 	extends Composite
-	implements ClosableContent, InitEvent.HasEvent, SelectEvent.HasEvent, CancelEvent.HasEvent
+	implements ClosableContent, SelectEvent.HasEvent, CancelEvent.HasEvent
 {
 	private DataObject mobjData;
 	private boolean mbEdit;
@@ -111,8 +111,6 @@ public class PopupGrid
 			{
 				mbtnDetails.setEnabled(mgrdTable.GetSelected() > -1);
 				mbtnSelect.setEnabled(mgrdTable.GetSelected() > -1);
-
-				mrefEventMgr.fireEvent(event);
 			}
 		});
 		mgrdTable.addSelectHandler(new SelectEvent.Handler()
@@ -143,11 +141,6 @@ public class PopupGrid
 	public void DoClose()
 	{
 		mgrdTable.DoClose();
-	}
-
-	public HandlerRegistration addInitHandler(InitEvent.Handler handler)
-	{
-		return mrefEventMgr.addHandler(InitEvent.TYPE, handler);
 	}
 
 	public HandlerRegistration addSelectHandler(SelectEvent.Handler handler)

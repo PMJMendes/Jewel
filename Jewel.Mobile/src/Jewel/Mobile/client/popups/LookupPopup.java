@@ -15,14 +15,14 @@ public class LookupPopup
 {
 	private LookupServiceAsync lookupSvc;
 
-	private PopupGrid msrcMain;
-
 	private Lookup mrefOwner;
 	private String mstrFormID;
 	private String mstrNameSpace;
 	private String mstrTmpValue;
 	private String mstrTmpFormID;
 	private ParamInfo[] marrTmpParams;
+
+	private PopupGrid msrcMain;
 
 	public LookupPopup(Lookup prefOwner)
 	{
@@ -42,13 +42,6 @@ public class LookupPopup
 
 		setWidget(msrcMain);
 
-		msrcMain.addInitHandler(new InitEvent.Handler()
-		{
-			public void onInit(InitEvent event)
-			{
-				center();
-			}
-		});
 		msrcMain.addSelectHandler(new SelectEvent.Handler()
 		{
 			public void onSelect(SelectEvent event)
