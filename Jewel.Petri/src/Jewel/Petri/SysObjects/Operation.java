@@ -2,6 +2,7 @@ package Jewel.Petri.SysObjects;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -21,6 +22,28 @@ public abstract class Operation
 {
 	private static final long serialVersionUID = 1L;
 
+	public static Operation getOperation(FileXfer pobjFile)
+		throws JewelPetriException
+	{
+        ByteArrayInputStream lstream;
+        ObjectInputStream lreader;
+        Operation lobjResult;
+
+        try
+        {
+            lstream = new ByteArrayInputStream(pobjFile.getData());
+			lreader = new ObjectInputStream(lstream);
+	        lobjResult = (Operation)lreader.readObject();
+	        lreader.close();
+		}
+        catch (Throwable e)
+        {
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		return lobjResult;
+	}
+
 	private transient UUID midProcess;
 	private transient IProcess mrefProcess;
 	private transient IStep mrefStep;
@@ -31,6 +54,10 @@ public abstract class Operation
 		midProcess = pidProcess;
 		mbDone = false;
 	}
+
+	public abstract String ShortDesc();
+	public abstract String LongDesc(String pstrLineBreak);
+	public abstract String UndoDesc(String pstrLineBreak);
 
 	protected abstract UUID OpID();
 	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
