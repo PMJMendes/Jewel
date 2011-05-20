@@ -381,7 +381,7 @@ public class DynaGridServiceImpl
             llngRow = marrData.size();
 			marrData.add(new Row(this, llngRow, null, larrRow));
 
-        	mlngCurrentPage = (int)Math.ceil(((double)marrData.size() + 0.1) / (double)PAGE_SIZE) - 1;
+        	mlngCurrentPage = (int)Math.ceil(((double)marrData.size() - 0.1) / (double)PAGE_SIZE) - 1;
 
         	return true;
         }
