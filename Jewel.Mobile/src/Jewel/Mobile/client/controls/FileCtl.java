@@ -1,15 +1,20 @@
 package Jewel.Mobile.client.controls;
 
-import Jewel.Mobile.client.*;
-import Jewel.Mobile.client.popups.*;
-import Jewel.Mobile.interfaces.*;
+import Jewel.Mobile.client.IJewelMobileCtl;
+import Jewel.Mobile.client.Jewel_Mobile;
+import Jewel.Mobile.client.popups.FilePopup;
+import Jewel.Mobile.interfaces.FileService;
+import Jewel.Mobile.interfaces.FileServiceAsync;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.Style.*;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 public class FileCtl
 	extends Composite
@@ -38,21 +43,25 @@ public class FileCtl
 		mtxtDisplay.setReadOnly(true);
 		mtxtDisplay.setStylePrimaryName("mFileXfer-Display");
 		louter.add(mtxtDisplay);
+		mtxtDisplay.getElement().getParentElement().setClassName("mFileXfer-Display-Wrapper");
 
-		mbtnAttach = new Button();
-		mbtnAttach.setText("Attach");
-		mbtnAttach.setStylePrimaryName("mFileXfer-Attach");
-		louter.add(mbtnAttach);
 		mbtnView = new Button();
-		mbtnView.setText("View");
+		mbtnView.setText("?");
 		mbtnView.setEnabled(false);
 		mbtnView.setStylePrimaryName("mFileXfer-View");
 		louter.add(mbtnView);
+		mbtnView.getElement().getParentElement().setClassName("mFileXfer-View-Wrapper");
+		mbtnAttach = new Button();
+		mbtnAttach.setText("+");
+		mbtnAttach.setStylePrimaryName("mFileXfer-Attach");
+		louter.add(mbtnAttach);
+		mbtnAttach.getElement().getParentElement().setClassName("mFileXfer-Attach-Wrapper");
 		mbtnClear = new Button();
-		mbtnClear.setText("Clear");
+		mbtnClear.setText("x");
 		mbtnClear.setEnabled(false);
 		mbtnClear.setStylePrimaryName("mFileXfer-Clear");
 		louter.add(mbtnClear);
+		mbtnClear.getElement().getParentElement().setClassName("mFileXfer-Clear-Wrapper");
 
 		initWidget(louter);
 
@@ -153,20 +162,10 @@ public class FileCtl
 		mtxtDisplay.setText(larrAux[1]);
 	}
 
-	public void setWidth(int plngWidth)
-	{
-		getElement().getStyle().setWidth(plngWidth-15, Unit.PX);
-		mtxtDisplay.getElement().getStyle().setWidth(plngWidth-175, Unit.PX);
-	}
-
 	private void DoPopup()
 	{
 		if ( mdlgPopup == null )
-		{
 			mdlgPopup = new FilePopup(this);
-			mdlgPopup.setText("File Upload");
-			mdlgPopup.center();
-		}
 
 		mdlgPopup.SetKey(mstrValue);
 		mdlgPopup.show();

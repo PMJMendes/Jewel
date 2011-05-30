@@ -46,8 +46,16 @@
 		<servlet-class>Jewel.Mobile.server.MultiEditorServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>ReportServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.ReportServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>LookupServiceImpls</servlet-name>
 		<servlet-class>Jewel.Mobile.server.LookupServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ValueServiceImpls</servlet-name>
+		<servlet-class>Jewel.Mobile.server.ValueServiceImpl</servlet-class>
 	</servlet>
 
 	<!-- Servlet Mappings -->
@@ -84,8 +92,16 @@
 		<url-pattern>/jewel_mobile/multieditor</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+		<servlet-name>ReportServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/report</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>LookupServiceImpls</servlet-name>
 		<url-pattern>/jewel_mobile/lookup</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ValueServiceImpls</servlet-name>
+		<url-pattern>/jewel_mobile/value</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->

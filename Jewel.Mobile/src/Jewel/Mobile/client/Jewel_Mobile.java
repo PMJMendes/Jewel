@@ -64,6 +64,26 @@ public class Jewel_Mobile
 		RootPanel.get().add(pscrnCurrent);
 	}
 
+	public void setSimpleReportScreen(SimpleReport pscrnCurrent)
+	{
+		if ( mrefCurrent != null )
+			mrefCurrent.DoClose();
+		mrefCurrent = pscrnCurrent;
+
+		RootPanel.get().clear();
+		RootPanel.get().add(pscrnCurrent);
+	}
+
+	public void setEmptyScreen(ClosableEmpty pscrnCurrent)
+	{
+		if ( mrefCurrent != null )
+			mrefCurrent.DoClose();
+		mrefCurrent = pscrnCurrent;
+
+		RootPanel.get().clear();
+		RootPanel.get().add(pscrnCurrent);
+	}
+
 	public void showError(String pstrError)
 	{
 		new MessageBox(pstrError).center();

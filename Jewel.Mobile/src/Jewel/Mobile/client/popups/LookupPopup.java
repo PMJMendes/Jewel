@@ -7,6 +7,8 @@ import Jewel.Mobile.interfaces.*;
 import Jewel.Mobile.shared.*;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -22,11 +24,14 @@ public class LookupPopup
 	private String mstrTmpFormID;
 	private ParamInfo[] marrTmpParams;
 
+	private ClosableHeader mheader;
 	private PopupGrid msrcMain;
 
 	public LookupPopup(Lookup prefOwner)
 	{
 		super(false, true);
+
+		VerticalPanel lpn;
 
 		mrefOwner = prefOwner;
 
@@ -38,9 +43,28 @@ public class LookupPopup
 		setGlassEnabled(true);
 		setGlassStyleName("lookupPopup-Glass");
 
-		msrcMain = new PopupGrid();
+		lpn = new VerticalPanel();
+		lpn.setStylePrimaryName("lookupPopup-Wrapper");
 
-		setWidget(msrcMain);
+		mheader = new ClosableHeader("");
+		lpn.add(mheader);
+
+		msrcMain = new PopupGrid();
+		lpn.add(msrcMain);
+
+		setWidget(lpn);
+
+		mheader.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				if ( !msrcMain.TryGoBack() )
+				{
+					msrcMain.DoClose();
+					hide();
+				}
+	        }
+	    });
 
 		msrcMain.addSelectHandler(new SelectEvent.Handler()
 		{
@@ -50,14 +74,6 @@ public class LookupPopup
 					mrefOwner.setJValue(null, true);
 				else
 					mrefOwner.setJValue(event.getResult().mstrID + "!" +  event.getResult().mstrDisplayName, true);
-				msrcMain.DoClose();
-				hide();
-			}
-		});
-		msrcMain.addCancelHandler(new CancelEvent.Handler()
-		{
-			public void onCancel(CancelEvent event)
-			{
 				msrcMain.DoClose();
 				hide();
 			}
@@ -81,7 +97,7 @@ public class LookupPopup
 			{
 				if (result != null)
 				{
-					setText(result.mstrFormName + " @ " + result.mstrNSpaceName);
+					mheader.SetText(result.mstrFormName + " @ " + result.mstrNSpaceName);
 					msrcMain.InitGrid(mstrFormID, result.mstrQueryID, mstrNameSpace, false, null, mstrTmpFormID,
 							marrTmpParams, mstrTmpValue);
 					mstrTmpValue = null;

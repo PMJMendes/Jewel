@@ -1,20 +1,21 @@
 package Jewel.Mobile.client.controls;
 
-import Jewel.Mobile.client.*;
-import Jewel.Mobile.client.events.*;
-import Jewel.Mobile.interfaces.*;
+import Jewel.Mobile.client.IJewelMobileCtl;
+import Jewel.Mobile.client.Jewel_Mobile;
+import Jewel.Mobile.client.events.JChangeEvent;
+import Jewel.Mobile.interfaces.ValueService;
+import Jewel.Mobile.interfaces.ValueServiceAsync;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.Style.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 
 public class ValueLookup
 	extends Composite
 	implements IJewelMobileCtl
 {
-//	private ValueServiceAsync valueSvc;
+	private ValueServiceAsync valueSvc;
 
 	private Lookup mobjClass;
 	private Lookup mobjValue;
@@ -26,11 +27,11 @@ public class ValueLookup
 		louter = new HorizontalPanel();
 		louter.setStylePrimaryName("formControl valueLookup");
 
-		mobjClass = new Lookup(null, null, null);
+		mobjClass = new Lookup(null, null, null, true);
 		mobjClass.Retarget("94AB0A74-25A1-11DA-91C2-000B6ABC6AE9");
 		louter.add(mobjClass);
 
-		mobjValue = new Lookup(null, null, null);
+		mobjValue = new Lookup(null, null, null, true);
 		louter.add(mobjValue);
 
 		initWidget(louter);
@@ -56,13 +57,13 @@ public class ValueLookup
 	     });
 	}
 
-//	private ValueServiceAsync getService()
-//	{
-//		if ( valueSvc == null )
-//			valueSvc = GWT.create(ValueService.class);
+	private ValueServiceAsync getService()
+	{
+		if ( valueSvc == null )
+			valueSvc = GWT.create(ValueService.class);
 
-//		return valueSvc;
-//	}
+		return valueSvc;
+	}
 
 	public String getJValue()
 	{
@@ -121,6 +122,6 @@ public class ValueLookup
 			}
         };
 
-//        getService().GetDisplayText(pstrEntity, pstrValue, callback);
+        getService().GetDisplayText(pstrEntity, pstrValue, callback);
 	}
 }

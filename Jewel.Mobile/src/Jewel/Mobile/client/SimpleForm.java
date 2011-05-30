@@ -200,7 +200,7 @@ public class SimpleForm
 			break;
 
 		case FormCtlObj.LOOKUP:
-			lctlAux = new Lookup(prefControl.mstrFormID, mstrNameSpace, mstrFormID);
+			lctlAux = new Lookup(prefControl.mstrFormID, mstrNameSpace, mstrFormID, false);
 			break;
 
 		case FormCtlObj.CALENDAR:

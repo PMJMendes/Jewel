@@ -396,7 +396,7 @@ public class GridServiceImpl
 			marrData.add(new Row(this, llngRow, null, larrRow));
 
 			if ( mlngPageSize > 0 )
-				mlngCurrentPage = (int)Math.ceil(((double)marrData.size() + 0.1) / (double)mlngPageSize) - 1;
+				mlngCurrentPage = (int)Math.ceil(((double)marrData.size() - 0.1) / (double)mlngPageSize) - 1;
 
         	return true;
         }

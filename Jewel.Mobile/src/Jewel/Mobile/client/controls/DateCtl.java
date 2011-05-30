@@ -16,32 +16,34 @@ public class DateCtl
 	public DateCtl()
 	{
 		HorizontalPanel louter;
-		Image limg;
+		Button lbtn;
+
+		mdlgPopup = null;
 
 		louter = new HorizontalPanel();
+		louter.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		louter.setStylePrimaryName("formControl datebox");
 
 		mtxtDisplay = new TextBox();
 		mtxtDisplay.setReadOnly(true);
 		mtxtDisplay.setStylePrimaryName("datebox-Display");
 		louter.add(mtxtDisplay);
+		mtxtDisplay.getElement().getParentElement().setClassName("datebox-Display-Wrapper");
 
-		limg = new Image();
-		limg.setUrl("images/iconlookup.bmp");
-		limg.setStylePrimaryName("datebox-Button");
-		louter.add(limg);
+		lbtn = new Button("?");
+		lbtn.setStylePrimaryName("datebox-Button");
+		louter.add(lbtn);
+		lbtn.getElement().getParentElement().setClassName("datebox-Button-Wrapper");
 
 		initWidget(louter);
 
-		limg.addClickHandler(new ClickHandler()
+		lbtn.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 	        {
 				DoPopup();
 	        }
 	     });
-
-		mdlgPopup = null;
 	}
 
 	public String getJValue()
@@ -60,11 +62,7 @@ public class DateCtl
 	public void DoPopup()
 	{
 		if ( mdlgPopup == null )
-		{
 			mdlgPopup = new DatePopup(this);
-			mdlgPopup.setText("Calendar");
-			mdlgPopup.center();
-		}
 
 		mdlgPopup.InitPopup(getJValue());
 		mdlgPopup.show();

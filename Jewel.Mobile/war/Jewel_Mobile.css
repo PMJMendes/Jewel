@@ -134,21 +134,6 @@ select
 }
 
 /*****************************************************************************************************/
-/* Lookup Popup                                                                                       */
-/*****************************************************************************************************/
-
-.lookupPopup
-{
-}
-
-.lookupPopup-Glass
-{
-	background-color: #87cefa;
-	filter: alpha(opacity=90);
-	opacity: 0.9;
-}
-
-/*****************************************************************************************************/
 /* Menu Screen                                                                                       */
 /*****************************************************************************************************/
 
@@ -200,14 +185,6 @@ select
 	margin: 0 0 5px;
 }
 
-.closableHeader-Label-Wrapper
-{
-}
-
-.closableHeader-Label
-{
-}
-
 .closableHeader-CloseButton-Wrapper
 {
 	width: 0;
@@ -218,6 +195,15 @@ select
 	cursor: pointer;
 	padding: 2px 5px;
 	width: 100px;
+}
+
+.closableHeader-Label-Wrapper
+{
+	padding: 0 0 0 5px;
+}
+
+.closableHeader-Label
+{
 }
 
 /*****************************************************************************************************/
@@ -288,6 +274,84 @@ select
 }
 
 .lookup-Button
+{
+	cursor: pointer;
+	padding: 2px;
+}
+
+/*****************************************************************************************************/
+/* Datebox Control                                                                                    */
+/*****************************************************************************************************/
+
+.datebox
+{
+}
+
+.datebox-Display-Wrapper
+{
+}
+
+.datebox-Display
+{
+	width: 100%;
+}
+
+.datebox-Button-Wrapper
+{
+	width: 0;
+}
+
+.datebox-Button
+{
+	cursor: pointer;
+	padding: 2px;
+}
+
+/*****************************************************************************************************/
+/* FileXfer Control                                                                                    */
+/*****************************************************************************************************/
+
+.mFileXfer
+{
+}
+
+.mFileXfer-Display-Wrapper
+{
+}
+
+.mFileXfer-Display
+{
+	width: 100%;
+}
+
+.mFileXfer-View-Wrapper
+{
+	width: 0;
+}
+
+.mFileXfer-View
+{
+	cursor: pointer;
+	padding: 2px;
+}
+
+.mFileXfer-Attach-Wrapper
+{
+	width: 0;
+}
+
+.mFileXfer-Attach
+{
+	cursor: pointer;
+	padding: 2px;
+}
+
+.mFileXfer-Clear-Wrapper
+{
+	width: 0;
+}
+
+.mFileXfer-Clear
 {
 	cursor: pointer;
 	padding: 2px;
@@ -370,18 +434,6 @@ select
 .searchForm-Toolbar
 {
 	margin: 5px 0 0;
-	width: 100%;
-}
-
-.searchForm-ClearButton-Wrapper
-{
-}
-
-.searchForm-ClearButton
-{
-	cursor: pointer;
-	padding: 2px 5px;
-	width: 100px;
 }
 
 .searchForm-SearchButton-Wrapper
@@ -390,6 +442,19 @@ select
 }
 
 .searchForm-SearchButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.searchForm-ClearButton-Wrapper
+{
+	width: 0;
+	padding: 0 0 0 5px;
+}
+
+.searchForm-ClearButton
 {
 	cursor: pointer;
 	padding: 2px 5px;
@@ -412,11 +477,11 @@ select
 
 .simpleGrid-Toolbar
 {
-	width: 100%;
 }
 
 .simpleGrid-SearchButton-Wrapper
 {
+	width: 0;
 }
 
 .simpleGrid-SearchButton
@@ -429,6 +494,7 @@ select
 .simpleGrid-NewButton-Wrapper
 {
 	width: 0;
+	padding: 0 0 0 5px;
 }
 
 .simpleGrid-NewButton
@@ -501,15 +567,27 @@ select
 
 .simpleGrid-Pagebar
 {
-	width: 100%;
 }
 
-.simpleGrid-PageButton-Wrapper
+.simpleGrid-PageFirstButton-Wrapper
 {
 	width: 0px;
 }
 
-.simpleGrid-PageButton
+.simpleGrid-PageFirstButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.simpleGrid-PagePrevButton-Wrapper
+{
+	width: 0;
+	padding: 0 0 0 5px;
+}
+
+.simpleGrid-PagePrevButton
 {
 	cursor: pointer;
 	padding: 2px 5px;
@@ -518,11 +596,39 @@ select
 
 .simpleGrid-PageText-Wrapper
 {
+	width: 0;
+	padding: 0 5px;
 }
 
 .simpleGrid-PageText
 {
 	text-align: center;
+	white-space: nowrap;
+}
+
+.simpleGrid-PageNextButton-Wrapper
+{
+	width: 0px;
+	padding: 0 5px 0 0;
+}
+
+.simpleGrid-PageNextButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.simpleGrid-PageLastButton-Wrapper
+{
+	width: 0px;
+}
+
+.simpleGrid-PageLastButton
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
 }
 
 /*****************************************************************************************************/
@@ -541,15 +647,7 @@ select
 
 .multiEditor-Toolbar
 {
-	width: 100%;
-}
-
-.multiEditor-Selector-Wrapper
-{
-}
-
-.multiEditor-Selector
-{
+	padding: 0 0 5px 0;
 }
 
 .multiEditor-Edit-Wrapper
@@ -567,6 +665,7 @@ select
 .multiEditor-Save-Wrapper
 {
 	width: 0px;
+	padding: 0 5px;
 }
 
 .multiEditor-Save
@@ -591,6 +690,7 @@ select
 .multiEditor-Delete-Wrapper
 {
 	width: 0px;
+	padding: 0 5px;
 }
 
 .multiEditor-Delete
@@ -600,6 +700,14 @@ select
 	width: 100px;
 }
 
+.multiEditor-Selector-Wrapper
+{
+}
+
+.multiEditor-Selector
+{
+}
+
 .multiEditor-Content-Wrapper
 {
 }
@@ -607,4 +715,355 @@ select
 .multiEditor-Content
 {
 	width: 100%;
+}
+
+/*****************************************************************************************************/
+/* Simple Report                                                                                     */
+/*****************************************************************************************************/
+
+.simpleReport
+{
+	width: 100%;
+	padding: 5px;
+	height: 0;
+}
+
+.simpleReport-Header-Wrapper
+{
+}
+
+.simpleReport-Form-Wrapper
+{
+}
+
+.simpleReport-Open-Wrapper
+{
+	padding: 5px 0 0 0;
+}
+
+.simpleReport-Open
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 150px;
+}
+
+/*****************************************************************************************************/
+/* Lookup Popup                                                                                       */
+/*****************************************************************************************************/
+
+.lookupPopup
+{
+	padding: 5px;
+}
+
+.lookupPopup-Wrapper
+{
+}
+
+.lookupPopup-Glass
+{
+	background-color: #87cefa;
+}
+
+/*****************************************************************************************************/
+/* Popup Grid                                                                                        */
+/*****************************************************************************************************/
+
+.popupGrid
+{
+}
+
+.popupGrid-Main
+{
+}
+
+.popupGrid-Grid
+{
+}
+
+.popupGrid-Resultsbar-Wrapper
+{
+}
+
+.popupGrid-Resultsbar
+{
+	padding: 5px 0 0 0;
+}
+
+.popupGrid-Select-Wrapper
+{
+	width: 0px;
+}
+
+.popupGrid-Select
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.popupGrid-Empty-Wrapper
+{
+	width: 0px;
+	padding: 0 5px;
+}
+
+.popupGrid-Empty
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 150px;
+}
+
+.popupGrid-Details-Wrapper
+{
+	width: 0px;
+}
+
+.popupGrid-Details
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+/*****************************************************************************************************/
+/* Date Popup                                                                                        */
+/*****************************************************************************************************/
+
+.datePopup
+{
+	padding: 5px;
+}
+
+.datePopup-Wrapper
+{
+}
+
+.datePopup-Glass
+{
+	background-color: #87cefa;
+}
+
+.datePopup-Datepicker-Wrapper
+{
+}
+
+.datePopup-Datepicker
+{
+	background-color: white;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+	width: 300px;
+	height: 250px;
+}
+
+.datePopup-Datepicker .datePickerMonthSelector
+{
+	border-width: 0px 0px 1px 0px;
+	border-color: black;
+	border-style: solid;
+	height: 40px;
+}
+
+.datePopup-Datepicker .datePickerMonth
+{
+	text-align: center;
+	font-weight: bold;
+	color: darkblue;
+	cursor: default;
+}
+
+.datePopup-Datepicker .datePickerPreviousButton
+{
+	cursor: pointer;
+}
+
+.datePopup-Datepicker .datePickerNextButton
+{
+	cursor: pointer;
+}
+.datePopup-Datepicker .datePickerDays
+{
+	width: 100%;
+	height: 100%;
+}
+
+.datePopup-Datepicker .datePickerWeekendLabel
+{
+	font-weight: bold;
+	padding: 5px 0px;
+	text-align: center;
+	cursor: default;
+}
+
+.datePopup-Datepicker .datePickerWeekdayLabel
+{
+	font-weight: bold;
+	padding: 5px 0px;
+	text-align: center;
+	cursor: default;
+}
+
+.datePopup-Datepicker .datePickerDay
+{
+	padding: 0px 0px 5px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.datePopup-Datepicker .datePickerDayIsToday
+{
+	text-decoration: underline;
+}
+
+.datePopup-Datepicker .datePickerDayIsFiller
+{
+	color: lightgray;
+}
+
+.datePopup-Datepicker .datePickerDayIsValue
+{
+	font-weight: bold;
+	color: white;
+	background-color: blue;
+}
+
+.datePopup-Timebar-Wrapper
+{
+	text-align: right;
+	width: 100%;
+	border-color: black;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    background: white;
+}
+
+.datePopup-Timebar
+{
+	padding: 5px 5px 5px 0;
+	margin: auto 0 auto auto;
+}
+
+.datePopup-Hours-Wrapper
+{
+}
+
+.datePopup-Hours
+{
+	width: 25px;
+}
+
+.datePopup-Minutes-Wrapper
+{
+}
+
+.datePopup-Minutes
+{
+	width: 25px;
+}
+
+.datePopup-Seconds-Wrapper
+{
+}
+
+.datePopup-Seconds
+{
+	width: 25px;
+}
+
+.datePopup-Nanos-Wrapper
+{
+}
+
+.datePopup-Nanos
+{
+	width: 35px;
+}
+
+.datePopup-Buttonbar-Wrapper
+{
+}
+
+.datePopup-Buttonbar
+{
+	padding: 5px 0 0 0;
+}
+
+.datePopup-Ok-Wrapper
+{
+	width: 0px;
+}
+
+.datePopup-Ok
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
+}
+
+.datePopup-Empty-Wrapper
+{
+	width: 0px;
+	padding: 0 5px;
+}
+
+.datePopup-Empty
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 150px;
+}
+
+/*****************************************************************************************************/
+/* File Popup                                                                                       */
+/*****************************************************************************************************/
+
+.filePopup
+{
+	padding: 5px;
+}
+
+.filePopup-Wrapper
+{
+}
+
+.filePopup-Glass
+{
+	background-color: #87cefa;
+}
+
+.filePopup-Main
+{
+}
+
+.filePopup-ErrorLine
+{
+	color: red;
+}
+
+.filePopup-Form-Wrapper
+{
+}
+
+.filePopup-Form
+{
+}
+
+.filePopup-Upload
+{
+}
+
+.filePopup-Ok-Wrapper
+{
+	padding: 5px 0 0 0;
+}
+
+.filePopup-Ok
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	width: 100px;
 }

@@ -2,6 +2,7 @@ package Jewel.Mobile.client.popups;
 
 import java.sql.*;
 
+import Jewel.Mobile.client.ClosableHeader;
 import Jewel.Mobile.client.controls.*;
 
 import com.google.gwt.event.dom.client.*;
@@ -11,6 +12,9 @@ import com.google.gwt.user.datepicker.client.*;
 public class DatePopup
 	extends DialogBox
 {
+	private DateCtl mrefOwner;
+
+	private ClosableHeader mheader;
 	private DatePicker mdtMain;
 	private IntBox mtxtHours;
 	private IntBox mtxtMinutes;
@@ -18,9 +22,6 @@ public class DatePopup
 	private IntBox mtxtNanos;
 	private Button mbtnEmpty;
 	private Button mbtnOk;
-	private Button mbtnCancel;
-
-	private DateCtl mrefOwner;
 
 	public DatePopup(DateCtl prefOwner)
 	{
@@ -32,72 +33,86 @@ public class DatePopup
 
 		mrefOwner = prefOwner;
 
-		this.setStylePrimaryName("datePopup");
+		setStylePrimaryName("datePopup");
+
+		setGlassEnabled(true);
+		setGlassStyleName("datePopup-Glass");
 
 		lvert = new VerticalPanel();
+
+		mheader = new ClosableHeader("Calendar");
+		lvert.add(mheader);
 
 		mdtMain = new DatePicker();
 		mdtMain.setStylePrimaryName("datePopup-Datepicker");
 		lvert.add(mdtMain);
+		mdtMain.getElement().getParentElement().setClassName("datePopup-Datepicker-Wrapper");
 
 		lhorz = new HorizontalPanel();
 		lhorz.setStylePrimaryName("datePopup-Timebar");
+		lvert.add(lhorz);
+		lhorz.getElement().getParentElement().setClassName("datePopup-Timebar-Wrapper");
+		lhorz.getElement().getParentElement().removeAttribute("align");
+
+		lhtml = new HTML("Time:&nbsp;");
+		lhtml.setStylePrimaryName("datePopup-Separator");
+		lhorz.add(lhtml);
+		lhtml.getElement().getParentElement().setClassName("datePopup-Separator-Wrapper");
 		mtxtHours = new IntBox();
-		mtxtHours.setStylePrimaryName("formControl datePopup-Hours");
+		mtxtHours.setStylePrimaryName("datePopup-Hours");
 		lhorz.add(mtxtHours);
+		mtxtHours.getElement().getParentElement().setClassName("datePopup-Hours-Wrapper");
 		lhtml = new HTML(":");
 		lhtml.setStylePrimaryName("datePopup-Separator");
 		lhorz.add(lhtml);
 		lhtml.getElement().getParentElement().setClassName("datePopup-Separator-Wrapper");
 		mtxtMinutes = new IntBox();
-		mtxtMinutes.setStylePrimaryName("formControl datePopup-Minutes");
+		mtxtMinutes.setStylePrimaryName("datePopup-Minutes");
 		lhorz.add(mtxtMinutes);
+		mtxtMinutes.getElement().getParentElement().setClassName("datePopup-Minutes-Wrapper");
 		lhtml = new HTML(":");
 		lhtml.setStylePrimaryName("datePopup-Separator");
 		lhorz.add(lhtml);
 		lhtml.getElement().getParentElement().setClassName("datePopup-Separator-Wrapper");
 		mtxtSeconds = new IntBox();
-		mtxtSeconds.setStylePrimaryName("formControl datePopup-Seconds");
+		mtxtSeconds.setStylePrimaryName("datePopup-Seconds");
 		lhorz.add(mtxtSeconds);
+		mtxtSeconds.getElement().getParentElement().setClassName("datePopup-Seconds-Wrapper");
 		lhtml = new HTML(".");
 		lhtml.setStylePrimaryName("datePopup-Separator");
 		lhorz.add(lhtml);
 		lhtml.getElement().getParentElement().setClassName("datePopup-Separator-Wrapper");
 		mtxtNanos = new IntBox();
-		mtxtNanos.setStylePrimaryName("formControl datePopup-Nanos");
+		mtxtNanos.setStylePrimaryName("datePopup-Nanos");
 		lhorz.add(mtxtNanos);
-		lvert.add(lhorz);
+		mtxtNanos.getElement().getParentElement().setClassName("datePopup-Nanos-Wrapper");
 
 		lhorz = new HorizontalPanel();
 		lhorz.setStylePrimaryName("datePopup-Buttonbar");
-		mbtnEmpty = new Button();
-		mbtnEmpty.setText("Select (empty)");
-		lhorz.add(mbtnEmpty);
-		mbtnEmpty.getElement().getParentElement().setClassName("datePopup-Button-Wrapper");
-		lhtml = new HTML("&nbsp;");
-		lhtml.setStylePrimaryName("datePopup-Buttongap");
-		lhorz.add(lhtml);
-		lhtml.getElement().getParentElement().setClassName("datePopup-Buttongap-Wrapper");
+		lvert.add(lhorz);
+		lhorz.getElement().getParentElement().setClassName("datePopup-Buttonbar-Wrapper");
+
 		mbtnOk = new Button();
 		mbtnOk.setText("Ok");
+		mbtnOk.setStylePrimaryName("datePopup-Ok");
 		lhorz.add(mbtnOk);
-		mbtnOk.getElement().getParentElement().setClassName("datePopup-Button-Wrapper");
-		mbtnCancel = new Button();
-		mbtnCancel.setText("Cancel");
-		lhorz.add(mbtnCancel);
-		mbtnCancel.getElement().getParentElement().setClassName("datePopup-Button-Wrapper");
-		lvert.add(lhorz);
+		mbtnOk.getElement().getParentElement().setClassName("datePopup-Ok-Wrapper");
+		mbtnEmpty = new Button();
+		mbtnEmpty.setText("Select (empty)");
+		mbtnEmpty.setStylePrimaryName("datePopup-Empty");
+		lhorz.add(mbtnEmpty);
+		mbtnEmpty.getElement().getParentElement().setClassName("datePopup-Empty-Wrapper");
 
 		setWidget(lvert);
 
-		mbtnEmpty.addClickHandler(new ClickHandler()
+		mheader.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
-	        {
-				mrefOwner.setJValue(null);
+			{
 				hide();
 	        }
-	     });
+		});
+
 		mbtnOk.addClickHandler(new ClickHandler()
 		{
 			@SuppressWarnings("deprecation")
@@ -135,14 +150,15 @@ public class DatePopup
 					mrefOwner.setJValue(ltAux.toString());
 				hide();
 	        }
-	     });
-		mbtnCancel.addClickHandler(new ClickHandler()
+		});
+		mbtnEmpty.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 	        {
+				mrefOwner.setJValue(null);
 				hide();
 	        }
-	     });
+		});
 	}
 
 	@SuppressWarnings("deprecation")

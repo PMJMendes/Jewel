@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.*;
 
 public class SimpleGrid
 	extends Composite
-	implements ClosableContent, InitEvent.HasEvent, SelectEvent.HasEvent, OkEvent.HasEvent
+	implements ClosableContent, SelectEvent.HasEvent, OkEvent.HasEvent
 {
 	private GridServiceAsync gridSvc;
 
@@ -65,21 +65,22 @@ public class SimpleGrid
 		mgrdTable.getElement().getParentElement().setClassName("simpleGrid-Grid-Wrapper");
 
 		lhorz = new HorizontalPanel();
+		lhorz.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		lhorz.setStylePrimaryName("simpleGrid-Pagebar");
 		mpnMain.add(lhorz);
 		lhorz.getElement().getParentElement().setClassName("simpleGrid-Pagebar-Wrapper");
 		mbtnFirst = new Button();
 		mbtnFirst.setText("<< First");
 		mbtnFirst.setEnabled(false);
-		mbtnFirst.setStylePrimaryName("simpleGrid-PageButton");
+		mbtnFirst.setStylePrimaryName("simpleGrid-PageFirstButton");
 		lhorz.add(mbtnFirst);
-		mbtnFirst.getElement().getParentElement().setClassName("simpleGrid-PageButton-Wrapper");
+		mbtnFirst.getElement().getParentElement().setClassName("simpleGrid-PageFirstButton-Wrapper");
 		mbtnPrev = new Button();
 		mbtnPrev.setText("< Prev");
 		mbtnPrev.setEnabled(false);
-		mbtnPrev.setStylePrimaryName("simpleGrid-PageButton");
+		mbtnPrev.setStylePrimaryName("simpleGrid-PagePrevButton");
 		lhorz.add(mbtnPrev);
-		mbtnPrev.getElement().getParentElement().setClassName("simpleGrid-PageButton-Wrapper");
+		mbtnPrev.getElement().getParentElement().setClassName("simpleGrid-PagePrevButton-Wrapper");
 		mlblPage = new Label();
 		mlblPage.setStylePrimaryName("simpleGrid-PageText");
 		lhorz.add(mlblPage);
@@ -87,15 +88,15 @@ public class SimpleGrid
 		mbtnNext = new Button();
 		mbtnNext.setText("Next >");
 		mbtnNext.setEnabled(false);
-		mbtnNext.setStylePrimaryName("simpleGrid-PageButton");
+		mbtnNext.setStylePrimaryName("simpleGrid-PageNextButton");
 		lhorz.add(mbtnNext);
-		mbtnNext.getElement().getParentElement().setClassName("simpleGrid-PageButton-Wrapper");
+		mbtnNext.getElement().getParentElement().setClassName("simpleGrid-PageNextButton-Wrapper");
 		mbtnLast = new Button();
 		mbtnLast.setText("Last >>");
 		mbtnLast.setEnabled(false);
-		mbtnLast.setStylePrimaryName("simpleGrid-PageButton");
+		mbtnLast.setStylePrimaryName("simpleGrid-PageLastButton");
 		lhorz.add(mbtnLast);
-		mbtnLast.getElement().getParentElement().setClassName("simpleGrid-PageButton-Wrapper");
+		mbtnLast.getElement().getParentElement().setClassName("simpleGrid-PageLastButton-Wrapper");
 
 		initWidget(mpnMain);
 
@@ -175,6 +176,8 @@ public class SimpleGrid
 			        mlngSelected = result.mlngCurrRow;
 					RenderData(result);
 					mrefEventMgr.fireEvent(new InitEvent());
+					if ( mlngSelected >= 0 )
+						DoSelect(-1);
 				}
 				else
 				{
@@ -762,11 +765,6 @@ public class SimpleGrid
 		};
 
 		getService().CloseQuery(mstrWorkspace, callback);
-	}
-
-	public HandlerRegistration addInitHandler(InitEvent.Handler handler)
-	{
-		return mrefEventMgr.addHandler(InitEvent.TYPE, handler);
 	}
 
 	public HandlerRegistration addSelectHandler(SelectEvent.Handler handler)

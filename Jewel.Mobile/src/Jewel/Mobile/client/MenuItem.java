@@ -88,6 +88,8 @@ public class MenuItem
 	{
 		SingleForm lrefForm;
 		ComplexScreen lrefCplx;
+		SimpleReport lrefReport;
+		ClosableEmpty lrefAux;
 
 		switch ( pobjResp.mlngType )
 		{
@@ -102,24 +104,16 @@ public class MenuItem
 			lrefCplx.InitScreen(pobjResp.mstrID, pobjResp.mstrNSpace, null, null, null);
         	Jewel_Mobile.getReference().setComplexScreen(lrefCplx);
 			break;
-/*
-		case TreeResponse.REPORT:
-			lrefReport = new DynaReport();
-			lrefReport.addJErrorHandler(new JErrorEvent.Handler()
-			{
-				public void onJError(JErrorEvent event)
-				{
-					SetError(event.getError());
-				}
-			});
+
+		case MenuResponse.REPORT:
+			lrefReport = new SimpleReport(pobjResp.mstrTitle);
 			lrefReport.InitReport(pobjResp.mstrID, pobjResp.mstrNSpace);
-			mtabs.add(lrefReport, new ClosableTab(pobjResp.mstrTitle, mtabs, lrefReport));
+        	Jewel_Mobile.getReference().setSimpleReportScreen(lrefReport);
 			break;
 
 		default:
-			lrefAux = new ClosableEmpty();
-			mtabs.add(lrefAux, new ClosableTab(pobjResp.mstrTitle, mtabs, lrefAux));
-*/
+			lrefAux = new ClosableEmpty(pobjResp.mstrTitle);
+        	Jewel_Mobile.getReference().setEmptyScreen(lrefAux);
 		}
 	}
 

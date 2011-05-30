@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.*;
 
 public class SingleGrid
 	extends Composite
-	implements ClosableContent, InitEvent.HasEvent, SelectEvent.HasEvent, CancelEvent.HasEvent
+	implements ClosableContent, SelectEvent.HasEvent, CancelEvent.HasEvent
 {
 	private boolean mbForPopup;
 	private String mstrSearchFormID;
@@ -48,13 +48,6 @@ public class SingleGrid
 			public void onOk(OkEvent event)
 			{
 				doApplySearch();
-			}
-		});
-		mgrdTable.addInitHandler(new InitEvent.Handler()
-		{
-			public void onInit(InitEvent event)
-			{
-				mrefEventMgr.fireEvent(event);
 			}
 		});
 		mgrdTable.addOkHandler(new OkEvent.Handler()
@@ -222,11 +215,6 @@ public class SingleGrid
 		UnloadEditor();
 		mfrmSearch.DoClose();
 		mgrdTable.DoClose();
-	}
-
-	public HandlerRegistration addInitHandler(InitEvent.Handler handler)
-	{
-		return mrefEventMgr.addHandler(InitEvent.TYPE, handler);
 	}
 
 	public HandlerRegistration addSelectHandler(SelectEvent.Handler handler)

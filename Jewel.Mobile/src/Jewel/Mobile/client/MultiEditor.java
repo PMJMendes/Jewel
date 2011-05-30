@@ -44,12 +44,6 @@ public class MultiEditor
 		louter.add(mpnToolbar);
 		mpnToolbar.getElement().getParentElement().setClassName("multiEditor-Toolbar-Wrapper");
 
-		mlbxSelector = new ListBox();
-		mlbxSelector.setStylePrimaryName("multiEditor-Selector");
-		mpnToolbar.add(mlbxSelector);
-		mlbxSelector.getElement().getParentElement().setClassName("multiEditor-SelectorWrapper");
-		mlbxSelector.setVisible(false);
-
 		mbtnEdit = new Button("Edit");
 		mbtnEdit.setStylePrimaryName("multiEditor-Edit");
 		mpnToolbar.add(mbtnEdit);
@@ -69,6 +63,12 @@ public class MultiEditor
 		mbtnDelete.setEnabled(false);
 		mpnToolbar.add(mbtnDelete);
 		mbtnDelete.getElement().getParentElement().setClassName("multiEditor-Delete-Wrapper");
+
+		mlbxSelector = new ListBox();
+		mlbxSelector.setStylePrimaryName("multiEditor-Selector");
+		louter.add(mlbxSelector);
+		mlbxSelector.getElement().getParentElement().setClassName("multiEditor-SelectorWrapper");
+		mlbxSelector.setVisible(false);
 
 		mpnContent = new HorizontalPanel();
 		mpnContent.setStylePrimaryName("multiEditor-Content");

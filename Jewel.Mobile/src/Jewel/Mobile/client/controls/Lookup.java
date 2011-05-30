@@ -24,7 +24,7 @@ public class Lookup
 
 	private HandlerManager mrefEventMgr;
 
-	public Lookup(String pstrFormID, String pstrNameSpace, String pstrParentFormID)
+	public Lookup(String pstrFormID, String pstrNameSpace, String pstrParentFormID, boolean pbComponent)
 	{
 		HorizontalPanel louter;
 		Button lbtn;
@@ -38,7 +38,10 @@ public class Lookup
 
 		louter = new HorizontalPanel();
 		louter.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		louter.setStylePrimaryName("formControl lookup");
+		if (pbComponent)
+			louter.setStylePrimaryName("lookup");
+		else
+			louter.setStylePrimaryName("formControl lookup");
 
 		mtxtDisplay = new TextBox();
 		mtxtDisplay.setReadOnly(true);

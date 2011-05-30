@@ -33,16 +33,16 @@ public class SearchForm
 		lpnOuter.add(lpnInner);
 		lpnInner.getElement().getParentElement().setClassName("searchForm-Toolbar-Wrapper");
 
-		lbtnClear = new Button();
-		lbtnClear.setText("Clear");
-		lbtnClear.setStylePrimaryName("searchForm-ClearButton");
-		lpnInner.add(lbtnClear);
-		lbtnClear.getElement().getParentElement().setClassName("searchForm-ClearButton-Wrapper");
 		lbtnSearch = new Button();
 		lbtnSearch.setText("Search");
 		lbtnSearch.setStylePrimaryName("searchForm-SearchButton");
 		lpnInner.add(lbtnSearch);
 		lbtnSearch.getElement().getParentElement().setClassName("searchForm-SearchButton-Wrapper");
+		lbtnClear = new Button();
+		lbtnClear.setText("Clear");
+		lbtnClear.setStylePrimaryName("searchForm-ClearButton");
+		lpnInner.add(lbtnClear);
+		lbtnClear.getElement().getParentElement().setClassName("searchForm-ClearButton-Wrapper");
 
 		initWidget(lpnOuter);
 

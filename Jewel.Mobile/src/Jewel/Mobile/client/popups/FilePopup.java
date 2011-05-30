@@ -1,5 +1,6 @@
 package Jewel.Mobile.client.popups;
 
+import Jewel.Mobile.client.ClosableHeader;
 import Jewel.Mobile.client.controls.*;
 
 import com.google.gwt.core.client.*;
@@ -10,13 +11,13 @@ import com.google.gwt.user.client.ui.FormPanel.*;
 public class FilePopup
 	extends DialogBox
 {
+	private FileCtl mrefOwner;
+
+	private ClosableHeader mheader;
 	private Label mlblError;
 	private FormPanel mfrmMain;
 	private FileUpload mfupMain;
 	private Button mbtnOk;
-	private Button mbtnCancel;
-
-	private FileCtl mrefOwner;
 
 	public FilePopup(FileCtl prefOwner)
 	{
@@ -25,15 +26,20 @@ public class FilePopup
 		mrefOwner = prefOwner;
 
 		VerticalPanel lvert;
-		HorizontalPanel lhorz;
 
 		setStylePrimaryName("filePopup");
+
+		setGlassEnabled(true);
+		setGlassStyleName("filePopup-Glass");
 
 		lvert = new VerticalPanel();
 		lvert.setStylePrimaryName("filePopup-Main");
 
+		mheader = new ClosableHeader("File Upload");
+		lvert.add(mheader);
+
 		mlblError = new Label(" ");
-		mlblError.setStylePrimaryName("messageLine");
+		mlblError.setStylePrimaryName("filePopup-ErrorLine");
 		lvert.add(mlblError);
 
 		mfrmMain = new FormPanel();
@@ -48,29 +54,29 @@ public class FilePopup
 		mfupMain.setStylePrimaryName("formControl filePopup-Upload");
 		mfrmMain.setWidget(mfupMain);
 
-		lhorz = new HorizontalPanel();
-		lhorz.setStylePrimaryName("filePopup-Buttonbar");
 		mbtnOk = new Button();
 		mbtnOk.setText("Ok");
-		lhorz.add(mbtnOk);
+		mbtnOk.setStylePrimaryName("filePopup-Ok");
+		lvert.add(mbtnOk);
 		mbtnOk.getElement().getParentElement().setClassName("filePopup-Ok-Wrapper");
-		mbtnCancel = new Button();
-		mbtnCancel.setText("Cancel");
-		lhorz.add(mbtnCancel);
-		mbtnCancel.getElement().getParentElement().setClassName("filePopup-Cancel-Wrapper");
-		lvert.add(lhorz);
 
 		setWidget(lvert);
 
+		mheader.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				hide();
+	        }
+		});
 		mfrmMain.addSubmitCompleteHandler(new SubmitCompleteHandler()
 		{
 			public void onSubmitComplete(SubmitCompleteEvent event)
 			{
 				String lstrResults;
 
+				mheader.setEnabled(true);
 				mbtnOk.setEnabled(true);
-				mbtnCancel.setEnabled(true);
-
 				lstrResults = event.getResults();
 				if ( lstrResults.startsWith("!") )
 				{
@@ -86,19 +92,12 @@ public class FilePopup
 		{
 			public void onClick(ClickEvent event)
 	        {
+				mheader.setEnabled(false);
 				mbtnOk.setEnabled(false);
-				mbtnCancel.setEnabled(false);
 				SetError(null);
 				mfrmMain.submit();
 	        }
 	    });
-		mbtnCancel.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-	        {
-				hide();
-	        }
-		});
 	}
 
 	public void SetKey(String pstrKey)

@@ -8,22 +8,16 @@ public class ClosableHeader
 	extends Composite
 	implements HasClickHandlers
 {
-	Button mbtnClose;
+	private Button mbtnClose;
+	private Label mlblHeader;
 
 	public ClosableHeader(String pstrText)
 	{
 		HorizontalPanel linner;
-		Label llbl;
 		
 		linner = new HorizontalPanel();
 		linner.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		linner.setStylePrimaryName("closableHeader");
-
-		llbl = new Label(pstrText);
-		llbl.setStylePrimaryName("closableHeader-Label");
-		llbl.setWordWrap(false);
-		linner.add(llbl);
-		llbl.getElement().getParentElement().setClassName("closableHeader-Label-Wrapper");
 
 		mbtnClose = new Button();
 		mbtnClose.setText("Close");
@@ -31,7 +25,23 @@ public class ClosableHeader
 		linner.add(mbtnClose);
 		mbtnClose.getElement().getParentElement().setClassName("closableHeader-CloseButton-Wrapper");
 
+		mlblHeader = new Label(pstrText);
+		mlblHeader.setStylePrimaryName("closableHeader-Label");
+		mlblHeader.setWordWrap(false);
+		linner.add(mlblHeader);
+		mlblHeader.getElement().getParentElement().setClassName("closableHeader-Label-Wrapper");
+
 		initWidget(linner);
+	}
+	
+	public void setEnabled(boolean enabled)
+	{
+		mbtnClose.setEnabled(enabled);
+	}
+
+	public void SetText(String pstrText)
+	{
+		mlblHeader.setText(pstrText);
 	}
 
 	public HandlerRegistration addClickHandler(ClickHandler handler)
