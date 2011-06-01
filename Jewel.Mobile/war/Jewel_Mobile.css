@@ -112,6 +112,7 @@ select
 
 .errorPopup
 {
+	margin: 5px 0 0 5px;
 }
 
 .errorPopup-Glass
@@ -181,7 +182,6 @@ select
 
 .closableHeader
 {
-	width: 100%;
 	margin: 0 0 5px;
 }
 
@@ -650,22 +650,9 @@ select
 	padding: 0 0 5px 0;
 }
 
-.multiEditor-Edit-Wrapper
-{
-	width: 0px;
-}
-
-.multiEditor-Edit
-{
-	cursor: pointer;
-	padding: 2px 5px;
-	width: 100px;
-}
-
 .multiEditor-Save-Wrapper
 {
 	width: 0px;
-	padding: 0 5px;
 }
 
 .multiEditor-Save
@@ -678,6 +665,7 @@ select
 .multiEditor-Cancel-Wrapper
 {
 	width: 0px;
+	padding: 0 5px;
 }
 
 .multiEditor-Cancel
@@ -690,7 +678,6 @@ select
 .multiEditor-Delete-Wrapper
 {
 	width: 0px;
-	padding: 0 5px;
 }
 
 .multiEditor-Delete

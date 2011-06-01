@@ -1,4 +1,4 @@
-package Jewel.Mobile.client;
+package Jewel.Mobile.client.controls;
 
 import com.google.gwt.user.client.ui.*;
 

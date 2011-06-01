@@ -1,14 +1,19 @@
 package Jewel.Mobile.client;
 
-import Jewel.Mobile.client.events.*;
-import Jewel.Mobile.interfaces.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Mobile.client.controls.IDButton;
+import Jewel.Mobile.client.events.ActionEvent;
+import Jewel.Mobile.interfaces.CommandSetService;
+import Jewel.Mobile.interfaces.CommandSetServiceAsync;
+import Jewel.Mobile.shared.CommandObj;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 public class CommandSet
 	extends Composite
@@ -16,18 +21,33 @@ public class CommandSet
 {
 	private CommandSetServiceAsync cmdSvc;
 
+	private boolean mbInit;
+	private boolean mbEnabled;
+
 	private FlowPanel mtblPanel;
+	private IDButton[] marrButtons;
 
 	private HandlerManager mrefEventMgr;
 
 	public CommandSet()
 	{
+		mbInit = false;
+		mbEnabled = false;
+
 		mtblPanel = new FlowPanel();
 		mtblPanel.setStylePrimaryName("commandSet");
 
 		initWidget(mtblPanel);
 
 		mrefEventMgr = new HandlerManager(this);
+	}
+
+	private CommandSetServiceAsync getService()
+	{
+		if ( cmdSvc == null )
+			cmdSvc = GWT.create(CommandSetService.class);
+
+		return cmdSvc;
 	}
 
 	public void InitSet(String pstrFormID)
@@ -39,6 +59,7 @@ public class CommandSet
 				if (result != null)
 				{
 					BuildSet(result);
+					mbInit = true;
 				}
 				else
 				{
@@ -57,28 +78,33 @@ public class CommandSet
 
         getService().GetCommands(pstrFormID, callback);
 	}
-
-	private CommandSetServiceAsync getService()
+	
+	void setEnabled(boolean enabled)
 	{
-		if ( cmdSvc == null )
-			cmdSvc = GWT.create(CommandSetService.class);
+		int i;
 
-		return cmdSvc;
+		mbEnabled = enabled;
+
+		if ( mbInit )
+			for ( i = 0; i < marrButtons.length; i++ )
+				marrButtons[i].setEnabled(enabled);
 	}
 
 	private void BuildSet(CommandObj[] parrActions)
 	{
-		IDButton lbtnAux;
 		int i;
+
+		marrButtons = new IDButton[parrActions.length];
 
 		for ( i = 0; i < parrActions.length; i++ )
 		{
-			lbtnAux = new IDButton(i);
-			lbtnAux.setText(parrActions[i].mstrCaption);
-			lbtnAux.setStylePrimaryName("commandSet-Command");
-			mtblPanel.add(lbtnAux);
+			marrButtons[i] = new IDButton(i);
+			marrButtons[i].setText(parrActions[i].mstrCaption);
+			marrButtons[i].setEnabled(mbEnabled);
+			marrButtons[i].setStylePrimaryName("commandSet-Command");
+			mtblPanel.add(marrButtons[i]);
 
-			lbtnAux.addClickHandler(new ClickHandler()
+			marrButtons[i].addClickHandler(new ClickHandler()
 			{
 				public void onClick(ClickEvent event)
 		        {

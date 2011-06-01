@@ -1,17 +1,21 @@
 package Jewel.Mobile.client;
 
-import Jewel.Mobile.client.events.*;
-import Jewel.Mobile.interfaces.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Mobile.client.events.ActionEvent;
+import Jewel.Mobile.client.events.InitEvent;
+import Jewel.Mobile.interfaces.EditorFormService;
+import Jewel.Mobile.interfaces.EditorFormServiceAsync;
+import Jewel.Mobile.shared.CommandResponse;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class EditorForm
 	extends Composite
-	implements ClosableContent, ActionEvent.HasEvent
+	implements ClosableContent, InitEvent.HasEvent, ActionEvent.HasEvent
 {
 	private EditorFormServiceAsync formSvc;
 
@@ -40,6 +44,15 @@ public class EditorForm
 		msetCommands.getElement().getParentElement().setClassName("editorForm-Commands-Wrapper");
 
 		initWidget(louter);
+
+		mfrmData.addInitHandler(new InitEvent.Handler()
+		{
+			public void onInit(InitEvent event)
+			{
+				msetCommands.setEnabled(true);
+				mrefEventMgr.fireEvent(event);
+			}
+		});
 
 		msetCommands.addActionHandler(new ActionEvent.Handler()
 		{
@@ -116,6 +129,11 @@ public class EditorForm
 	public void DoClose()
 	{
 		mfrmData.DoClose();
+	}
+
+	public HandlerRegistration addInitHandler(InitEvent.Handler handler)
+	{
+		return mrefEventMgr.addHandler(InitEvent.TYPE, handler);
 	}
 
 	public HandlerRegistration addActionHandler(ActionEvent.Handler handler)

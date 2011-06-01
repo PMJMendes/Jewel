@@ -20,11 +20,13 @@ public class MultiEditor
 	private String mstrViewID;
 	private String mstrNameSpace;
 	private DataObject mobjDataCache;
+	private int mlngInitCount;
+	private boolean mbInit;
+	private boolean mbEnabled;
 	private int mlngSelected;
 
 	HorizontalPanel mpnToolbar;
 	private ListBox mlbxSelector;
-    private Button mbtnEdit;
     private Button mbtnSave;
     private Button mbtnCancel;
     private Button mbtnDelete;
@@ -36,6 +38,9 @@ public class MultiEditor
 	{
 		VerticalPanel louter;
 
+		mbInit = false;
+		mbEnabled = true;
+
 		louter = new VerticalPanel();
 		louter.setStylePrimaryName("multiEditor");
 
@@ -44,36 +49,31 @@ public class MultiEditor
 		louter.add(mpnToolbar);
 		mpnToolbar.getElement().getParentElement().setClassName("multiEditor-Toolbar-Wrapper");
 
-		mbtnEdit = new Button("Edit");
-		mbtnEdit.setStylePrimaryName("multiEditor-Edit");
-		mpnToolbar.add(mbtnEdit);
-		mbtnEdit.getElement().getParentElement().setClassName("multiEditor-Edit-Wrapper");
 		mbtnSave = new Button("Save");
 		mbtnSave.setStylePrimaryName("multiEditor-Save");
-		mbtnSave.setEnabled(false);
 		mpnToolbar.add(mbtnSave);
 		mbtnSave.getElement().getParentElement().setClassName("multiEditor-Save-Wrapper");
-		mbtnCancel = new Button("Cancel");
-		mbtnCancel.setEnabled(false);
+		mbtnCancel = new Button("Revert");
 		mbtnCancel.setStylePrimaryName("multiEditor-Cancel");
 		mpnToolbar.add(mbtnCancel);
 		mbtnCancel.getElement().getParentElement().setClassName("multiEditor-Cancel-Wrapper");
 		mbtnDelete = new Button("Delete");
 		mbtnDelete.setStylePrimaryName("multiEditor-Delete");
-		mbtnDelete.setEnabled(false);
 		mpnToolbar.add(mbtnDelete);
 		mbtnDelete.getElement().getParentElement().setClassName("multiEditor-Delete-Wrapper");
 
 		mlbxSelector = new ListBox();
 		mlbxSelector.setStylePrimaryName("multiEditor-Selector");
+		mlbxSelector.setVisible(false);
 		louter.add(mlbxSelector);
 		mlbxSelector.getElement().getParentElement().setClassName("multiEditor-SelectorWrapper");
-		mlbxSelector.setVisible(false);
 
 		mpnContent = new HorizontalPanel();
 		mpnContent.setStylePrimaryName("multiEditor-Content");
 		louter.add(mpnContent);
 		mpnContent.getElement().getParentElement().setClassName("multiEditor-Content-Wrapper");
+
+		ResetButtons();
 
 		initWidget(louter);
 		
@@ -84,35 +84,20 @@ public class MultiEditor
 				DoChangeView();
 			}
 		});
-		mbtnEdit.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-	        {
-				mbtnEdit.setEnabled(false);
-				mbtnSave.setEnabled(true);
-				mbtnCancel.setEnabled(true);
-				mbtnDelete.setEnabled(true);
-	        }
-	    });
 		mbtnSave.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 	        {
-				mbtnSave.setEnabled(false);
-				mbtnCancel.setEnabled(false);
-				mbtnDelete.setEnabled(false);
-				SaveData();
+				mbEnabled = false;
+				ResetButtons();
+				mrefEventMgr.fireEvent(new SaveEvent());
 	        }
 	    });
 		mbtnCancel.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
-				mbtnSave.setEnabled(false);
-				mbtnCancel.setEnabled(false);
-				mbtnDelete.setEnabled(false);
 				LoadData(mobjDataCache);
-				mbtnEdit.setEnabled(true);
 			}
 		});
 		mbtnDelete.addClickHandler(new ClickHandler()
@@ -122,10 +107,9 @@ public class MultiEditor
 				if ( !Window.confirm("Are you sure you wish to delete this entry?") )
 					return;
 
-				mbtnSave.setEnabled(false);
-				mbtnCancel.setEnabled(false);
-				mbtnDelete.setEnabled(false);
-				DeleteRow();
+				mbEnabled = false;
+				ResetButtons();
+				mrefEventMgr.fireEvent(new DeleteEvent());
 	        }
 	    });
 
@@ -204,12 +188,10 @@ public class MultiEditor
 		return lobjData;
 	}
 
-	public void ResetButtons()
+	public void EnableButtons()
 	{
-		mbtnEdit.setEnabled(true);
-		mbtnSave.setEnabled(false);
-		mbtnCancel.setEnabled(false);
-		mbtnDelete.setEnabled(false);
+		mbEnabled = true;
+		ResetButtons();
 	}
 
 	public boolean TryGoBack()
@@ -231,6 +213,8 @@ public class MultiEditor
 		if ( prefResult.marrTabs.length == 0 )
 			return;
 
+		mlngInitCount = prefResult.marrTabs.length;
+
 		for ( i = 0; i < prefResult.marrTabs.length; i++ )
 		{
 			if ( prefResult.marrTabs[i].mlngType == TabObj.FORMTAB )
@@ -240,6 +224,18 @@ public class MultiEditor
 				lform.setVisible(i == 0);
 				lform.InitForm(prefResult.marrTabs[i].mstrID, mstrNameSpace, pobjData.marrData[i], i);
 				mlbxSelector.addItem(prefResult.marrTabs[i].mstrCaption);
+				lform.addInitHandler(new InitEvent.Handler()
+				{
+					public void onInit(InitEvent event)
+					{
+						mlngInitCount--;
+						if ( mlngInitCount <= 0 )
+						{
+							mbInit = true;
+							ResetButtons();
+						}
+					}
+				});
 				lform.addActionHandler(new ActionEvent.Handler()
 				{
 					public void onAction(ActionEvent event)
@@ -255,6 +251,18 @@ public class MultiEditor
 				lgrid.setVisible(i == 0);
 				lgrid.InitGrid(null, prefResult.marrTabs[i].mstrID, mstrNameSpace, true, pobjData.mstrID, null, null, null);
 				mlbxSelector.addItem(prefResult.marrTabs[i].mstrCaption);
+				lgrid.addInitHandler(new InitEvent.Handler()
+				{
+					public void onInit(InitEvent event)
+					{
+						mlngInitCount--;
+						if ( mlngInitCount <= 0 )
+						{
+							mbInit = true;
+							ResetButtons();
+						}
+					}
+				});
 				lgrid.addSelectHandler(new SelectEvent.Handler()
 				{
 					public void onSelect(SelectEvent event)
@@ -276,11 +284,18 @@ public class MultiEditor
 
 		if ( prefResult.marrTabs.length > 1 )
 		{
-			mlbxSelector.setVisible(true);
 			mlbxSelector.setSelectedIndex(0);
+			mlbxSelector.setVisible(true);
 		}
 	}
-	
+
+	private void ResetButtons()
+	{
+		mbtnSave.setEnabled(mbEnabled && mbInit);
+		mbtnCancel.setEnabled(mbEnabled && mbInit);
+		mbtnDelete.setEnabled(mbEnabled && mbInit);
+	}
+
 	private void DoChangeView()
 	{
 		if ( mlbxSelector.getSelectedIndex() == mlngSelected )
@@ -289,16 +304,6 @@ public class MultiEditor
 		mpnContent.getWidget(mlngSelected).setVisible(false);
 		mlngSelected = mlbxSelector.getSelectedIndex();
 		mpnContent.getWidget(mlngSelected).setVisible(true);
-	}
-
-	private void SaveData()
-	{
-		mrefEventMgr.fireEvent(new SaveEvent());
-	}
-
-	private void DeleteRow()
-	{
-		mrefEventMgr.fireEvent(new DeleteEvent());
 	}
 
 	public void DoClose()
@@ -317,7 +322,7 @@ public class MultiEditor
 		return mrefEventMgr.addHandler(ActionEvent.TYPE, handler);
 	}
 
-	public HandlerRegistration addSaveRowHandler(SaveEvent.Handler handler)
+	public HandlerRegistration addSaveHandler(SaveEvent.Handler handler)
 	{
 		return mrefEventMgr.addHandler(SaveEvent.TYPE, handler);
 	}

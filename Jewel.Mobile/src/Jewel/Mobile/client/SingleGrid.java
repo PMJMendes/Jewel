@@ -1,14 +1,23 @@
 package Jewel.Mobile.client;
 
-import Jewel.Mobile.client.events.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Mobile.client.events.ActionEvent;
+import Jewel.Mobile.client.events.CancelEvent;
+import Jewel.Mobile.client.events.DeleteEvent;
+import Jewel.Mobile.client.events.InitEvent;
+import Jewel.Mobile.client.events.OkEvent;
+import Jewel.Mobile.client.events.SaveEvent;
+import Jewel.Mobile.client.events.SelectEvent;
+import Jewel.Mobile.shared.DataObject;
+import Jewel.Mobile.shared.ParamInfo;
 
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SingleGrid
 	extends Composite
-	implements ClosableContent, SelectEvent.HasEvent, CancelEvent.HasEvent
+	implements ClosableContent, InitEvent.HasEvent, SelectEvent.HasEvent, CancelEvent.HasEvent
 {
 	private boolean mbForPopup;
 	private String mstrSearchFormID;
@@ -50,6 +59,14 @@ public class SingleGrid
 				doApplySearch();
 			}
 		});
+
+		mgrdTable.addInitHandler(new InitEvent.Handler()
+		{
+			public void onInit(InitEvent event)
+			{
+				mrefEventMgr.fireEvent(event);
+			}
+		});
 		mgrdTable.addOkHandler(new OkEvent.Handler()
 		{
 			public void onOk(OkEvent event)
@@ -64,6 +81,22 @@ public class SingleGrid
 				if ( !mbForPopup )
 					LoadEditor(event.getResult());
 				mrefEventMgr.fireEvent(event);
+			}
+		});
+		mgrdTable.addSaveHandler(new SaveEvent.Handler()
+		{
+			public void onSave(SaveEvent event)
+			{
+				mdvEditor.EnableButtons();
+				HideEditor();
+			}
+		});
+		mgrdTable.addDeleteRowHandler(new DeleteEvent.Handler()
+		{
+			public void onDelete(DeleteEvent event)
+			{
+				mdvEditor.EnableButtons();
+				HideEditor();
 			}
 		});
 
@@ -92,11 +125,6 @@ public class SingleGrid
 
 		mgrdTable.setVisible(false);
 		mdvEditor.setVisible(true);
-	}
-
-	public int GetSelected()
-	{
-		return mgrdTable.GetSelected();
 	}
 
 	public boolean TryGoBack()
@@ -148,23 +176,6 @@ public class SingleGrid
 		mrefEventMgr.fireEvent(new CancelEvent());
 	}
 
-	private void DoAction(int plngOrder, int plngAction)
-	{
-		mgrdTable.DoAction(plngOrder, plngAction, mdvEditor.GetData());
-	}
-
-	private void SaveData()
-	{
-		mgrdTable.SaveData(mdvEditor.GetData());
-		HideEditor();
-	}
-
-	private void DeleteRow()
-	{
-		mgrdTable.DeleteRow();
-		HideEditor();
-	}
-
 	private void BuildEditor(DataObject pobjData)
 	{
 		if ( mdvEditor != null )
@@ -179,21 +190,21 @@ public class SingleGrid
 		{
 			public void onAction(ActionEvent event)
 			{
-				DoAction(event.GetOrder(), event.GetAction());
+				mgrdTable.DoAction(event.GetOrder(), event.GetAction(), mdvEditor.GetData());
 			}
 		});
-		mdvEditor.addSaveRowHandler(new SaveEvent.Handler()
+		mdvEditor.addSaveHandler(new SaveEvent.Handler()
 		{
 			public void onSave(SaveEvent event)
 			{
-				SaveData();
+				mgrdTable.SaveData(mdvEditor.GetData());
 			}
 		});
 		mdvEditor.addDeleteRowHandler(new DeleteEvent.Handler()
 		{
 			public void onDelete(DeleteEvent event)
 			{
-				DeleteRow();
+				mgrdTable.DeleteRow();
 			}
 		});
 	}
@@ -215,6 +226,11 @@ public class SingleGrid
 		UnloadEditor();
 		mfrmSearch.DoClose();
 		mgrdTable.DoClose();
+	}
+
+	public HandlerRegistration addInitHandler(InitEvent.Handler handler)
+	{
+		return mrefEventMgr.addHandler(InitEvent.TYPE, handler);
 	}
 
 	public HandlerRegistration addSelectHandler(SelectEvent.Handler handler)

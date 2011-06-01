@@ -13,7 +13,7 @@ public class SaveEvent
 
 	public static interface HasEvent
 	{
-		public HandlerRegistration addSaveRowHandler(Handler handler);
+		public HandlerRegistration addSaveHandler(Handler handler);
 	}
 
 	public static final Type<Handler> TYPE = new Type<Handler>();

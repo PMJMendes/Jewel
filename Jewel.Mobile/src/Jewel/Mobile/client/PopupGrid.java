@@ -54,6 +54,7 @@ public class PopupGrid
 		mbtnEmpty = new Button();
 		mbtnEmpty.setText("Select (empty)");
 		mbtnEmpty.setStylePrimaryName("popupGrid-Empty");
+		mbtnEmpty.setEnabled(false);
 		mhorzResults.add(mbtnEmpty);
 		mbtnEmpty.getElement().getParentElement().addClassName("popupGrid-Empty-Wrapper");
 		mbtnDetails = new Button();
@@ -88,13 +89,20 @@ public class PopupGrid
 	        }
 	    });
 
+		mgrdTable.addInitHandler(new InitEvent.Handler()
+		{
+			public void onInit(InitEvent event)
+			{
+				mbtnEmpty.setEnabled(true);
+			}
+		});
 		mgrdTable.addSelectHandler(new SelectEvent.Handler()
 		{
 			public void onSelect(SelectEvent event)
 			{
+				mobjData = event.getResult();
 				mbtnDetails.setEnabled(true);
 				mbtnSelect.setEnabled(true);
-				mobjData = event.getResult();
 			}
 		});
 

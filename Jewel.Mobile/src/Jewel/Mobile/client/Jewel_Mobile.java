@@ -86,6 +86,6 @@ public class Jewel_Mobile
 
 	public void showError(String pstrError)
 	{
-		new MessageBox(pstrError).center();
+		new MessageBox(pstrError).show();
 	}
 }

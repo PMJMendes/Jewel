@@ -11,6 +11,8 @@ public class SearchForm
 	implements ClosableContent, OkEvent.HasEvent
 {
 	private SimpleForm mfrmSearch;
+	private Button mbtnSearch;
+	private Button mbtnClear;
 
 	private HandlerManager mrefEventMgr;
 
@@ -18,8 +20,6 @@ public class SearchForm
 	{
 		VerticalPanel lpnOuter;
 		HorizontalPanel lpnInner;
-		Button lbtnClear;
-		Button lbtnSearch;
 
 		lpnOuter = new VerticalPanel();
 		lpnOuter.setStylePrimaryName("searchForm");
@@ -33,27 +33,37 @@ public class SearchForm
 		lpnOuter.add(lpnInner);
 		lpnInner.getElement().getParentElement().setClassName("searchForm-Toolbar-Wrapper");
 
-		lbtnSearch = new Button();
-		lbtnSearch.setText("Search");
-		lbtnSearch.setStylePrimaryName("searchForm-SearchButton");
-		lpnInner.add(lbtnSearch);
-		lbtnSearch.getElement().getParentElement().setClassName("searchForm-SearchButton-Wrapper");
-		lbtnClear = new Button();
-		lbtnClear.setText("Clear");
-		lbtnClear.setStylePrimaryName("searchForm-ClearButton");
-		lpnInner.add(lbtnClear);
-		lbtnClear.getElement().getParentElement().setClassName("searchForm-ClearButton-Wrapper");
+		mbtnSearch = new Button();
+		mbtnSearch.setText("Search");
+		mbtnSearch.setStylePrimaryName("searchForm-SearchButton");
+		mbtnSearch.setEnabled(false);
+		lpnInner.add(mbtnSearch);
+		mbtnSearch.getElement().getParentElement().setClassName("searchForm-SearchButton-Wrapper");
+		mbtnClear = new Button();
+		mbtnClear.setText("Clear");
+		mbtnClear.setStylePrimaryName("searchForm-ClearButton");
+		mbtnClear.setEnabled(false);
+		lpnInner.add(mbtnClear);
+		mbtnClear.getElement().getParentElement().setClassName("searchForm-ClearButton-Wrapper");
 
 		initWidget(lpnOuter);
 
-		lbtnClear.addClickHandler(new ClickHandler()
+		mfrmSearch.addInitHandler(new InitEvent.Handler()
+		{
+			public void onInit(InitEvent event)
+			{
+				mbtnSearch.setEnabled(true);
+				mbtnClear.setEnabled(true);
+			}
+		});
+		mbtnClear.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 	        {
 				mfrmSearch.ClearData();
 	        }
 	     });
-		lbtnSearch.addClickHandler(new ClickHandler()
+		mbtnSearch.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 	        {

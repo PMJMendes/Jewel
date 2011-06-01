@@ -1,5 +1,6 @@
 package Jewel.Mobile.client;
 
+import Jewel.Mobile.client.events.InitEvent;
 import Jewel.Mobile.interfaces.ReportService;
 import Jewel.Mobile.interfaces.ReportServiceAsync;
 import Jewel.Mobile.shared.ReportID;
@@ -24,12 +25,12 @@ public class SimpleReport
 	private String mstrFormID;
 
 	private SimpleForm mfrmParams;
+	private Button mbtnOpenReport;
 
 	public SimpleReport(String pstrText)
 	{
 		VerticalPanel lvert;
 		ClosableHeader lheader;
-		Button lbtn;
 
 		lvert = new VerticalPanel();
 		lvert.setStylePrimaryName("simpleReport");
@@ -42,11 +43,12 @@ public class SimpleReport
 		lvert.add(mfrmParams);
 		mfrmParams.getElement().getParentElement().setClassName("simpleReport-Form-Wrapper");
 
-		lbtn = new Button();
-		lbtn.setText("Open Report");
-		lbtn.setStylePrimaryName("simpleReport-Open");
-		lvert.add(lbtn);
-		lbtn.getElement().getParentElement().setClassName("simpleReport-Open-Wrapper");
+		mbtnOpenReport = new Button();
+		mbtnOpenReport.setText("Open Report");
+		mbtnOpenReport.setStylePrimaryName("simpleReport-Open");
+		mbtnOpenReport.setEnabled(false);
+		lvert.add(mbtnOpenReport);
+		mbtnOpenReport.getElement().getParentElement().setClassName("simpleReport-Open-Wrapper");
 
 		initWidget(lvert);
 
@@ -58,7 +60,15 @@ public class SimpleReport
 	        }
 	    });
 
-		lbtn.addClickHandler(new ClickHandler()
+		mfrmParams.addInitHandler(new InitEvent.Handler()
+		{
+			public void onInit(InitEvent event)
+			{
+				mbtnOpenReport.setEnabled(true);
+			}
+		});
+
+		mbtnOpenReport.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 	        {

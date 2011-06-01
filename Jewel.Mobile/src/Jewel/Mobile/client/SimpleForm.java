@@ -20,6 +20,7 @@ public class SimpleForm
 	private String mstrNameSpace;
 	private String[] marrTmpData;
 	private ParamInfo[] marrExtParams;
+	private boolean mbInit;
 
 	private Grid mtblForm;
 	private IJewelMobileCtl[] marrControls;
@@ -28,6 +29,8 @@ public class SimpleForm
 
 	public SimpleForm()
 	{
+		mbInit = false;
+
 		mtblForm = new Grid();
 		mtblForm.setCellSpacing(5);
 		mtblForm.setCellPadding(0);
@@ -55,6 +58,7 @@ public class SimpleForm
 				if (result != null)
 				{
 					BuildForm(result);
+					mbInit = true;
 					if ( marrTmpData != null )
 					{
 						SetData(marrTmpData);
@@ -88,6 +92,9 @@ public class SimpleForm
 		String[] marrAux;
 		int i;
 
+		if ( !mbInit )
+			return new String[0];
+
 		marrAux = new String[marrControls.length];
 
 		for ( i = 0; i < marrControls.length; i++ )
@@ -100,6 +107,9 @@ public class SimpleForm
 	{
 		int i;
 
+		if ( !mbInit )
+			return;
+
 		for ( i = 0; i < marrControls.length; i++ )
 			marrControls[i].setJValue(parrData[i]);
 	}
@@ -108,6 +118,9 @@ public class SimpleForm
 	{
 		int i;
 
+		if ( !mbInit )
+			return;
+
 		for ( i = 0; i < marrControls.length; i++ )
 			marrControls[i].setJValue(null);
 	}
@@ -115,6 +128,9 @@ public class SimpleForm
 	public ParamInfo[] GetExternalParams()
 	{
 		int i;
+
+		if ( !mbInit )
+			return null;
 
 		if ( marrExtParams == null )
 			return null;

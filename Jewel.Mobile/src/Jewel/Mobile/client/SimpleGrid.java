@@ -1,19 +1,37 @@
 package Jewel.Mobile.client;
 
-import Jewel.Mobile.client.events.*;
-import Jewel.Mobile.interfaces.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Mobile.client.events.DeleteEvent;
+import Jewel.Mobile.client.events.InitEvent;
+import Jewel.Mobile.client.events.OkEvent;
+import Jewel.Mobile.client.events.SaveEvent;
+import Jewel.Mobile.client.events.SelectEvent;
+import Jewel.Mobile.interfaces.GridService;
+import Jewel.Mobile.interfaces.GridServiceAsync;
+import Jewel.Mobile.shared.DataObject;
+import Jewel.Mobile.shared.GridActionResponse;
+import Jewel.Mobile.shared.GridResponse;
+import Jewel.Mobile.shared.GridSaveResponse;
+import Jewel.Mobile.shared.ParamInfo;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.Style.*;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SimpleGrid
 	extends Composite
-	implements ClosableContent, SelectEvent.HasEvent, OkEvent.HasEvent
+	implements ClosableContent, InitEvent.HasEvent, SelectEvent.HasEvent, OkEvent.HasEvent, SaveEvent.HasEvent, DeleteEvent.HasEvent
 {
 	private GridServiceAsync gridSvc;
 
@@ -22,6 +40,7 @@ public class SimpleGrid
 	private int[] marrSort;
 	private int mlngSelected;
 	private int[] marrRows;
+	private boolean mbInit;
 
 	private VerticalPanel mpnMain;
 	private Grid mgrdTable;
@@ -39,6 +58,8 @@ public class SimpleGrid
 	{
 		HorizontalPanel lhorz;
 
+		mbInit = false;
+
 		mpnMain = new VerticalPanel();
 		mpnMain.setStylePrimaryName("simpleGrid");
 
@@ -49,11 +70,13 @@ public class SimpleGrid
 		mbtnSearch = new Button();
 		mbtnSearch.setText("Search");
 		mbtnSearch.setStylePrimaryName("simpleGrid-SearchButton");
+		mbtnSearch.setEnabled(false);
 		lhorz.add(mbtnSearch);
 		mbtnSearch.getElement().getParentElement().setClassName("simpleGrid-SearchButton-Wrapper");
 		mbtnNew = new Button();
 		mbtnNew.setText("New");
 		mbtnNew.setStylePrimaryName("simpleGrid-NewButton");
+		mbtnNew.setEnabled(false);
 		lhorz.add(mbtnNew);
 		mbtnNew.getElement().getParentElement().setClassName("simpleGrid-NewButton-Wrapper");
 
@@ -104,7 +127,7 @@ public class SimpleGrid
 		{
 			public void onClick(ClickEvent event)
 			{
-				doSearch();
+				mrefEventMgr.fireEvent(new OkEvent());
 			}
 		});
 		mbtnNew.addClickHandler(new ClickHandler()
@@ -175,6 +198,8 @@ public class SimpleGrid
 			        marrSort = new int[0];
 			        mlngSelected = result.mlngCurrRow;
 					RenderData(result);
+					mbtnSearch.setEnabled(true);
+					mbInit = true;
 					mrefEventMgr.fireEvent(new InitEvent());
 					if ( mlngSelected >= 0 )
 						DoSelect(-1);
@@ -225,6 +250,9 @@ public class SimpleGrid
 			}
         };
 
+        if ( !mbInit )
+        	return;
+
         getService().ReloadAt(mstrWorkspace, pbForceParam, pstrParam, callback);
 	}
 
@@ -253,6 +281,9 @@ public class SimpleGrid
 			}
         };
 
+        if ( !mbInit )
+        	return;
+
         getService().ApplySearch(mstrWorkspace, pstrFormID, parrData, callback);
 	}
 
@@ -265,6 +296,7 @@ public class SimpleGrid
 				if (result != null)
 				{
 					RenderRow(result.mlngRow, result.marrRow);
+					mrefEventMgr.fireEvent(new SaveEvent());
 				}
 				else
 				{
@@ -281,19 +313,23 @@ public class SimpleGrid
 			}
 		};
 
+		if ( !mbInit )
+			return;
+
 		getService().SaveRow(mstrWorkspace, mlngSelected, pobjData, callback);
 	}
 
 	public void DeleteRow()
 	{
 		AsyncCallback<GridResponse> callback = new AsyncCallback<GridResponse>()
-      {
+		{
 			public void onSuccess(GridResponse result)
 			{
 				if (result != null)
 				{
 			        mlngSelected = -1;
 					RenderData(result);
+					mrefEventMgr.fireEvent(new DeleteEvent());
 				}
 				else
 				{
@@ -308,7 +344,10 @@ public class SimpleGrid
 
 				Jewel_Mobile.getReference().showError(ex.getMessage());
 			}
-      };
+		};
+
+		if ( !mbInit )
+			return;
 
 		getService().DeleteRow(mstrWorkspace, mlngSelected, callback);
 	}
@@ -349,16 +388,6 @@ public class SimpleGrid
 		return mstrEditorID;
 	}
 	
-	public int GetSelected()
-	{
-		return mlngSelected;
-	}
-
-	private void doSearch()
-	{
-		mrefEventMgr.fireEvent(new OkEvent());
-	}
-
 	private void doNext()
 	{
 		AsyncCallback<GridResponse> callback = new AsyncCallback<GridResponse>()
@@ -767,6 +796,11 @@ public class SimpleGrid
 		getService().CloseQuery(mstrWorkspace, callback);
 	}
 
+	public HandlerRegistration addInitHandler(InitEvent.Handler handler)
+	{
+		return mrefEventMgr.addHandler(InitEvent.TYPE, handler);
+	}
+
 	public HandlerRegistration addSelectHandler(SelectEvent.Handler handler)
 	{
 		return mrefEventMgr.addHandler(SelectEvent.TYPE, handler);
@@ -775,5 +809,15 @@ public class SimpleGrid
 	public HandlerRegistration addOkHandler(OkEvent.Handler handler)
 	{
 		return mrefEventMgr.addHandler(OkEvent.TYPE, handler);
+	}
+
+	public HandlerRegistration addSaveHandler(SaveEvent.Handler handler)
+	{
+		return mrefEventMgr.addHandler(SaveEvent.TYPE, handler);
+	}
+
+	public HandlerRegistration addDeleteRowHandler(DeleteEvent.Handler handler)
+	{
+		return mrefEventMgr.addHandler(DeleteEvent.TYPE, handler);
 	}
 }
