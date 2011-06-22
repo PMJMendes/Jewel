@@ -71,6 +71,18 @@ public class PNProcess
 				larrAuxNodes.add((INode)PNNode.GetInstance(getNameSpace(), lrsNodes));
 			}
 			lrsNodes.close();
+			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelEngineException(e.getMessage(), e);
+		}
+
+		marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
+
+		try
+		{
+			ldb = new MasterDB();
 
 			larrMembers[0] = Constants.FKProcess_In_Step;
 			larrAuxSteps = new ArrayList<IStep>();
@@ -88,7 +100,6 @@ public class PNProcess
 			throw new JewelEngineException(e.getMessage(), e);
 		}
 
-		marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
 		marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
 	}
 
