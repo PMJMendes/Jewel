@@ -173,6 +173,64 @@ public class Entity
 		return lstrAux;
     }
 
+	public String SQLForSelectAll()
+	{
+		return SQLForSelect("[t1]");
+	}
+
+	public String SQLForSelectByKey(UUID pidKey)
+	{
+		return SQLForSelect("[t1]") + " WHERE [t1].[PK] = '" + pidKey.toString() + "'";
+	}
+
+	public String SQLForSelectByMembers(int[] parrMembers, java.lang.Object[] parrValues, int[] parrSorts)
+		throws JewelEngineException
+	{
+		String lstrAux;
+
+		if ((EntityGUIDs.E_ObjMember.equals(getKey())) && (parrMembers.length == 1) && (parrMembers[0] == Miscellaneous.FKObject_In_Member) && (parrValues[0] != null) &&
+				(parrSorts.length == 1) && (parrSorts[0] == Miscellaneous.NOrd_In_Member))
+			return SQLForSelect("[t1]") + SpecialSQL.ObjMemberBuild + "'" + ((UUID)parrValues[0]).toString() + "'" + SpecialSQL.ObjMemberSort;
+
+		lstrAux = SQLForSelect("[t1]");
+		if ( parrMembers.length > 0 )
+			lstrAux += " WHERE 1=1" + mrefObject.FilterByMembers("[t1]", parrMembers, parrValues);
+		if ( parrSorts.length >= 0 )
+			lstrAux += " ORDER BY " + mrefObject.OrderByMembers("[t1]", parrSorts) + "[t1].[_TSCreate]";
+
+		return lstrAux;
+	}
+
+	public String SQLForSelectForReports(String[] parrColAliases, String[] parrCriteria, String[] parrSorts)
+		throws JewelEngineException, SQLException
+	{
+        String lstrAux;
+		R<Integer> llngCurrTbl;
+        int i;
+
+        lstrAux = SQLForSelectMulti();
+
+        if (parrCriteria.length > 0)
+        {
+            lstrAux += " WHERE 1=1";
+            for (i = 0; i < parrCriteria.length; i++)
+            {
+        		llngCurrTbl = new R<Integer>(new Integer(1));
+                lstrAux += " AND " + mrefObject.ColumnForReportFilter(mrefSpace.getKey(), parrColAliases[i], "", llngCurrTbl, true) + parrCriteria[i];
+            }
+        }
+
+        if (parrSorts.length >= 0)
+        {
+            lstrAux += " ORDER BY ";
+            for (i = 0; i < parrSorts.length; i++)
+                lstrAux += parrSorts[i] + ", ";
+            lstrAux += "[t1].[_TSCreate]";
+        }
+
+		return lstrAux;
+	}
+
 	public UUID Insert(SQLServer pdb, java.lang.Object[] parrData)
 		throws SQLException, JewelEngineException
 	{
@@ -218,62 +276,25 @@ public class Entity
 	public ResultSet SelectAll(SQLServer pdb)
 		throws SQLException
 	{
-		return pdb.OpenRecordset(SQLForSelect("[t1]"));
+		return pdb.OpenRecordset(SQLForSelectAll());
 	}
 
 	public ResultSet SelectByKey(SQLServer pdb, UUID pidKey)
 		throws SQLException
 	{
-		return pdb.OpenRecordset(SQLForSelect("[t1]") + " WHERE [t1].[PK] = '" + pidKey.toString() + "'");
+		return pdb.OpenRecordset(SQLForSelectByKey(pidKey));
 	}
 
 	public ResultSet SelectByMembers(SQLServer pdb, int[] parrMembers, java.lang.Object[] parrValues, int[] parrSorts)
 		throws SQLException, JewelEngineException
 	{
-		String lstrAux;
-
-		if ((EntityGUIDs.E_ObjMember.equals(getKey())) && (parrMembers.length == 1) && (parrMembers[0] == Miscellaneous.FKObject_In_Member) && (parrValues[0] != null) &&
-				(parrSorts.length == 1) && (parrSorts[0] == Miscellaneous.NOrd_In_Member))
-			return pdb.OpenRecordset(SQLForSelect("[t1]") + SpecialSQL.ObjMemberBuild + "'" + ((UUID)parrValues[0]).toString() +
-					"'" + SpecialSQL.ObjMemberSort);
-
-		lstrAux = SQLForSelect("[t1]");
-		if ( parrMembers.length > 0 )
-			lstrAux += " WHERE 1=1" + mrefObject.FilterByMembers("[t1]", parrMembers, parrValues);
-		if ( parrSorts.length >= 0 )
-			lstrAux += " ORDER BY " + mrefObject.OrderByMembers("[t1]", parrSorts) + "[t1].[_TSCreate]";
-
-		return pdb.OpenRecordset(lstrAux);
+		return pdb.OpenRecordset(SQLForSelectByMembers(parrMembers, parrValues, parrSorts));
     }
 
     public ResultSet SelectForReports(SQLServer pdb, String[] parrColAliases, String[] parrCriteria, String[] parrSorts)
     	throws SQLException, JewelEngineException
     {
-        String lstrAux;
-		R<Integer> llngCurrTbl;
-        int i;
-
-        lstrAux = SQLForSelectMulti();
-
-        if (parrCriteria.length > 0)
-        {
-            lstrAux += " WHERE 1=1";
-            for (i = 0; i < parrCriteria.length; i++)
-            {
-        		llngCurrTbl = new R<Integer>(new Integer(1));
-                lstrAux += " AND " + mrefObject.ColumnForReportFilter(mrefSpace.getKey(), parrColAliases[i], "", llngCurrTbl, true) + parrCriteria[i];
-            }
-        }
-
-        if (parrSorts.length >= 0)
-        {
-            lstrAux += " ORDER BY ";
-            for (i = 0; i < parrSorts.length; i++)
-                lstrAux += parrSorts[i] + ", ";
-            lstrAux += "[t1].[_TSCreate]";
-        }
-
-        return pdb.OpenRecordset(lstrAux);
+        return pdb.OpenRecordset(SQLForSelectForReports(parrColAliases, parrCriteria, parrSorts));
     }
 
 	public void CreateTable(SQLServer pdb)

@@ -271,7 +271,6 @@ public class ObjMember
             if (getAt(6) != null)
             {
                 lrefEntity = (IEntity)Entity.GetInstance(Engine.FindEntity(pidNSpace, (UUID)getAt(6)));
-
                 lstrAux = lrefEntity.SQLColumnForReportFilter(pstrAlias, pstrColPrefix + ":" + (String)getAt(2), plngNextTbl, false);
             }
         }

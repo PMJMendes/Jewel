@@ -16,6 +16,10 @@ public interface IEntity
     String SQLColumnForReportFilter(String pstrAlias, String pstrColPrefix, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
 	String SQLForSelectMulti() throws JewelEngineException, SQLException;
     String SQLForSelectMultiFiltered(int[] parrMembers, Object[] parrValues) throws JewelEngineException, SQLException;
+    String SQLForSelectAll();
+    String SQLForSelectByKey(UUID pidKey);
+    String SQLForSelectByMembers(int[] parrMembers, Object[] parrValues, int[] parrSorts) throws JewelEngineException;
+    String SQLForSelectForReports(String[] parrColAliases, String[] parrCriteria, String[] parrSorts) throws JewelEngineException, SQLException;
 
 	UUID Insert(SQLServer pdb, Object[] parrData) throws SQLException, JewelEngineException;
 	void Update(SQLServer pdb, UUID pidKey, Object[] parrData) throws SQLException, JewelEngineException;
