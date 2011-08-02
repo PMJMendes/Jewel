@@ -17,6 +17,7 @@ public class Constants
     public static final UUID ObjID_PNLog        = UUID.fromString("F63454DC-B63C-44EC-9E5E-9E1A01004BDB");
 
     public static final int FKScript_In_Operation  = 1;
+    public static final int FKSourceOp_In_Operation  = 4;
     public static final int FKScript_In_Controller = 1;
     public static final int FKOperation_In_Sink = 1;
     public static final int FKOperation_In_Source = 0;

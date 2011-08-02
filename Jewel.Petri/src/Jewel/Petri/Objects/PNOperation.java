@@ -22,6 +22,7 @@ public class PNOperation
 	private IController[] marrInputs;
 	private IController[] marrOutputs;
 	private IPermission[] marrPermissions;
+	private IOperation mrefUndoOp;
     private Class<?> mrefClass;
     private Constructor<?> mrefConst;
 
@@ -55,11 +56,12 @@ public class PNOperation
 		throws JewelEngineException
 	{
 		MasterDB ldb;
-		ResultSet lrsInputs, lrsOutputs;
-		IEntity lrefSink, lrefSource;
+		ResultSet lrsInputs, lrsOutputs, lrsPerms, lrsOperations;
+		IEntity lrefSink, lrefSource, lrefPerm, lrefOperation;
 		int[] larrMembers;
 		java.lang.Object[] larrParams;
 		ArrayList<IController> larrAux;
+		ArrayList<IPermission> larrAux2;
 
 		mrefClass = null;
 		mrefConst = null;
@@ -111,6 +113,50 @@ public class PNOperation
 		{
 			throw new JewelEngineException(e.getMessage(), e);
 		}
+
+		larrAux2 = new ArrayList<IPermission>();
+
+		larrMembers = new int[1];
+		larrMembers[0] = Constants.FKOperation_In_Permission;
+		larrParams = new java.lang.Object[1];
+		larrParams[0] = getKey();
+
+		try
+		{
+			lrefPerm = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNPermission));
+			ldb = new MasterDB();
+			lrsPerms = lrefPerm.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+			while ( lrsPerms.next() )
+				larrAux2.add((IPermission)PNPermission.GetInstance(getNameSpace(), lrsPerms));
+			lrsPerms.close();
+			ldb.Disconnect();
+
+			marrPermissions = larrAux2.toArray(new IPermission[larrAux.size()]);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelEngineException(e.getMessage(), e);
+		}
+
+		larrMembers = new int[1];
+		larrMembers[0] = Constants.FKSourceOp_In_Operation;
+		larrParams = new java.lang.Object[1];
+		larrParams[0] = getKey();
+
+		try
+		{
+			lrefOperation = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNPermission));
+			ldb = new MasterDB();
+			lrsOperations = lrefOperation.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+			if ( lrsOperations.next() )
+				mrefUndoOp = (IOperation)PNOperation.GetInstance(getNameSpace(), lrsOperations);
+			lrsOperations.close();
+			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelEngineException(e.getMessage(), e);
+		}
 	}
 
     public UUID GetScriptID()
@@ -140,45 +186,11 @@ public class PNOperation
 	}
 
 	public boolean checkPermission(UUID pidProfile)
-		throws JewelPetriException
 	{
-		MasterDB ldb;
-		ResultSet lrsPerms;
-		IEntity lrefPerm;
-		int[] larrMembers;
-		java.lang.Object[] larrParams;
-		ArrayList<IPermission> larrAux;
 		int i;
 
 		if ( pidProfile == null )
 			return false;
-
-		if ( marrPermissions == null )
-		{
-			larrAux = new ArrayList<IPermission>();
-
-			larrMembers = new int[1];
-			larrMembers[0] = Constants.FKOperation_In_Permission;
-			larrParams = new java.lang.Object[1];
-			larrParams[0] = getKey();
-
-			try
-			{
-				lrefPerm = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNPermission));
-				ldb = new MasterDB();
-				lrsPerms = lrefPerm.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-				while ( lrsPerms.next() )
-					larrAux.add((IPermission)PNPermission.GetInstance(getNameSpace(), lrsPerms));
-				lrsPerms.close();
-				ldb.Disconnect();
-
-				marrPermissions = larrAux.toArray(new IPermission[larrAux.size()]);
-			}
-			catch (Throwable e)
-			{
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-		}
 
 		for ( i = 0; i < marrPermissions.length; i++ )
 			if ( pidProfile.equals(marrPermissions[i].getProfile()) )
@@ -187,16 +199,30 @@ public class PNOperation
 		return false;
 	}
 
-	public Operation GetNewInstance()
+	public IOperation GetUndoOp()
+	{
+		return mrefUndoOp;
+	}
+
+	public Operation GetNewInstance(UUID pidProcess)
 		throws JewelPetriException
 	{
+		Class<?>[] larrTypes;
+		java.lang.Object[] larrParams;
+
+		larrTypes = new Class<?>[1];
+		larrTypes[0] = UUID.class;
+
+        larrParams = new java.lang.Object[1];
+		larrParams[0] = pidProcess;
+
 		try
 		{
 			if ( mrefClass == null )
 				mrefClass = Class.forName(((String)getAt(5)).replaceAll("MADDS", "Jewel"));
 			if ( mrefConst == null )
-				mrefConst = mrefClass.getConstructor(new Class<?>[0]);
-			return (Operation)mrefConst.newInstance(new java.lang.Object[0]);
+				mrefConst = mrefClass.getConstructor(larrTypes);
+			return (Operation)mrefConst.newInstance(larrParams);
 		}
 		catch (Throwable e)
 		{

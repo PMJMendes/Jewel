@@ -69,14 +69,14 @@ public class CodeExecuter
 	public static String ExecuteObject(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, UUID pidKey, Object[] parrParams)
 	{
 		Class<?>[] larrTypes;
-		Object[] larrParams;
+		java.lang.Object[] larrParams;
 
 		larrTypes = new Class<?>[3];
 		larrTypes[0] = UUID.class;
 		larrTypes[1] = UUID.class;
-		larrTypes[2] = Object[].class;
+		larrTypes[2] = java.lang.Object[].class;
 
-        larrParams = new Object[3];
+        larrParams = new java.lang.Object[3];
 		larrParams[0] = pidNameSpace;
 		larrParams[1] = pidKey;
 		larrParams[2] = parrParams;
@@ -87,12 +87,12 @@ public class CodeExecuter
 	public static String ExecuteStatic(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace)
 	{
 		Class<?>[] larrTypes;
-		Object[] larrParams;
+		java.lang.Object[] larrParams;
 
 		larrTypes = new Class<?>[1];
 		larrTypes[0] = UUID.class;
 
-		larrParams = new Object[1];
+		larrParams = new java.lang.Object[1];
 		larrParams[0] = pidNameSpace;
 
         return ExecuteGeneral(pstrAssembly, pstrType, pstrMethod, larrTypes, larrParams);
@@ -101,13 +101,13 @@ public class CodeExecuter
 	public static String ExecuteAction(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, Object[] parrParams)
 	{
 		Class<?>[] larrTypes;
-		Object[] larrParams;
+		java.lang.Object[] larrParams;
 
 		larrTypes = new Class<?>[2];
 		larrTypes[0] = UUID.class;
-		larrTypes[1] = Object[].class;
+		larrTypes[1] = java.lang.Object[].class;
 
-		larrParams = new Object[2];
+		larrParams = new java.lang.Object[2];
 		larrParams[0] = pidNameSpace;
 		larrParams[1] = parrParams;
 
@@ -117,15 +117,15 @@ public class CodeExecuter
 	public static String ExecuteReport(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, int[] parrMembers, Object[] parrValues, Object pobjResults)
 	{
 		Class<?>[] larrTypes;
-		Object[] larrParams;
+		java.lang.Object[] larrParams;
 
 		larrTypes = new Class<?>[4];
 		larrTypes[0] = UUID.class;
 		larrTypes[1] = int[].class;
-		larrTypes[2] = Object[].class;
-        larrTypes[3] = Object.class;
+		larrTypes[2] = java.lang.Object[].class;
+        larrTypes[3] = java.lang.Object.class;
 
-		larrParams = new Object[4];
+		larrParams = new java.lang.Object[4];
 		larrParams[0] = pidNameSpace;
 		larrParams[1] = parrMembers;
 		larrParams[2] = parrValues;
@@ -137,13 +137,13 @@ public class CodeExecuter
     public static String ExecuteLogin(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, UUID pidUser)
     {
         Class<?>[] larrTypes;
-        Object[] larrParams;
+        java.lang.Object[] larrParams;
 
         larrTypes = new Class<?>[2];
         larrTypes[0] = UUID.class;
         larrTypes[1] = UUID.class;
 
-        larrParams = new Object[2];
+        larrParams = new java.lang.Object[2];
         larrParams[0] = pidNameSpace;
         larrParams[1] = pidUser;
 

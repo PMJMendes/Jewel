@@ -62,7 +62,7 @@ public abstract class Operation
 	protected abstract UUID OpID();
 	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
 
-	public synchronized final void Execute()
+	public synchronized final void Execute(UUID pidSourceLog)
 		throws JewelPetriException
 	{
 		MasterDB ldb;
@@ -99,7 +99,7 @@ public abstract class Operation
 		{
 			CheckRunnable();
 			Run(ldb);
-			BuildLog(ldb);
+			BuildLog(ldb, pidSourceLog);
 		}
 		catch (JewelPetriException e)
 		{
@@ -231,7 +231,7 @@ public abstract class Operation
 		}
 	}
 
-	private void BuildLog(SQLServer pdb)
+	private void BuildLog(SQLServer pdb, UUID pidSource)
 		throws JewelPetriException
 	{
 		PNLog lobjLog;
@@ -255,7 +255,7 @@ public abstract class Operation
 			lobjLog.setAt(1, OpID());
 			lobjLog.setAt(2, new Timestamp(new java.util.Date().getTime()));
 			lobjLog.setAt(3, Engine.getCurrentUser());
-			lobjLog.setAt(4, (UUID)null);
+			lobjLog.setAt(4, pidSource);
 			lobjLog.setAt(5, false);
 			lobjLog.setAt(6, lobjFile);
 			lobjLog.SaveToDb(pdb);
