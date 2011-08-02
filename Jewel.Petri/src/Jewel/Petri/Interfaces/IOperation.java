@@ -13,5 +13,6 @@ public interface IOperation
     public IController[] getInputs();
     public IController[] getOutputs();
     public UUID getDefaultLevel();
+    public boolean checkPermission(UUID pidProfile) throws JewelPetriException;
     public Operation GetNewInstance() throws JewelPetriException;
 }

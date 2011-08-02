@@ -9,6 +9,7 @@ public class Constants
     public static final UUID ObjID_PNController = UUID.fromString("75640640-37D1-48FC-9B3C-9E1600DC206B");
     public static final UUID ObjID_PNSink       = UUID.fromString("26F6690D-EFD4-4863-BCFA-9E1600E2C89B");
     public static final UUID ObjID_PNSource     = UUID.fromString("3189E3B3-0DCC-4580-A966-9E1600E2EE41");
+    public static final UUID ObjID_PNPermission = UUID.fromString("087BB553-9DC6-4F50-8910-9F3300B72D6F");
 
     public static final UUID ObjID_PNProcess    = UUID.fromString("1967E563-01AD-4683-9D66-9E1700B7DF07");
     public static final UUID ObjID_PNStep       = UUID.fromString("B4E6C433-2DA6-4E66-8F3F-9E1700B8062B");
@@ -24,4 +25,5 @@ public class Constants
     public static final int FKProcess_In_Node = 0;
     public static final int FKController_In_Node = 1;
     public static final int FKProcess_In_Log = 0;
+    public static final int FKOperation_In_Permission = 0;
 }

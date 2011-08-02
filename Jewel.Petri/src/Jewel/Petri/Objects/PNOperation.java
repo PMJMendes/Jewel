@@ -11,6 +11,7 @@ import Jewel.Engine.Interfaces.*;
 import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
 import Jewel.Petri.Interfaces.*;
+import Jewel.Petri.Interfaces.IPermission;
 import Jewel.Petri.SysObjects.JewelPetriException;
 import Jewel.Petri.SysObjects.Operation;
 
@@ -20,6 +21,7 @@ public class PNOperation
 {
 	private IController[] marrInputs;
 	private IController[] marrOutputs;
+	private IPermission[] marrPermissions;
     private Class<?> mrefClass;
     private Constructor<?> mrefConst;
 
@@ -135,6 +137,54 @@ public class PNOperation
 	public UUID getDefaultLevel()
 	{
 		return (UUID)getAt(3);
+	}
+
+	public boolean checkPermission(UUID pidProfile)
+		throws JewelPetriException
+	{
+		MasterDB ldb;
+		ResultSet lrsPerms;
+		IEntity lrefPerm;
+		int[] larrMembers;
+		java.lang.Object[] larrParams;
+		ArrayList<IPermission> larrAux;
+		int i;
+
+		if ( pidProfile == null )
+			return false;
+
+		if ( marrPermissions == null )
+		{
+			larrAux = new ArrayList<IPermission>();
+
+			larrMembers = new int[1];
+			larrMembers[0] = Constants.FKOperation_In_Permission;
+			larrParams = new java.lang.Object[1];
+			larrParams[0] = getKey();
+
+			try
+			{
+				lrefPerm = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNPermission));
+				ldb = new MasterDB();
+				lrsPerms = lrefPerm.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+				while ( lrsPerms.next() )
+					larrAux.add((IPermission)PNPermission.GetInstance(getNameSpace(), lrsPerms));
+				lrsPerms.close();
+				ldb.Disconnect();
+
+				marrPermissions = larrAux.toArray(new IPermission[larrAux.size()]);
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+		}
+
+		for ( i = 0; i < marrPermissions.length; i++ )
+			if ( pidProfile.equals(marrPermissions[i].getProfile()) )
+				return true;
+
+		return false;
 	}
 
 	public Operation GetNewInstance()
