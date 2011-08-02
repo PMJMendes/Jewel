@@ -282,6 +282,9 @@ public class DynaForm
 	{
 		int i;
 
+		if ( marrControls == null )
+			return;
+
 		for ( i = 0; i < marrControls.length; i++ )
 			if ( marrControls[i] instanceof FileCtl )
 				((FileCtl)marrControls[i]).DiscardValue();

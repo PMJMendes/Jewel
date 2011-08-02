@@ -4,6 +4,7 @@ import java.util.*;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.Implementation.*;
+import Jewel.Engine.Interfaces.IForm;
 import Jewel.Web.interfaces.*;
 import Jewel.Web.shared.*;
 
@@ -18,6 +19,7 @@ public class LookupServiceImpl
 	{
 		LookupResponse lobjRes;
 		Entity lrefEntity;
+		IForm lrefForm;
 
 		if ( Engine.getCurrentUser() == null )
 			return null;
@@ -26,9 +28,14 @@ public class LookupServiceImpl
 		try
 		{
 			lrefEntity = Entity.GetInstance(UUID.fromString(pstrEntity));
-			lobjRes.mstrFormID = lrefEntity.getDefaultSearchForm().getKey().toString();
+			lrefForm = lrefEntity.getDefaultSearchForm();
+
+			if ( lrefForm == null )
+				throw new JewelWebException("Object does not have default search form.");
+
+			lobjRes.mstrFormID = lrefForm.getKey().toString();
 			lobjRes.mstrNSpaceID = lrefEntity.getMemberOf().getKey().toString();
-			lobjRes.mstrFormName = lrefEntity.getDefaultSearchForm().getName();
+			lobjRes.mstrFormName = lrefForm.getName();
 			lobjRes.mstrNSpaceName = lrefEntity.getMemberOf().getName();
 		}
 		catch (Throwable e)

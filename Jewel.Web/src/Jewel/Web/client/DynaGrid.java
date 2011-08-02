@@ -1035,7 +1035,8 @@ public class DynaGrid
 
         UnloadEditor();
 		mrefEventMgr.fireEvent(new JErrorEvent(null));
-        getService().CloseQuery(mstrWorkspace, callback);
+		if ( mstrWorkspace != null )
+			getService().CloseQuery(mstrWorkspace, callback);
 	}
 
 	public HandlerRegistration addInitHandler(InitEvent.Handler handler)

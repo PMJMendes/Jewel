@@ -120,6 +120,7 @@ public class LookupPopup
 				while ( ex.getCause() != null )
 					ex = ex.getCause();
 
+				SetError(ex.getMessage());
 			}
         };
 
@@ -156,6 +157,10 @@ public class LookupPopup
 
 			public void onFailure(Throwable ex)
 			{
+				while ( ex.getCause() != null )
+					ex = ex.getCause();
+
+				SetError(ex.getMessage());
 			}
         };
 
