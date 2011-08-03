@@ -171,7 +171,8 @@ public abstract class ObjectBase
             if (!lstrError.equals(""))
                 throw new JewelEngineException(lstrError);
 
-        	Engine.GetCache(false).setAt(midEntity, midKey, this);
+            if ( !mbReadOnly )
+            	Engine.GetCache(false).setAt(midEntity, midKey, this);
         }
         else
         {
@@ -181,7 +182,8 @@ public abstract class ObjectBase
 	        if (!lstrError.equals(""))
 	            throw new JewelEngineException(lstrError);
 
-        	Engine.GetCache(false).getAt(midEntity, midKey).setData(getData());
+            if ( !mbReadOnly )
+            	Engine.GetCache(false).getAt(midEntity, midKey).setData(getData());
         }
     }
 
