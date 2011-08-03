@@ -145,7 +145,7 @@ public class PNOperation
 
 		try
 		{
-			lrefOperation = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNPermission));
+			lrefOperation = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNOperation));
 			ldb = new MasterDB();
 			lrsOperations = lrefOperation.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
 			if ( lrsOperations.next() )
