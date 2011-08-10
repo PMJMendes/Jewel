@@ -56,8 +56,8 @@ public class PNOperation
 		throws JewelEngineException
 	{
 		MasterDB ldb;
-		ResultSet lrsInputs, lrsOutputs, lrsPerms, lrsOperations;
-		IEntity lrefSink, lrefSource, lrefPerm, lrefOperation;
+		ResultSet lrsInputs, lrsOutputs, lrsPerms;
+		IEntity lrefSink, lrefSource, lrefPerm;
 		int[] larrMembers;
 		java.lang.Object[] larrParams;
 		ArrayList<IController> larrAux;
@@ -138,24 +138,16 @@ public class PNOperation
 			throw new JewelEngineException(e.getMessage(), e);
 		}
 
-		larrMembers = new int[1];
-		larrMembers[0] = Constants.FKSourceOp_In_Operation;
-		larrParams = new java.lang.Object[1];
-		larrParams[0] = getKey();
-
-		try
+		if ( getAt(6) != null )
 		{
-			lrefOperation = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNOperation));
-			ldb = new MasterDB();
-			lrsOperations = lrefOperation.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-			if ( lrsOperations.next() )
-				mrefUndoOp = (IOperation)PNOperation.GetInstance(getNameSpace(), lrsOperations);
-			lrsOperations.close();
-			ldb.Disconnect();
-		}
-		catch (Throwable e)
-		{
-			throw new JewelEngineException(e.getMessage(), e);
+			try
+			{
+				mrefUndoOp = PNOperation.GetInstance(getNameSpace(), (UUID)getAt(6));
+			}
+			catch (Throwable e)
+			{
+				throw new JewelEngineException(e.getMessage(), e);
+			}
 		}
 	}
 

@@ -1,9 +1,12 @@
 package Jewel.Petri.Objects;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import Jewel.Engine.Engine;
+import Jewel.Engine.Implementation.User;
+import Jewel.Engine.Interfaces.IUser;
 import Jewel.Engine.SysObjects.FileXfer;
 import Jewel.Engine.SysObjects.JewelEngineException;
 import Jewel.Engine.SysObjects.ObjectBase;
@@ -18,6 +21,7 @@ public class PNLog
 	implements ILog
 {
 	private IOperation mrefOp;
+	private IUser mrefUser;
 
     public static PNLog GetInstance(UUID pidNameSpace, UUID pidKey)
 		throws JewelPetriException
@@ -72,5 +76,36 @@ public class PNLog
 	public UUID GetProcessID()
 	{
 		return (UUID)getAt(0);
+	}
+
+	public IUser GetUser()
+		throws JewelPetriException
+	{
+		if ( mrefUser == null )
+		{
+			try
+			{
+				mrefUser = ((IUser)User.GetInstance(getNameSpace(), (UUID)getAt(3)));
+			}
+			catch (Throwable e)
+			{
+		    	throw new JewelPetriException(e.getMessage(), e);
+			}
+		}
+
+		return mrefUser;
+	}
+
+	public Timestamp GetTimestamp()
+	{
+		return (Timestamp)getAt(2);
+	}
+
+	public boolean CanUndo()
+	{
+		if ( mrefOp.GetUndoOp() == null )
+			return false;
+
+		return !((Boolean)getAt(5));
 	}
 }
