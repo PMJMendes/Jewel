@@ -195,7 +195,7 @@ public class Entity
 		lstrAux = SQLForSelect("[t1]");
 		if ( parrMembers.length > 0 )
 			lstrAux += " WHERE 1=1" + mrefObject.FilterByMembers("[t1]", parrMembers, parrValues);
-		if ( parrSorts.length >= 0 )
+		if ( parrSorts != null )
 			lstrAux += " ORDER BY " + mrefObject.OrderByMembers("[t1]", parrSorts) + "[t1].[_TSCreate]";
 
 		return lstrAux;
