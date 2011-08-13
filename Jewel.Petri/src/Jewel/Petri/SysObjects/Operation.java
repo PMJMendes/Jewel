@@ -57,7 +57,6 @@ public abstract class Operation
 
 	public abstract String ShortDesc();
 	public abstract String LongDesc(String pstrLineBreak);
-	public abstract String UndoDesc(String pstrLineBreak);
 
 	protected abstract UUID OpID();
 	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
@@ -227,6 +226,7 @@ public abstract class Operation
 			{
 				throw new JewelPetriException(e.getMessage(), e);
 			}
+
 			throw new JewelPetriException("Error: Operation not currently available in this process.");
 		}
 	}

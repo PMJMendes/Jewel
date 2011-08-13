@@ -15,6 +15,7 @@ import Jewel.Petri.Interfaces.ILog;
 import Jewel.Petri.Interfaces.IOperation;
 import Jewel.Petri.SysObjects.JewelPetriException;
 import Jewel.Petri.SysObjects.Operation;
+import Jewel.Petri.SysObjects.UndoableOperation;
 
 public class PNLog
 	extends ObjectBase
@@ -22,6 +23,7 @@ public class PNLog
 {
 	private IOperation mrefOp;
 	private IUser mrefUser;
+	private Operation mobjData;
 
     public static PNLog GetInstance(UUID pidNameSpace, UUID pidKey)
 		throws JewelPetriException
@@ -65,7 +67,10 @@ public class PNLog
 	public Operation GetOperationData()
 		throws JewelPetriException
 	{
-		return Operation.getOperation((getAt(6) instanceof FileXfer ? (FileXfer)getAt(6) : new FileXfer((byte[])getAt(6))));
+		if ( mobjData == null )
+			mobjData = Operation.getOperation((getAt(6) instanceof FileXfer ? (FileXfer)getAt(6) : new FileXfer((byte[])getAt(6))));
+
+		return mobjData;
 	}
 
 	public IOperation GetOperation()
@@ -102,8 +107,12 @@ public class PNLog
 	}
 
 	public boolean CanUndo()
+		throws JewelPetriException
 	{
 		if ( mrefOp.GetUndoOp() == null )
+			return false;
+
+		if ( !(GetOperationData() instanceof UndoableOperation) )
 			return false;
 
 		return !((Boolean)getAt(5));
