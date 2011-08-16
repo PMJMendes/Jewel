@@ -55,10 +55,9 @@ public abstract class Operation
 		mbDone = false;
 	}
 
+	protected abstract UUID OpID();
 	public abstract String ShortDesc();
 	public abstract String LongDesc(String pstrLineBreak);
-
-	protected abstract UUID OpID();
 	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
 
 	public synchronized final void Execute(UUID pidSourceLog)

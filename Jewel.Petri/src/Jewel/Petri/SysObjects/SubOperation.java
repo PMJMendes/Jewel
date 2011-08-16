@@ -11,6 +11,8 @@ public abstract class SubOperation
 	private static final long serialVersionUID = 1L;
 
 	public abstract void LongDesc(StringBuilder pstrResult, String pstrLineBreak);
-	public abstract void UndoDesc(StringBuilder pstrResult, String pstrLineBreak);
 	public abstract void RunSubOp(SQLServer pdb, UUID pidOwner) throws JewelPetriException;
+	public abstract void UndoDesc(StringBuilder pstrResult, String pstrLineBreak);
+	public abstract void UndoLongDesc(StringBuilder pstrResult, String pstrLineBreak);
+	public abstract void UndoSubOp(SQLServer pdb, UUID pidOwner) throws JewelPetriException;
 }
