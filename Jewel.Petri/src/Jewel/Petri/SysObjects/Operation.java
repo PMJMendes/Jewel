@@ -12,6 +12,7 @@ import Jewel.Engine.Engine;
 import Jewel.Engine.DataAccess.MasterDB;
 import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Petri.Interfaces.ILog;
 import Jewel.Petri.Interfaces.IProcess;
 import Jewel.Petri.Interfaces.IStep;
 import Jewel.Petri.Objects.PNLog;
@@ -48,11 +49,13 @@ public abstract class Operation
 	private transient IProcess mrefProcess;
 	private transient IStep mrefStep;
 	private transient boolean mbDone;
+	private transient ILog mobjLog;
 
 	public Operation(UUID pidProcess)
 	{
 		midProcess = pidProcess;
 		mbDone = false;
+		mobjLog = null;
 	}
 
 	protected abstract UUID OpID();
@@ -164,6 +167,11 @@ public abstract class Operation
 
 		mbDone = true;
 	}
+	
+	public ILog getLog()
+	{
+		return mobjLog;
+	}
 
 	private void LockProcess()
 		throws JewelPetriException
@@ -263,5 +271,7 @@ public abstract class Operation
 		{
 			throw new JewelPetriException(e.getMessage(), e);
 		}
+
+		mobjLog = lobjLog;
 	}
 }
