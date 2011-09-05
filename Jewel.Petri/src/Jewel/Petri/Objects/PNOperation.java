@@ -221,4 +221,9 @@ public class PNOperation
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 	}
+
+	public UUID GetRole()
+	{
+		return (UUID)getAt(2);
+	}
 }

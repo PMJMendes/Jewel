@@ -6,12 +6,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.DataAccess.MasterDB;
 import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Petri.Constants;
 import Jewel.Petri.Interfaces.ILog;
 import Jewel.Petri.Interfaces.IProcess;
 import Jewel.Petri.Interfaces.IStep;
@@ -45,11 +48,18 @@ public abstract class Operation
 		return lobjResult;
 	}
 
+	private static class QueuedOp
+	{
+		public IStep mobjStep;
+		public Operation mobjSource;
+	}
+
 	private transient UUID midProcess;
 	private transient IProcess mrefProcess;
 	private transient IStep mrefStep;
 	private transient boolean mbDone;
 	private transient ILog mobjLog;
+	private transient Queue<QueuedOp> marrTriggers;
 
 	public Operation(UUID pidProcess)
 	{
@@ -63,7 +73,19 @@ public abstract class Operation
 	public abstract String LongDesc(String pstrLineBreak);
 	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
 
-	public synchronized final void Execute(UUID pidSourceLog)
+	public void Execute()
+		throws JewelPetriException
+	{
+		Execute(null, new LinkedList<QueuedOp>());
+	}
+
+	public void Execute(UUID pidSourceLog)
+		throws JewelPetriException
+	{
+		Execute(pidSourceLog, new LinkedList<QueuedOp>());
+	}
+
+	private synchronized final void Execute(UUID pidSourceLog, Queue<QueuedOp> parrTriggers)
 		throws JewelPetriException
 	{
 		MasterDB ldb;
@@ -99,7 +121,49 @@ public abstract class Operation
 		try
 		{
 			CheckRunnable();
+		}
+		catch (JewelPetriException e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		marrTriggers = parrTriggers;
+
+		try
+		{
 			Run(ldb);
+		}
+		catch (JewelPetriException e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			marrTriggers = null;
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			marrTriggers = null;
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		marrTriggers = null;
+
+		try
+		{
 			BuildLog(ldb, pidSourceLog);
 		}
 		catch (JewelPetriException e)
@@ -119,13 +183,11 @@ public abstract class Operation
 
 		try
 		{
-			mrefStep.DoSafeRun(ldb);
-			mrefProcess.RecalcSteps(ldb);
+			mrefStep.DoSafeRun();
 		}
 		catch (JewelPetriException e)
 		{
 			try { ldb.Rollback(); } catch (Throwable e1) {}
-			mrefStep.RollbackSafeRun();
 			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			mrefProcess.Unlock();
 			throw e;
@@ -133,7 +195,46 @@ public abstract class Operation
 		catch (Throwable e)
 		{
 			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			mrefProcess.RecalcSteps(ldb);
+		}
+		catch (JewelPetriException e)
+		{
 			mrefStep.RollbackSafeRun();
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			mrefStep.RollbackSafeRun();
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			mrefStep.CommitSafeRun(ldb);
+		}
+		catch (JewelPetriException e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
 			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			mrefProcess.Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
@@ -145,13 +246,10 @@ public abstract class Operation
 		}
 		catch (Throwable e)
 		{
-			mrefStep.RollbackSafeRun();
 			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			mrefProcess.Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
-
-		mrefStep.CommitSafeRun();
 
 		try
 		{
@@ -166,6 +264,10 @@ public abstract class Operation
 		mrefProcess.Unlock();
 
 		mbDone = true;
+
+		RunTriggers(parrTriggers);
+
+		mrefProcess.RunAutoSteps();
 	}
 	
 	public ILog getLog()
@@ -273,5 +375,56 @@ public abstract class Operation
 		}
 
 		mobjLog = lobjLog;
+	}
+
+	protected IProcess GetProcess()
+	{
+		return mrefProcess;
+	}
+
+	protected boolean TriggerOp(UUID pidOp)
+		throws JewelPetriException
+	{
+		return TriggerOp(midProcess, pidOp);
+	}
+
+	protected boolean TriggerOp(UUID pidProcess, UUID pidOp)
+		throws JewelPetriException
+	{
+		IProcess lobjProcess;
+		IStep lobjStep;
+		QueuedOp lobjQueue;
+
+		if ( marrTriggers == null )
+			throw new JewelPetriException("Invalid: Attempted to queue operation outside of execution.");
+
+		lobjProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), pidProcess);
+		lobjStep = lobjProcess.GetOperation(pidOp);
+
+		if ( lobjStep == null )
+			return false;
+
+		if ( !Constants.RoleID_Triggered.equals(lobjStep.GetRole()) )
+			throw new JewelPetriException("Error: Attempted to queue non-triggerable operation.");
+
+		lobjQueue = new QueuedOp();
+		lobjQueue.mobjStep = lobjStep;
+		lobjQueue.mobjSource = this;
+		marrTriggers.add(lobjQueue);
+
+		return true;
+	}
+
+	private void RunTriggers(Queue<QueuedOp> parrTriggers)
+		throws JewelPetriException
+	{
+		QueuedOp lobjQueue;
+		Operation lobjOp;
+
+		while ( (lobjQueue = parrTriggers.poll()) != null )
+		{
+			lobjOp = lobjQueue.mobjStep.GetOperation().GetNewInstance(lobjQueue.mobjStep.GetProcessID());
+			lobjOp.Execute(lobjQueue.mobjSource.getLog().getKey(), parrTriggers);
+		}
 	}
 }

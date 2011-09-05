@@ -161,7 +161,7 @@ public class PNStep
 		return b;
 	}
 
-	public void DoSafeRun(SQLServer pdb)
+	public void DoSafeRun()
 		throws JewelPetriException
 	{
 		int i;
@@ -173,10 +173,10 @@ public class PNStep
 			marrOutputs[i].IncCount();
 
 		for ( i = 0; i < marrInputs.length; i++ )
-			marrInputs[i].DoSafeSave(pdb);
+			marrInputs[i].DoSafeSave();
 
 		for ( i = 0; i < marrOutputs.length; i++ )
-			marrOutputs[i].DoSafeSave(pdb);
+			marrOutputs[i].DoSafeSave();
 	}
 
 	public void RollbackSafeRun()
@@ -190,15 +190,16 @@ public class PNStep
 			marrOutputs[i].RollbackSafeSave();
 	}
 
-	public void CommitSafeRun()
+	public void CommitSafeRun(SQLServer pdb)
+		throws JewelPetriException
 	{
 		int i;
 
 		for ( i = 0; i < marrInputs.length; i++ )
-			marrInputs[i].CommitSafeSave();
+			marrInputs[i].CommitSafeSave(pdb);
 
 		for ( i = 0; i < marrOutputs.length; i++ )
-			marrOutputs[i].CommitSafeSave();
+			marrOutputs[i].CommitSafeSave(pdb);
 	}
 
 	public void Delete(SQLServer pdb)
@@ -215,5 +216,10 @@ public class PNStep
 		{
 			throw new JewelPetriException(e.getMessage(), e);
 		}
+	}
+
+	public UUID GetRole()
+	{
+		return GetOperation().GetRole();
 	}
 }

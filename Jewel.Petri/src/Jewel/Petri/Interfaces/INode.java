@@ -16,7 +16,7 @@ public interface INode
 	public boolean CheckCount();
 	public void DecCount() throws JewelPetriException;
 	public void IncCount() throws JewelPetriException;
-	public void DoSafeSave(SQLServer pdb) throws JewelPetriException;
+	public void DoSafeSave() throws JewelPetriException;
 	public void RollbackSafeSave();
-	public void CommitSafeSave();
+	public void CommitSafeSave(SQLServer pdb) throws JewelPetriException;
 }

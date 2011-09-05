@@ -11,12 +11,14 @@ import Jewel.Engine.Implementation.Entity;
 import Jewel.Engine.SysObjects.JewelEngineException;
 import Jewel.Engine.SysObjects.ObjectBase;
 import Jewel.Petri.Constants;
+import Jewel.Petri.Interfaces.IController;
 import Jewel.Petri.Interfaces.INode;
 import Jewel.Petri.Interfaces.IOperation;
 import Jewel.Petri.Interfaces.IProcess;
 import Jewel.Petri.Interfaces.IScript;
 import Jewel.Petri.Interfaces.IStep;
 import Jewel.Petri.SysObjects.JewelPetriException;
+import Jewel.Petri.SysObjects.Operation;
 
 public class PNProcess
 	extends ObjectBase
@@ -230,5 +232,132 @@ public class PNProcess
 				larrAux.add(marrSteps[i]);
 
 		marrSteps = larrAux.toArray(new IStep[larrAux.size()]);
+	}
+
+	public void Setup()
+		throws JewelPetriException
+	{
+		MasterDB ldb;
+		IController[] larrControllers;
+		ArrayList<INode> larrAuxNodes;
+		int i;
+		PNNode lobjNode;
+
+		if ( !Lock() )
+			throw new JewelPetriException("Unexpected: Process locked during setup.");
+
+		try
+		{
+			ldb = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.BeginTrans();
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		larrAuxNodes = new ArrayList<INode>();
+		larrControllers = GetScript().getControllers();
+		try
+		{
+			for ( i = 0; i < larrControllers.length; i++ )
+			{
+				lobjNode = PNNode.GetInstance(getNameSpace(), (UUID)null);
+				lobjNode.setAt(0, getKey());
+				lobjNode.setAt(1, larrControllers[i].getKey());
+				lobjNode.setAt(2, larrControllers[i].getInitialCount());
+				lobjNode.SaveToDb(ldb);
+				larrAuxNodes.add(lobjNode);
+			}
+
+			marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
+
+			RecalcSteps(ldb);
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.Commit();
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		Unlock();
+
+		RunAutoSteps();
+	}
+
+	public void RunAutoSteps()
+		throws JewelPetriException
+	{
+		int i;
+		Operation lobjOp;
+
+		if ( !Lock() )
+			throw new JewelPetriException("Unexpected: Process locked during autorun.");
+
+		for ( i = 0; i < marrSteps.length; i++ )
+		{
+			if ( Constants.RoleID_Autorun.equals(marrSteps[i].GetRole()) )
+			{
+				lobjOp = marrSteps[i].GetOperation().GetNewInstance(getKey());
+				Unlock();
+				lobjOp.Execute();
+				return;
+			}
+		}
+
+		Unlock();
+	}
+
+	public ObjectBase GetData()
+		throws JewelPetriException
+	{
+		UUID lidData;
+
+		lidData = (UUID)getAt(1);
+		if ( lidData == null )
+			return null;
+
+		try
+		{
+			return Engine.GetWorkInstance(Engine.FindEntity(getNameSpace(), GetScript().GetDataType()), lidData);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
 	}
 }

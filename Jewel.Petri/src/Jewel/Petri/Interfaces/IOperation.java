@@ -16,4 +16,5 @@ public interface IOperation
     public boolean checkPermission(UUID pidProfile);
     public IOperation GetUndoOp();
     public Operation GetNewInstance(UUID pidProcess) throws JewelPetriException;
+    public UUID GetRole();
 }

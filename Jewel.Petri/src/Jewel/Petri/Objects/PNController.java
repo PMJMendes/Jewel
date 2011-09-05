@@ -73,4 +73,9 @@ public class PNController
 	{
 		return (Integer)getAt(2);
 	}
+
+	public int getMaxCount()
+	{
+		return (Integer)getAt(3);
+	}
 }

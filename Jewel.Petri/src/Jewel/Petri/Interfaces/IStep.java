@@ -16,8 +16,9 @@ public interface IStep
     public INode[] getInputs();
     public INode[] getOutputs();
     public boolean IsRunnable();
-    public void DoSafeRun(SQLServer pdb) throws JewelPetriException;
+    public void DoSafeRun() throws JewelPetriException;
 	public void RollbackSafeRun();
-	public void CommitSafeRun();
+	public void CommitSafeRun(SQLServer pdb) throws JewelPetriException;
     public void Delete(SQLServer pdb) throws JewelPetriException;
+    public UUID GetRole();
 }

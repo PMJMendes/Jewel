@@ -111,11 +111,6 @@ public class PNScript
 		MasterDB ldb;
 		ObjectBase lobjData;
 		PNProcess lobjProc;
-		int i, j;
-		IController[] larrControllers;
-		boolean b;
-		PNNode lobjNode;
-		PNStep lobjStep;
 
 		if ( (parrParams == null) || (parrParams.length < 4) || (parrParams[3] == null) || !(parrParams[3] instanceof UUID))
 			throw new JewelPetriException("Invalid Argument: Name Space to start up in is null or not an identifier.");
@@ -169,35 +164,7 @@ public class PNScript
 				lobjProc.SaveToDb(ldb);
 			}
 
-			for ( i = 0; i < marrControllers.length; i++ )
-			{
-				lobjNode = PNNode.GetInstance(lidNSpace, (UUID)null);
-				lobjNode.setAt(0, lobjProc.getKey());
-				lobjNode.setAt(1, marrControllers[i].getKey());
-				lobjNode.setAt(2, marrControllers[i].getInitialCount());
-				lobjNode.SaveToDb(ldb);
-			}
-
-			for ( i = 0; i < marrOperations.length; i++ )
-			{
-				b = true;
-				larrControllers = marrOperations[i].getInputs();
-				for ( j = 0; j < larrControllers.length; j++ )
-				{
-					if ( larrControllers[j].getInitialCount() == 0 )
-						b = false;
-				}
-				if ( b )
-				{
-					lobjStep = PNStep.GetInstance(lidNSpace, (UUID)null);
-					lobjStep.setAt(0, lobjProc.getKey());
-					lobjStep.setAt(1, marrOperations[i].getKey());
-					lobjStep.setAt(2, marrOperations[i].getDefaultLevel());
-					lobjStep.setAt(3, null);
-					lobjStep.setAt(4, null);
-					lobjStep.SaveToDb(ldb);
-				}
-			}
+			lobjProc.Setup();
 		}
 		catch (Throwable e)
 		{
@@ -226,5 +193,10 @@ public class PNScript
 		}
 
 		throw new JewelPetriException("Process successfully deployed.");
+	}
+
+	public UUID GetDataType()
+	{
+		return (UUID)getAt(2);
 	}
 }

@@ -103,11 +103,13 @@ public class PNNode
 		if ( mbPending )
 			throw new JewelPetriException("Unexpected: Attempted operation while node is pending.");
 
-		mlngCount++;
+		if ( mlngCount < GetController().getMaxCount() )
+			mlngCount++;
+
 		mbSaved = false;
 	}
 
-	public void DoSafeSave(SQLServer pdb)
+	public void DoSafeSave()
 		throws JewelPetriException
 	{
 		if ( mbPending )
@@ -117,15 +119,6 @@ public class PNNode
 			return;
 
 		internalSetAt(2, mlngCount);
-
-		try
-		{
-			SaveToDb(pdb);
-		}
-		catch (Throwable e)
-		{
-			throw new JewelPetriException(e.getMessage(), e);
-		}
 
 		mbSaved = true;
 		mbPending = true;
@@ -140,10 +133,20 @@ public class PNNode
 		Reset();
 	}
 
-	public void CommitSafeSave()
+	public void CommitSafeSave(SQLServer pdb)
+		throws JewelPetriException
 	{
 		if ( !mbPending )
 			return;
+
+		try
+		{
+			SaveToDb(pdb);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
 
 		Reset();
 	}

@@ -6,4 +6,5 @@ public interface IController
 	extends IJewelBase
 {
 	int getInitialCount();
+	int getMaxCount();
 }

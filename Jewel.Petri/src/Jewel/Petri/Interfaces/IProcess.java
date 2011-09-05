@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.Interfaces.IJewelBase;
+import Jewel.Engine.SysObjects.ObjectBase;
 import Jewel.Petri.SysObjects.JewelPetriException;
 
 public interface IProcess
@@ -18,4 +19,7 @@ public interface IProcess
 	public void Unlock();
 	public void RecalcSteps(SQLServer pdb) throws JewelPetriException;
 	public void RemoveStep(SQLServer pdb, IStep pobjStep) throws JewelPetriException;
+	public void Setup() throws JewelPetriException;
+	public void RunAutoSteps() throws JewelPetriException;
+	public ObjectBase GetData() throws JewelPetriException;
 }
