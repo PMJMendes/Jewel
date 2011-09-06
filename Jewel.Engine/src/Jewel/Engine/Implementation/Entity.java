@@ -178,6 +178,18 @@ public class Entity
 		return SQLForSelect("[t1]");
 	}
 
+	public String SQLForSelectAllSort(int[] parrSorts)
+	{
+		String lstrAux;
+
+		lstrAux = SQLForSelect("[t1]");
+
+		if ( parrSorts != null )
+			lstrAux += " ORDER BY " + mrefObject.OrderByMembers("[t1]", parrSorts) + "[t1].[_TSCreate]";
+
+		return lstrAux;
+	}
+
 	public String SQLForSelectByKey(UUID pidKey)
 	{
 		return SQLForSelect("[t1]") + " WHERE [t1].[PK] = '" + pidKey.toString() + "'";
@@ -277,6 +289,12 @@ public class Entity
 		throws SQLException
 	{
 		return pdb.OpenRecordset(SQLForSelectAll());
+	}
+
+	public ResultSet SelectAllSort(SQLServer pdb, int[] parrSorts)
+		throws SQLException
+	{
+		return pdb.OpenRecordset(SQLForSelectAllSort(parrSorts));
 	}
 
 	public ResultSet SelectByKey(SQLServer pdb, UUID pidKey)

@@ -17,6 +17,7 @@ public interface IEntity
 	String SQLForSelectMulti() throws JewelEngineException, SQLException;
     String SQLForSelectMultiFiltered(int[] parrMembers, Object[] parrValues) throws JewelEngineException, SQLException;
     String SQLForSelectAll();
+    String SQLForSelectAllSort(int[] parrSorts);
     String SQLForSelectByKey(UUID pidKey);
     String SQLForSelectByMembers(int[] parrMembers, Object[] parrValues, int[] parrSorts) throws JewelEngineException;
     String SQLForSelectForReports(String[] parrColAliases, String[] parrCriteria, String[] parrSorts) throws JewelEngineException, SQLException;
@@ -25,6 +26,7 @@ public interface IEntity
 	void Update(SQLServer pdb, UUID pidKey, Object[] parrData) throws SQLException, JewelEngineException;
 	void Delete(SQLServer pdb, UUID pidKey) throws SQLException, JewelEngineException;
 	ResultSet SelectAll(SQLServer pdb) throws SQLException;
+	ResultSet SelectAllSort(SQLServer pdb, int[] parrSorts) throws SQLException;
 	ResultSet SelectByKey(SQLServer pdb, UUID pidKey) throws SQLException;
 	ResultSet SelectByMembers(SQLServer pdb, int[] parrMembers, Object[] parrValues, int[] parrSorts) throws SQLException, JewelEngineException;
     ResultSet SelectForReports(SQLServer pdb, String[] parrColAliases, String[] parrCriteria, String[] parrSorts) throws SQLException, JewelEngineException;
