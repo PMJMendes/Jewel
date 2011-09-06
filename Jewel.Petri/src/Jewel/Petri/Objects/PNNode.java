@@ -103,7 +103,7 @@ public class PNNode
 		if ( mbPending )
 			throw new JewelPetriException("Unexpected: Attempted operation while node is pending.");
 
-		if ( mlngCount < GetController().getMaxCount() )
+		if ( (GetController().getMaxCount()) <= 0 || (mlngCount < GetController().getMaxCount()) )
 			mlngCount++;
 
 		mbSaved = false;

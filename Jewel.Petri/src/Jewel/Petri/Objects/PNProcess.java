@@ -177,7 +177,7 @@ public class PNProcess
 			if ( marrSteps[i].IsRunnable() )
 				larrAux.add(marrSteps[i]);
 
-		larrOps = mrefScript.getOperations();
+		larrOps = GetScript().getOperations();
 
 		try
 		{

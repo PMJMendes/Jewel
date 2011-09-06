@@ -50,7 +50,7 @@ public abstract class Operation
 
 	private static class QueuedOp
 	{
-		public IStep mobjStep;
+		public Operation mobjQueued;
 		public Operation mobjSource;
 	}
 
@@ -382,13 +382,7 @@ public abstract class Operation
 		return mrefProcess;
 	}
 
-	protected boolean TriggerOp(UUID pidOp)
-		throws JewelPetriException
-	{
-		return TriggerOp(midProcess, pidOp);
-	}
-
-	protected boolean TriggerOp(UUID pidProcess, UUID pidOp)
+	protected boolean TriggerOp(Operation pobjQueued)
 		throws JewelPetriException
 	{
 		IProcess lobjProcess;
@@ -398,8 +392,8 @@ public abstract class Operation
 		if ( marrTriggers == null )
 			throw new JewelPetriException("Invalid: Attempted to queue operation outside of execution.");
 
-		lobjProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), pidProcess);
-		lobjStep = lobjProcess.GetOperation(pidOp);
+		lobjProcess = pobjQueued.GetProcess();
+		lobjStep = lobjProcess.GetOperation(pobjQueued.OpID());
 
 		if ( lobjStep == null )
 			return false;
@@ -408,7 +402,7 @@ public abstract class Operation
 			throw new JewelPetriException("Error: Attempted to queue non-triggerable operation.");
 
 		lobjQueue = new QueuedOp();
-		lobjQueue.mobjStep = lobjStep;
+		lobjQueue.mobjQueued = pobjQueued;
 		lobjQueue.mobjSource = this;
 		marrTriggers.add(lobjQueue);
 
@@ -419,12 +413,8 @@ public abstract class Operation
 		throws JewelPetriException
 	{
 		QueuedOp lobjQueue;
-		Operation lobjOp;
 
 		while ( (lobjQueue = parrTriggers.poll()) != null )
-		{
-			lobjOp = lobjQueue.mobjStep.GetOperation().GetNewInstance(lobjQueue.mobjStep.GetProcessID());
-			lobjOp.Execute(lobjQueue.mobjSource.getLog().getKey(), parrTriggers);
-		}
+			lobjQueue.mobjQueued.Execute(lobjQueue.mobjSource.getLog().getKey(), parrTriggers);
 	}
 }
