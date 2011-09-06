@@ -131,7 +131,7 @@ public class PNOperation
 			lrsPerms.close();
 			ldb.Disconnect();
 
-			marrPermissions = larrAux2.toArray(new IPermission[larrAux.size()]);
+			marrPermissions = larrAux2.toArray(new IPermission[larrAux2.size()]);
 		}
 		catch (Throwable e)
 		{
