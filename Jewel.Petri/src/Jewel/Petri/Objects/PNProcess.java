@@ -179,6 +179,7 @@ public class PNProcess
 	public void RecalcSteps(SQLServer pdb)
 		throws JewelPetriException
 	{
+		UUID lidSteps;
 		ArrayList<IStep> larrAux;
 		IOperation[] larrOps;
 		PNStep lobjAux;
@@ -194,6 +195,7 @@ public class PNProcess
 
 		try
 		{
+			lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
 			for ( i = 0; i < larrOps.length; i++ )
 			{
 				if ( GetOperation(larrOps[i].getKey()) != null )
@@ -205,11 +207,12 @@ public class PNProcess
 				lobjAux.setAt(2, larrOps[i].getDefaultLevel());
 				lobjAux.setAt(3, null);
 				lobjAux.setAt(4, null);
-				lobjAux.Initialize();
+				lobjAux.SetupNodes(this);
 
 				if ( lobjAux.IsRunnable() )
 				{
 					lobjAux.SaveToDb(pdb);
+					Engine.GetCache(true).setAt(lidSteps, lobjAux.getKey(), lobjAux);
 					larrAux.add((IStep)lobjAux);
 				}
 			}
@@ -258,10 +261,7 @@ public class PNProcess
 		PNNode lobjNode;
 		ArrayList<IStep> larrAux;
 		IOperation[] larrOps;
-		INode[] larrInputs;
 		PNStep lobjStep;
-		int j, k;
-		boolean b;
 
 		if ( !Lock() )
 			throw new JewelPetriException("Unexpected: Process locked during setup.");
@@ -304,47 +304,17 @@ public class PNProcess
 			lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
 			for ( i = 0; i < larrOps.length; i++ )
 			{
-				larrControllers = larrOps[i].getInputs();
-				larrInputs = new INode[larrControllers.length];
-				for ( j = 0; j < larrControllers.length; j++ )
+				lobjStep = PNStep.GetInstance(getNameSpace(), (UUID)null);
+				lobjStep.setAt(0, getKey());
+				lobjStep.setAt(1, larrOps[i].getKey());
+				lobjStep.setAt(2, larrOps[i].getDefaultLevel());
+				lobjStep.setAt(3, null);
+				lobjStep.setAt(4, null);
+				lobjStep.SetupNodes(this);
+
+				if ( lobjStep.IsRunnable() )
 				{
-					larrInputs[j] = null;
-					for ( k = 0; k < marrNodes.length; k++ )
-					{
-						if ( marrNodes[k].GetControllerID().equals(larrControllers[j].getKey()) )
-						{
-							if ( larrInputs[j] != null )
-							{
-								larrInputs[j] = null;
-								break;
-							}
-							larrInputs[j] = marrNodes[k];
-						}
-					}
-					if ( larrInputs[j] == null )
-						throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
-				}
-
-				for ( j = 0; j < larrInputs.length; j++ )
-					larrInputs[j].PrepCount();
-
-				for ( j = 0; j < larrInputs.length; j++ )
-					larrInputs[j].TryDecCount();
-
-				b = true;
-				for ( j = 0; b && j < larrInputs.length; j++ )
-					b = larrInputs[j].CheckCount();
-
-				if ( b )
-				{
-					lobjStep = PNStep.GetInstance(getNameSpace(), (UUID)null);
-					lobjStep.setAt(0, getKey());
-					lobjStep.setAt(1, larrOps[i].getKey());
-					lobjStep.setAt(2, larrOps[i].getDefaultLevel());
-					lobjStep.setAt(3, null);
-					lobjStep.setAt(4, null);
 					lobjStep.SaveToDb(pdb);
-					lobjStep.SetupNodes(this);
 					Engine.GetCache(true).setAt(lidSteps, lobjStep.getKey(), lobjStep);
 					larrAux.add((IStep)lobjStep);
 				}

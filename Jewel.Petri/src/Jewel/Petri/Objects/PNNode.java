@@ -97,7 +97,7 @@ public class PNNode
 		mbSaved = false;
 	}
 
-	public void IncCount()
+	public synchronized void IncCount()
 		throws JewelPetriException
 	{
 		if ( mbPending )

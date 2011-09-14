@@ -97,7 +97,7 @@ public class SQLServer
 			return i;
 		}
 
-		public static Connection GetConnection(int plngSlot)
+		public static Connection OpenConnection(int plngSlot)
 		{
 			return garrPool[plngSlot].GetCon();
 		}
@@ -107,26 +107,7 @@ public class SQLServer
 			garrPool[plngSlot].Release();
 		}
 	}
-	@SuppressWarnings("unused")
-	private static int gintInitDone = DoInit();
 
-	private static int DoInit()
-	{
-		try
-		{
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		}
-		catch (ClassNotFoundException e)
-		{
-			return -1;
-		}
-		return 0;
-	}
-
-//	private String mstrServer;
-//	private String mstrDB;
-//	private String mstrUser;
-//	private String mstrPassword;
 	private int mlngSlot;
 	private Connection mcon;
 	private boolean mbInTrans;
@@ -134,23 +115,24 @@ public class SQLServer
 	public SQLServer(String pstrServer, String pstrDB, String pstrUser, String pstrPassword)
 		throws SQLException
 	{
-//		mstrServer = pstrServer;
-//		mstrDB = pstrDB;
-//		mstrUser = pstrUser;
-//		mstrPassword = pstrPassword;
-
-		mlngSlot = Pool.GetSlot(pstrServer, pstrDB, pstrUser, pstrPassword);
-		mcon = Pool.GetConnection(mlngSlot);
+		synchronized(Pool.class)
+		{
+			mlngSlot = Pool.GetSlot(pstrServer, pstrDB, pstrUser, pstrPassword);
+			mcon = Pool.OpenConnection(mlngSlot);
+		}
 		mcon.setAutoCommit(true);
 		mbInTrans = false;
 	}
 
-	public void Disconnect()
+	public final void Disconnect()
 		throws SQLException
 	{
 		if (mbInTrans)
 			Rollback();
-		Pool.CloseConnection(mlngSlot);
+		synchronized(Pool.class)
+		{
+			Pool.CloseConnection(mlngSlot);
+		}
 	}
 
 	public void ExecuteSQL(String pstrSQL)
