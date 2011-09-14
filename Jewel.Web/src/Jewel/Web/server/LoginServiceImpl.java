@@ -35,8 +35,24 @@ public class LoginServiceImpl
 			larrNames = new ArrayList<LoginDomain>();
 
 	        ldb = new MasterDB();
-	        lrs = lrefNameSpace.SelectAll(ldb);
+        }
+        catch (Throwable e)
+        {
+        	throw new JewelWebException(e.getMessage(), e);
+        }
 
+        try
+        {
+	        lrs = lrefNameSpace.SelectAll(ldb);
+        }
+        catch (Throwable e)
+        {
+        	try { ldb.Disconnect(); } catch (SQLException e1) {}
+        	throw new JewelWebException(e.getMessage(), e);
+        }
+
+        try
+        {
 	        while (lrs.next())
 	        {
 	            lrefNSpace = NameSpace.GetInstance(lrs);
@@ -56,8 +72,29 @@ public class LoginServiceImpl
         }
         catch (Throwable e)
         {
+        	try { lrs.close(); } catch (SQLException e1) {}
+        	try { ldb.Disconnect(); } catch (SQLException e1) {}
         	throw new JewelWebException(e.getMessage(), e);
         }
+
+        try
+        {
+	        lrs.close();
+        }
+        catch (Throwable e)
+        {
+        	try { ldb.Disconnect(); } catch (SQLException e1) {}
+        	throw new JewelWebException(e.getMessage(), e);
+        }
+
+        try
+        {
+			ldb.Disconnect();
+		}
+        catch (Throwable e)
+        {
+        	throw new JewelWebException(e.getMessage(), e);
+		}
 
         return larrNames.toArray(new LoginDomain[larrNames.size()]);
 	}
@@ -109,7 +146,7 @@ public class LoginServiceImpl
 	        getSession().setAttribute("UserID", lidUser);
 	        getSession().setAttribute("UserNSpace", lidNSpace);
 	
-	        NameSpace.GetInstance(lidNSpace).DoLogin(lidUser);
+	        NameSpace.GetInstance(lidNSpace).DoLogin(lidUser, false);
 	        
 	        return User.GetInstance(lidNSpace, lidUser).getDisplayName();
         }

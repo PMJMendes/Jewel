@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.UUID;
 
 import Jewel.Engine.Engine;
@@ -53,13 +52,19 @@ public abstract class Operation
 		public Operation mobjQueued;
 		public Operation mobjSource;
 	}
+	
+	public static class QueueContext
+		extends LinkedList<QueuedOp>
+	{
+		private static final long serialVersionUID = 1L;
+	}
 
 	private transient UUID midProcess;
 	private transient IProcess mrefProcess;
 	private transient IStep mrefStep;
 	private transient boolean mbDone;
 	private transient ILog mobjLog;
-	private transient Queue<QueuedOp> marrTriggers;
+	private transient QueueContext marrTriggers;
 
 	public Operation(UUID pidProcess)
 	{
@@ -73,37 +78,50 @@ public abstract class Operation
 	public abstract String LongDesc(String pstrLineBreak);
 	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
 
+	public QueueContext GetQueue()
+	{
+		return marrTriggers;
+	}
+
+	public void Enqueue(QueueContext parrTriggers)
+	{
+		QueuedOp lobjQueue;
+
+		lobjQueue = new QueuedOp();
+		lobjQueue.mobjQueued = this;
+		lobjQueue.mobjSource = null;
+		parrTriggers.add(lobjQueue);
+	}
+
 	public void Execute()
 		throws JewelPetriException
 	{
-		Execute(null, new LinkedList<QueuedOp>());
+		Execute(null, new QueueContext());
 	}
 
 	public void Execute(UUID pidSourceLog)
 		throws JewelPetriException
 	{
-		Execute(pidSourceLog, new LinkedList<QueuedOp>());
+		Execute(pidSourceLog, new QueueContext());
 	}
 
-	private synchronized final void Execute(UUID pidSourceLog, Queue<QueuedOp> parrTriggers)
+	public void Execute(SQLServer pdb)
+		throws JewelPetriException
+	{
+		Execute(null, new QueueContext(), pdb);
+	}
+
+	private void Execute(UUID pidSourceLog, QueueContext parrTriggers)
 		throws JewelPetriException
 	{
 		MasterDB ldb;
-
-		if ( mbDone )
-			throw new JewelPetriException("Error: Attempt to run operation twice.");
-
-		mrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
-
-		LockProcess();
-
+		
 		try
 		{
 			ldb = new MasterDB();
 		}
 		catch (Throwable e)
 		{
-			mrefProcess.Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
@@ -114,129 +132,23 @@ public abstract class Operation
 		catch (Throwable e)
 		{
 			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
 		try
 		{
-			CheckRunnable();
+			Execute(pidSourceLog, parrTriggers, ldb);
 		}
 		catch (JewelPetriException e)
 		{
 			try { ldb.Rollback(); } catch (Throwable e1) {}
 			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
 			throw e;
 		}
 		catch (Throwable e)
 		{
 			try { ldb.Rollback(); } catch (Throwable e1) {}
 			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		marrTriggers = parrTriggers;
-
-		try
-		{
-			Run(ldb);
-		}
-		catch (JewelPetriException e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			marrTriggers = null;
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			marrTriggers = null;
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		marrTriggers = null;
-
-		try
-		{
-			BuildLog(ldb, pidSourceLog);
-		}
-		catch (JewelPetriException e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			mrefStep.DoSafeRun();
-		}
-		catch (JewelPetriException e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			mrefProcess.RecalcSteps(ldb);
-		}
-		catch (JewelPetriException e)
-		{
-			mrefStep.RollbackSafeRun();
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			mrefStep.RollbackSafeRun();
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			mrefStep.CommitSafeRun(ldb);
-		}
-		catch (JewelPetriException e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
@@ -247,13 +159,120 @@ public abstract class Operation
 		catch (Throwable e)
 		{
 			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			mrefProcess.Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
 		try
 		{
 			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+	private synchronized final void Execute(UUID pidSourceLog, QueueContext parrTriggers, SQLServer pdb)
+		throws JewelPetriException
+	{
+		if ( mbDone )
+			throw new JewelPetriException("Error: Attempt to run operation twice.");
+
+		if ( !GetProcess().IsRunning() )
+			throw new JewelPetriException("Error: Attempt to run operation on stopped process.");
+
+		LockProcess();
+
+		try
+		{
+			CheckRunnable();
+		}
+		catch (JewelPetriException e)
+		{
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		marrTriggers = parrTriggers;
+
+		try
+		{
+			Run(pdb);
+		}
+		catch (JewelPetriException e)
+		{
+			marrTriggers = null;
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			marrTriggers = null;
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		marrTriggers = null;
+
+		try
+		{
+			BuildLog(pdb, pidSourceLog);
+		}
+		catch (JewelPetriException e)
+		{
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			mrefStep.DoSafeRun();
+		}
+		catch (JewelPetriException e)
+		{
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			mrefProcess.RecalcSteps(pdb);
+		}
+		catch (JewelPetriException e)
+		{
+			mrefStep.RollbackSafeRun();
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			mrefStep.RollbackSafeRun();
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			mrefStep.CommitSafeRun(pdb);
+		}
+		catch (JewelPetriException e)
+		{
+			mrefProcess.Unlock();
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -265,9 +284,9 @@ public abstract class Operation
 
 		mbDone = true;
 
-		RunTriggers(parrTriggers);
+		mrefProcess.RunAutoSteps(parrTriggers, pdb);
 
-		mrefProcess.RunAutoSteps();
+		RunTriggers(parrTriggers, pdb);
 	}
 	
 	public ILog getLog()
@@ -378,7 +397,11 @@ public abstract class Operation
 	}
 
 	protected IProcess GetProcess()
+		throws JewelPetriException
 	{
+		if ( mrefProcess == null )
+			mrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
+
 		return mrefProcess;
 	}
 
@@ -409,12 +432,13 @@ public abstract class Operation
 		return true;
 	}
 
-	private void RunTriggers(Queue<QueuedOp> parrTriggers)
+	private void RunTriggers(QueueContext parrTriggers, SQLServer pdb)
 		throws JewelPetriException
 	{
 		QueuedOp lobjQueue;
 
 		while ( (lobjQueue = parrTriggers.poll()) != null )
-			lobjQueue.mobjQueued.Execute(lobjQueue.mobjSource.getLog().getKey(), parrTriggers);
+			lobjQueue.mobjQueued.Execute(lobjQueue.mobjSource == null ? null : lobjQueue.mobjSource.getLog().getKey(),
+					parrTriggers, pdb);
 	}
 }

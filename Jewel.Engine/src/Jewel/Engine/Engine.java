@@ -27,13 +27,13 @@ public class Engine
     }
 
     public static UUID FindEntity(UUID pidNSpace, UUID pidObject)
-    	throws SQLException, JewelEngineException
+    	throws JewelEngineException
     {
         return grefEngine.GetCache(true).FindEntity(pidNSpace, pidObject);
     }
 
     public static UUID InternalFindEntity(UUID pidNSpace, UUID pidObject)
-    	throws SQLException, JewelEngineException
+    	throws JewelEngineException
     {
         int[] larrMembers;
         java.lang.Object[] larrParams;
@@ -49,14 +49,20 @@ public class Engine
         larrParams[0] = pidNSpace;
         larrParams[1] = pidObject;
 
-        ldb = new MasterDB();
-        lrs = Entity.GetInstance(EntityGUIDs.E_Entity).SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-        if (lrs.next())
-            lidAux = UUID.fromString(lrs.getString(1));
-        else
-            lidAux = null;
-        lrs.close();
-        ldb.Disconnect();
+        try {
+			ldb = new MasterDB();
+	        lrs = Entity.GetInstance(EntityGUIDs.E_Entity).SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+	        if (lrs.next())
+	            lidAux = UUID.fromString(lrs.getString(1));
+	        else
+	            lidAux = null;
+	        lrs.close();
+	        ldb.Disconnect();
+		}
+        catch (Throwable e)
+        {
+        	throw new JewelEngineException(e.getMessage(), e);
+		}
 
         if (lidAux == null)
         {
@@ -115,6 +121,18 @@ public class Engine
     {
         return grefEngine.getCurrentNameSpace();
     }
+
+    public static void pushNameSpace(UUID pidNameSpace)
+    	throws JewelEngineException
+	{
+    	grefEngine.pushNameSpace(pidNameSpace);
+	}
+
+    public static void popNameSpace()
+    	throws JewelEngineException
+	{
+    	grefEngine.popNameSpace();
+	}
 
     public static Hashtable<String, java.lang.Object> getUserData()
     {

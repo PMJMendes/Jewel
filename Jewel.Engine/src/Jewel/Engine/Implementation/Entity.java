@@ -273,8 +273,6 @@ public class Entity
 		lstrSQL = SQLForUpdate(parrData, larrParams);
 
 		pdb.ExecuteSQL(lstrSQL + " WHERE [PK] = '" + pidKey.toString() + "'", larrParams.toArray(new Blob[larrParams.size()]));
-
-		Engine.GetCache(true).DeleteAt(getKey(), pidKey);
 	}
 
 	public void Delete(SQLServer pdb, UUID pidKey)

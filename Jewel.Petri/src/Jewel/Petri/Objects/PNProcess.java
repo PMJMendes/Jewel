@@ -42,6 +42,19 @@ public class PNProcess
 		}
 	}
 
+    public static PNProcess GetInstance(UUID pidNameSpace, ResultSet prsObject)
+		throws JewelPetriException
+	{
+	    try
+	    {
+			return (PNProcess)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNProcess), prsObject);
+		}
+	    catch (Throwable e)
+	    {
+	    	throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
 	public void Initialize()
 		throws JewelEngineException
 	{
@@ -150,7 +163,7 @@ public class PNProcess
 		return lobjResult;
 	}
 
-	public synchronized boolean Lock()
+	public synchronized final boolean Lock()
 	{
 		if ( mlngLock > 0 )
 			return false;
@@ -158,7 +171,7 @@ public class PNProcess
 		return true;
 	}
 
-	public synchronized void Unlock()
+	public synchronized final void Unlock()
 	{
 		mlngLock = 0;
 	}
@@ -234,92 +247,130 @@ public class PNProcess
 		marrSteps = larrAux.toArray(new IStep[larrAux.size()]);
 	}
 
-	public void Setup()
+	public void Setup(SQLServer pdb, Operation.QueueContext pobjContext, boolean pbInitialize)
 		throws JewelPetriException
 	{
-		MasterDB ldb;
 		IController[] larrControllers;
+		UUID lidNodes;
+		UUID lidSteps;
 		ArrayList<INode> larrAuxNodes;
 		int i;
 		PNNode lobjNode;
+		ArrayList<IStep> larrAux;
+		IOperation[] larrOps;
+		INode[] larrInputs;
+		PNStep lobjStep;
+		int j, k;
+		boolean b;
 
 		if ( !Lock() )
 			throw new JewelPetriException("Unexpected: Process locked during setup.");
 
-		try
-		{
-			ldb = new MasterDB();
-		}
-		catch (Throwable e)
+		if ( IsRunning() )
 		{
 			Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			ldb.BeginTrans();
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
+			return;
 		}
 
 		larrAuxNodes = new ArrayList<INode>();
 		larrControllers = GetScript().getControllers();
 		try
 		{
+			lidNodes = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode);
 			for ( i = 0; i < larrControllers.length; i++ )
 			{
-				lobjNode = PNNode.GetInstance(getNameSpace(), (UUID)null);
+				lobjNode = (PNNode)Engine.GetWorkInstance(lidNodes, (UUID)null);
 				lobjNode.setAt(0, getKey());
 				lobjNode.setAt(1, larrControllers[i].getKey());
 				lobjNode.setAt(2, larrControllers[i].getInitialCount());
-				lobjNode.SaveToDb(ldb);
+				lobjNode.SaveToDb(pdb);
+				lobjNode.Initialize();
+				Engine.GetCache(true).setAt(lidNodes, lobjNode.getKey(), lobjNode);
 				larrAuxNodes.add(lobjNode);
 			}
 
 			marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
-
-			RecalcSteps(ldb);
 		}
 		catch (Throwable e)
 		{
-			try { ldb.Rollback(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
+		larrAux = new ArrayList<IStep>();
+		larrOps = GetScript().getOperations();
 		try
 		{
-			ldb.Commit();
+			lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
+			for ( i = 0; i < larrOps.length; i++ )
+			{
+				larrControllers = larrOps[i].getInputs();
+				larrInputs = new INode[larrControllers.length];
+				for ( j = 0; j < larrControllers.length; j++ )
+				{
+					larrInputs[j] = null;
+					for ( k = 0; k < marrNodes.length; k++ )
+					{
+						if ( marrNodes[k].GetControllerID().equals(larrControllers[j].getKey()) )
+						{
+							if ( larrInputs[j] != null )
+							{
+								larrInputs[j] = null;
+								break;
+							}
+							larrInputs[j] = marrNodes[k];
+						}
+					}
+					if ( larrInputs[j] == null )
+						throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
+				}
+
+				for ( j = 0; j < larrInputs.length; j++ )
+					larrInputs[j].PrepCount();
+
+				for ( j = 0; j < larrInputs.length; j++ )
+					larrInputs[j].TryDecCount();
+
+				b = true;
+				for ( j = 0; b && j < larrInputs.length; j++ )
+					b = larrInputs[j].CheckCount();
+
+				if ( b )
+				{
+					lobjStep = PNStep.GetInstance(getNameSpace(), (UUID)null);
+					lobjStep.setAt(0, getKey());
+					lobjStep.setAt(1, larrOps[i].getKey());
+					lobjStep.setAt(2, larrOps[i].getDefaultLevel());
+					lobjStep.setAt(3, null);
+					lobjStep.setAt(4, null);
+					lobjStep.SaveToDb(pdb);
+					lobjStep.SetupNodes(this);
+					Engine.GetCache(true).setAt(lidSteps, lobjStep.getKey(), lobjStep);
+					larrAux.add((IStep)lobjStep);
+				}
+			}
+		}
+		catch (JewelPetriException e)
+		{
+			Unlock();
+			throw e;
 		}
 		catch (Throwable e)
 		{
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
-		try
-		{
-			ldb.Disconnect();
-		}
-		catch (Throwable e)
-		{
-			Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
+		marrSteps = larrAux.toArray(new IStep[larrAux.size()]);
+
+		Restart(pdb);
 
 		Unlock();
 
-		RunAutoSteps();
+		RunAutoSteps(pobjContext, pdb);
 	}
 
-	public void RunAutoSteps()
+	public void RunAutoSteps(Operation.QueueContext pobjContext, SQLServer pdb)
 		throws JewelPetriException
 	{
 		int i;
@@ -334,7 +385,12 @@ public class PNProcess
 			{
 				lobjOp = marrSteps[i].GetOperation().GetNewInstance(getKey());
 				Unlock();
-				lobjOp.Execute();
+
+				if ( pobjContext == null )
+					lobjOp.Execute(pdb);
+				else
+					lobjOp.Enqueue(pobjContext);
+
 				return;
 			}
 		}
@@ -354,6 +410,39 @@ public class PNProcess
 		try
 		{
 			return Engine.GetWorkInstance(Engine.FindEntity(getNameSpace(), GetScript().GetDataType()), lidData);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	public boolean IsRunning()
+	{
+		return (Boolean)getAt(4);
+	}
+
+	public void Restart(SQLServer pdb)
+		throws JewelPetriException
+	{
+		internalSetAt(4, true);
+		try
+		{
+			SaveToDb(pdb);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	public void Stop(SQLServer pdb)
+		throws JewelPetriException
+	{
+		internalSetAt(4, false);
+		try
+		{
+			SaveToDb(pdb);
 		}
 		catch (Throwable e)
 		{

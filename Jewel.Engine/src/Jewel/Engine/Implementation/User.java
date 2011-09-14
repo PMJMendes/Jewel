@@ -16,7 +16,7 @@ public class User
 	private IProfile mrefProfile;
 
     public static User GetInstance(UUID pidNameSpace, UUID pidKey)
-    	throws JewelEngineException, SQLException
+    	throws JewelEngineException
 	{
         return (User)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, ObjectGUIDs.O_User), pidKey);
 	}

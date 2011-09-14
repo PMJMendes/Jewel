@@ -11,6 +11,7 @@ import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
 import Jewel.Petri.Interfaces.*;
 import Jewel.Petri.SysObjects.JewelPetriException;
+import Jewel.Petri.SysObjects.ProcessData;
 
 public class PNScript
 	extends ObjectBase
@@ -102,27 +103,31 @@ public class PNScript
 		return marrControllers;
 	}
 
-	public void CreateInstance(java.lang.Object[] parrParams)
+	public UUID GetDataType()
+	{
+		return (UUID)getAt(2);
+	}
+
+	public void CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent)
 		throws JewelPetriException
 	{
-    	UUID lidNSpace;
-		UUID lidData;
-		UUID lidParent;
 		MasterDB ldb;
-		ObjectBase lobjData;
+		ObjectBase lobjAux;
+		ProcessData lobjData;
 		PNProcess lobjProc;
 
-		if ( (parrParams == null) || (parrParams.length < 4) || (parrParams[3] == null) || !(parrParams[3] instanceof UUID))
-			throw new JewelPetriException("Invalid Argument: Name Space to start up in is null or not an identifier.");
-		lidNSpace = (UUID)parrParams[3];
-		if ( (parrParams.length >= 5) && (parrParams[4] != null) && (parrParams[4] instanceof UUID))
-			lidData = (UUID)parrParams[4];
-		else
-			lidData = null;
-		if ( (parrParams.length >= 6) && (parrParams[5] != null) && (parrParams[5] instanceof UUID))
-			lidParent = (UUID)parrParams[5];
-		else
-			lidParent = null;
+		try
+		{
+			lobjAux = Engine.GetWorkInstance(Engine.FindEntity(pidNSpace, (UUID)getAt(2)), pidData);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		if ( !(lobjAux instanceof ProcessData) )
+			throw new JewelPetriException("Unexpected: Invalid data object for new process.");
+		lobjData = (ProcessData)lobjAux;
 
 		try
 		{
@@ -145,26 +150,24 @@ public class PNScript
 
 		try
 		{
-			lobjData = Engine.GetWorkInstance(Engine.FindEntity(lidNSpace, (UUID)getAt(2)), lidData);
-
-			lobjProc = (PNProcess)Engine.GetWorkInstance(Engine.FindEntity(lidNSpace, Constants.ObjID_PNProcess), (UUID)null);
+			lobjProc = (PNProcess)Engine.GetWorkInstance(Engine.FindEntity(pidNSpace, Constants.ObjID_PNProcess), (UUID)null);
 			lobjProc.setAt(0, getKey());
-			lobjProc.setAt(1, lidData);
+			lobjProc.setAt(1, pidData);
 			lobjProc.setAt(2, Engine.getCurrentUser());
-			lobjProc.setAt(3, lidParent);
+			lobjProc.setAt(3, pidParent);
 			lobjProc.SaveToDb(ldb);
 
-			lobjData.setAt(0, lobjProc.getKey());
+			lobjData.SetProcessID(lobjProc.getKey());
 			lobjData.SaveToDb(ldb);
 
-			if ( lidData == null )
+			if ( pidData == null )
 			{
-				lidData = lobjData.getKey();
-				lobjProc.setAt(1, lidData);
+				pidData = lobjData.getKey();
+				lobjProc.setAt(1, pidData);
 				lobjProc.SaveToDb(ldb);
 			}
 
-			lobjProc.Setup();
+			lobjProc.Setup(ldb, null, false);
 		}
 		catch (Throwable e)
 		{
@@ -191,12 +194,29 @@ public class PNScript
 		{
 			throw new JewelPetriException(e.getMessage(), e);
 		}
-
-		throw new JewelPetriException("Process successfully deployed.");
 	}
 
-	public UUID GetDataType()
+	public void CreateInstance(java.lang.Object[] parrParams)
+		throws JewelPetriException
 	{
-		return (UUID)getAt(2);
+    	UUID lidNSpace;
+		UUID lidData;
+		UUID lidParent;
+
+		if ( (parrParams == null) || (parrParams.length < 4) || (parrParams[3] == null) || !(parrParams[3] instanceof UUID))
+			throw new JewelPetriException("Invalid Argument: Name Space to start up in is null or not an identifier.");
+		lidNSpace = (UUID)parrParams[3];
+		if ( (parrParams.length >= 5) && (parrParams[4] != null) && (parrParams[4] instanceof UUID))
+			lidData = (UUID)parrParams[4];
+		else
+			lidData = null;
+		if ( (parrParams.length >= 6) && (parrParams[5] != null) && (parrParams[5] instanceof UUID))
+			lidParent = (UUID)parrParams[5];
+		else
+			lidParent = null;
+
+		CreateInstance(lidNSpace, lidData, lidParent);
+
+		throw new JewelPetriException("Process successfully deployed.");
 	}
 }

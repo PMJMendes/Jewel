@@ -13,6 +13,9 @@ public interface IEngineImpl
     UUID getCurrentNameSpace();
     Hashtable<String, Object> getUserData();
 
+    void pushNameSpace(UUID pidNameSpace) throws JewelEngineException;
+    void popNameSpace() throws JewelEngineException;
+
     String getCurrentPath();
     void UnloadEngine();
 

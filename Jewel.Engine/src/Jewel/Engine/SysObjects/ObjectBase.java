@@ -183,7 +183,10 @@ public abstract class ObjectBase
 	            throw new JewelEngineException(lstrError);
 
             if ( !mbReadOnly )
+            {
+        		Engine.GetCache(true).DeleteAt(getKey(), midKey);
             	Engine.GetCache(false).getAt(midEntity, midKey).setData(getData());
+            }
         }
     }
 

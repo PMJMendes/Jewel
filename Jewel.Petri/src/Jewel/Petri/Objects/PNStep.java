@@ -54,18 +54,32 @@ public class PNStep
 	public void Initialize()
 		throws JewelEngineException
 	{
-		IController[] larrCtls;
-		INode[] larrNodes;
-		int i, j;
-
 		try
 		{
-			mrefProcess = (IProcess)PNProcess.GetInstance(getNameSpace(), (UUID)getAt(0));
-			mrefOperation = (IOperation)PNOperation.GetInstance(getNameSpace(), (UUID)getAt(1));
+			SetupNodes((IProcess)PNProcess.GetInstance(getNameSpace(), (UUID)getAt(0)));
 		}
 		catch (Throwable e)
 		{
 			throw new JewelEngineException(e.getMessage(), e);
+		}
+	}
+
+	public void SetupNodes(IProcess prefProcess)
+		throws JewelPetriException
+	{
+		IController[] larrCtls;
+		INode[] larrNodes;
+		int i, j;
+
+		mrefProcess = prefProcess;
+
+		try
+		{
+			mrefOperation = (IOperation)PNOperation.GetInstance(getNameSpace(), (UUID)getAt(1));
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
 		}
 
 		larrNodes = mrefProcess.GetNodes();
@@ -88,7 +102,7 @@ public class PNStep
 				}
 			}
 			if ( marrInputs[i] == null )
-				throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
+				throw new JewelPetriException("Database is inconsistent: Unexpected number of nodes for controller in process.");
 		}
 
 		larrCtls = mrefOperation.getOutputs();
@@ -109,7 +123,7 @@ public class PNStep
 				}
 			}
 			if ( marrOutputs[i] == null )
-				throw new JewelEngineException("Database is inconsistent: Unexpected number of nodes for controller in process.");
+				throw new JewelPetriException("Database is inconsistent: Unexpected number of nodes for controller in process.");
 		}
 	}
 

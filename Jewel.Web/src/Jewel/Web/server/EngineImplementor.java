@@ -1,14 +1,31 @@
 package Jewel.Web.server;
 
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.Hashtable;
+import java.util.UUID;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.SysObjects.*;
+import Jewel.Engine.Engine;
+import Jewel.Engine.Constants.Miscellaneous;
+import Jewel.Engine.Constants.ObjectGUIDs;
+import Jewel.Engine.DataAccess.MasterDB;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.NameSpace;
+import Jewel.Engine.Implementation.User;
+import Jewel.Engine.Interfaces.IEngineImpl;
+import Jewel.Engine.Interfaces.IEntity;
+import Jewel.Engine.Interfaces.INameSpace;
+import Jewel.Engine.Interfaces.IUser;
+import Jewel.Engine.SysObjects.Cache;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Engine.SysObjects.JewelEngineException;
 
-import com.google.gwt.user.server.rpc.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class EngineImplementor
 	extends RemoteServiceServlet
@@ -41,6 +58,9 @@ public class EngineImplementor
     	return grefSession.theSession.get();
     }
 
+    private IUser mrefPushedUser;
+    private INameSpace mrefPushedNSpace;
+
     public EngineImplementor()
     {
     	if ( mrefContext == null )
@@ -48,6 +68,9 @@ public class EngineImplementor
 
     	if ( grefSession == null )
     		grefSession = new SessionHolder();
+
+        mrefPushedUser = null;
+        mrefPushedNSpace = null;
     }
 
     public EngineImplementor(ServletContext prefContext)
@@ -143,6 +166,93 @@ public class EngineImplementor
 
         return larrUserData;
     }
+
+	public void pushNameSpace(UUID pidNameSpace)
+		throws JewelEngineException
+	{
+		User lobjUser;
+		INameSpace lrefNSpace;
+        IEntity lrefUsers;
+        MasterDB ldb;
+        ResultSet lrs;
+        int[] larrMembers;
+        java.lang.Object[] larrParams;
+        UUID lidUser;
+
+		if ( mrefPushedUser != null )
+			throw new JewelEngineException("Error: Nested Name Space push not allowed.");
+		if ( mrefPushedNSpace != null )
+			throw new JewelEngineException("Unexpected: Inconsistent internal state during Name Space push.");
+
+		lrefNSpace = NameSpace.GetInstance(getCurrentNameSpace());
+		lobjUser = User.GetInstance(lrefNSpace.getKey(), getCurrentUser());
+
+        lidUser = null;
+
+        larrMembers = new int[2];
+        larrMembers[0] = Miscellaneous.Username_In_User;
+        larrMembers[1] = Miscellaneous.Password_In_User;
+        larrParams = new java.lang.Object[2];
+        larrParams[0] = "!" + lobjUser.getAt(Miscellaneous.Username_In_User);
+        larrParams[1] = lobjUser.getAt(Miscellaneous.Password_In_User);
+
+        try
+        {
+	        lrefUsers = Entity.GetInstance(Engine.FindEntity(pidNameSpace, ObjectGUIDs.O_User));
+	
+	        ldb = new MasterDB();
+	        lrs = lrefUsers.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+
+	        if (lrs.next())
+	        {
+	            lidUser = UUID.fromString(lrs.getString(1));
+	            if (lrs.next())
+	            {
+	    	        lrs.close();
+	    	        ldb.Disconnect();
+	                throw new JewelEngineException("Unexpected: Username is not unique!");
+	            }
+	        }
+	        else
+	        {
+		        lrs.close();
+		        ldb.Disconnect();
+	            throw new JewelEngineException("Invalid Username or Password!");
+	        }
+
+	        lrs.close();
+	        ldb.Disconnect();
+
+	        mrefPushedUser = lobjUser;
+	        mrefPushedNSpace = lrefNSpace;
+
+	        getSession().setAttribute("UserID", lidUser);
+	        getSession().setAttribute("UserNSpace", pidNameSpace);
+
+	        NameSpace.GetInstance(pidNameSpace).DoLogin(lidUser, true);
+        }
+        catch (JewelEngineException e)
+        {
+        	throw e;
+        }
+        catch (Throwable e)
+        {
+        	throw new JewelEngineException(e.getMessage(), e);
+        }
+	}
+
+	public void popNameSpace()
+		throws JewelEngineException
+	{
+		if ( mrefPushedUser == null )
+			throw new JewelEngineException("Error: No previous Name Space push.");
+		if ( mrefPushedNSpace == null )
+			throw new JewelEngineException("Unexpected: Inconsistent internal state during Name Space pop.");
+        getSession().setAttribute("UserID", mrefPushedUser.getKey());
+        getSession().setAttribute("UserNSpace", mrefPushedNSpace.getKey());
+        mrefPushedUser = null;
+        mrefPushedNSpace = null;
+	}
 
     public String getCurrentPath()
     {

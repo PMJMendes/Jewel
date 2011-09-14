@@ -171,7 +171,7 @@ public class Cache
 	}
 
     public UUID FindEntity(UUID pidNSpace, UUID pidObject)
-    	throws SQLException, JewelEngineException
+    	throws JewelEngineException
     {
         java.lang.Object lobjAux;
         UUID lidAux;

@@ -10,6 +10,6 @@ public interface IScript
 {
 	IOperation[] getOperations();
 	IController[] getControllers();
-	void CreateInstance(java.lang.Object[] parrParams) throws JewelPetriException;
 	UUID GetDataType(); 
+	void CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent) throws JewelPetriException;
 }

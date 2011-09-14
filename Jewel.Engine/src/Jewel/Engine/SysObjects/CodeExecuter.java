@@ -134,7 +134,7 @@ public class CodeExecuter
         return ExecuteGeneral(pstrAssembly, pstrType, pstrMethod, larrTypes, larrParams);
     }
 
-    public static String ExecuteLogin(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, UUID pidUser)
+    public static String ExecuteLogin(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, UUID pidUser, boolean pbNested)
     {
         Class<?>[] larrTypes;
         java.lang.Object[] larrParams;
@@ -142,10 +142,12 @@ public class CodeExecuter
         larrTypes = new Class<?>[2];
         larrTypes[0] = UUID.class;
         larrTypes[1] = UUID.class;
+        larrTypes[2] = boolean.class;
 
         larrParams = new java.lang.Object[2];
         larrParams[0] = pidNameSpace;
         larrParams[1] = pidUser;
+        larrParams[2] = pbNested;
 
         return ExecuteGeneral(pstrAssembly, pstrType, pstrMethod, larrTypes, larrParams);
     }

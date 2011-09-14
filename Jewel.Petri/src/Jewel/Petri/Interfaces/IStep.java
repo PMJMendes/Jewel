@@ -9,6 +9,7 @@ import Jewel.Petri.SysObjects.JewelPetriException;
 public interface IStep
 	extends IJewelBase
 {
+	public void SetupNodes(IProcess prefProcess) throws JewelPetriException;
     public UUID GetProcessID();
     public IProcess GetProcess();
     public UUID GetOperationID();

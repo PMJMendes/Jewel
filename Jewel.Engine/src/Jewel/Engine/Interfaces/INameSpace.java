@@ -12,5 +12,5 @@ public interface INameSpace
         String getAssembly();
         String getStaticClass();
         String getLoginMethod();
-        void DoLogin(UUID pidUser);
+        void DoLogin(UUID pidUser, boolean pbNested);
 }

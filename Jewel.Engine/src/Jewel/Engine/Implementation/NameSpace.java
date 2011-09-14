@@ -67,9 +67,9 @@ public class NameSpace
         return mrefApp.getLoginMethod();
     }
 
-    public void DoLogin(UUID pidUser)
+    public void DoLogin(UUID pidUser, boolean pbNested)
     {
-        DoLogin(getKey(), pidUser);
+        DoLogin(getKey(), pidUser, pbNested);
     }
 
     public void CreateInDB(java.lang.Object[] parrParams)
@@ -88,12 +88,12 @@ public class NameSpace
         ldb.Disconnect();
     }
 
-    public void DoLogin(UUID pidOriginalSpace, UUID pidUser)
+    public void DoLogin(UUID pidOriginalSpace, UUID pidUser, boolean pbNested)
     {
         if ((getAssembly() != null) && (getStaticClass() != null) && (getLoginMethod() != null))
-            CodeExecuter.ExecuteLogin(getAssembly(), getStaticClass(), getLoginMethod(), pidOriginalSpace, pidUser);
+            CodeExecuter.ExecuteLogin(getAssembly(), getStaticClass(), getLoginMethod(), pidOriginalSpace, pidUser, pbNested);
 
         if (mrefParent != null)
-            mrefParent.DoLogin(pidOriginalSpace, pidUser);
+            mrefParent.DoLogin(pidOriginalSpace, pidUser, pbNested);
     }
 }
