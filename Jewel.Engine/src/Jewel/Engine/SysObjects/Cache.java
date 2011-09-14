@@ -104,7 +104,7 @@ public class Cache
 		mbIsGlobal = pbIsGlobal;
 	}
 
-    public void InitCache()
+    public synchronized void InitCache()
     	throws JewelEngineException
     {
         int i;
@@ -148,9 +148,11 @@ public class Cache
 		return GetObject(pidEntity, pidKey, null, true);
 	}
 
-	public void setAt(UUID pidEntity, UUID pidKey, ObjectBase value)
+	public synchronized void setAt(UUID pidEntity, UUID pidKey, ObjectBase value)
 	{
 		marrElements.put(pidEntity.toString() + "." + pidKey.toString(), value);
+        if (mbIsGlobal)
+            value.SetReadonly();
 	}
 
 	public ObjectBase getAt(UUID pidEntity, ResultSet prsObject)
@@ -165,12 +167,12 @@ public class Cache
 		return GetObject(pidEntity, pidKey, null, false);
 	}
 
-	public void DeleteAt(UUID pidEntity, UUID pidKey)
+	public synchronized void DeleteAt(UUID pidEntity, UUID pidKey)
 	{
 		marrElements.remove(pidEntity.toString() + "." + pidKey.toString());
 	}
 
-    public UUID FindEntity(UUID pidNSpace, UUID pidObject)
+    public synchronized UUID FindEntity(UUID pidNSpace, UUID pidObject)
     	throws JewelEngineException
     {
         java.lang.Object lobjAux;

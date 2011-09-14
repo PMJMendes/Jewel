@@ -108,10 +108,9 @@ public class PNScript
 		return (UUID)getAt(2);
 	}
 
-	public void CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent)
+	public void CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb)
 		throws JewelPetriException
 	{
-		MasterDB ldb;
 		ObjectBase lobjAux;
 		ProcessData lobjData;
 		PNProcess lobjProc;
@@ -128,6 +127,55 @@ public class PNScript
 		if ( !(lobjAux instanceof ProcessData) )
 			throw new JewelPetriException("Unexpected: Invalid data object for new process.");
 		lobjData = (ProcessData)lobjAux;
+
+		try
+		{
+			lobjProc = (PNProcess)Engine.GetWorkInstance(Engine.FindEntity(pidNSpace, Constants.ObjID_PNProcess), (UUID)null);
+			lobjProc.setAt(0, getKey());
+			lobjProc.setAt(1, pidData);
+			lobjProc.setAt(2, Engine.getCurrentUser());
+			lobjProc.setAt(3, pidParent);
+			lobjProc.setAt(4, false);
+			lobjProc.SaveToDb(pdb);
+			Engine.GetCache(true).setAt(Engine.FindEntity(pidNSpace, Constants.ObjID_PNProcess), lobjProc.getKey(), lobjProc);
+
+			lobjData.SetProcessID(lobjProc.getKey());
+			lobjData.SaveToDb(pdb);
+
+			if ( pidData == null )
+			{
+				pidData = lobjData.getKey();
+				lobjProc.setAt(1, pidData);
+				lobjProc.SaveToDb(pdb);
+			}
+
+			lobjProc.Setup(pdb, null, false);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	public void CreateInstance(java.lang.Object[] parrParams)
+		throws JewelPetriException
+	{
+    	UUID lidNSpace;
+		UUID lidData;
+		UUID lidParent;
+		MasterDB ldb;
+
+		if ( (parrParams == null) || (parrParams.length < 4) || (parrParams[3] == null) || !(parrParams[3] instanceof UUID))
+			throw new JewelPetriException("Invalid Argument: Name Space to start up in is null or not an identifier.");
+		lidNSpace = (UUID)parrParams[3];
+		if ( (parrParams.length >= 5) && (parrParams[4] != null) && (parrParams[4] instanceof UUID))
+			lidData = (UUID)parrParams[4];
+		else
+			lidData = null;
+		if ( (parrParams.length >= 6) && (parrParams[5] != null) && (parrParams[5] instanceof UUID))
+			lidParent = (UUID)parrParams[5];
+		else
+			lidParent = null;
 
 		try
 		{
@@ -150,24 +198,13 @@ public class PNScript
 
 		try
 		{
-			lobjProc = (PNProcess)Engine.GetWorkInstance(Engine.FindEntity(pidNSpace, Constants.ObjID_PNProcess), (UUID)null);
-			lobjProc.setAt(0, getKey());
-			lobjProc.setAt(1, pidData);
-			lobjProc.setAt(2, Engine.getCurrentUser());
-			lobjProc.setAt(3, pidParent);
-			lobjProc.SaveToDb(ldb);
-
-			lobjData.SetProcessID(lobjProc.getKey());
-			lobjData.SaveToDb(ldb);
-
-			if ( pidData == null )
-			{
-				pidData = lobjData.getKey();
-				lobjProc.setAt(1, pidData);
-				lobjProc.SaveToDb(ldb);
-			}
-
-			lobjProc.Setup(ldb, null, false);
+			CreateInstance(lidNSpace, lidData, lidParent, ldb);
+		}
+		catch (JewelPetriException e)
+		{
+			try { ldb.Rollback(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -194,28 +231,6 @@ public class PNScript
 		{
 			throw new JewelPetriException(e.getMessage(), e);
 		}
-	}
-
-	public void CreateInstance(java.lang.Object[] parrParams)
-		throws JewelPetriException
-	{
-    	UUID lidNSpace;
-		UUID lidData;
-		UUID lidParent;
-
-		if ( (parrParams == null) || (parrParams.length < 4) || (parrParams[3] == null) || !(parrParams[3] instanceof UUID))
-			throw new JewelPetriException("Invalid Argument: Name Space to start up in is null or not an identifier.");
-		lidNSpace = (UUID)parrParams[3];
-		if ( (parrParams.length >= 5) && (parrParams[4] != null) && (parrParams[4] instanceof UUID))
-			lidData = (UUID)parrParams[4];
-		else
-			lidData = null;
-		if ( (parrParams.length >= 6) && (parrParams[5] != null) && (parrParams[5] instanceof UUID))
-			lidParent = (UUID)parrParams[5];
-		else
-			lidParent = null;
-
-		CreateInstance(lidNSpace, lidData, lidParent);
 
 		throw new JewelPetriException("Process successfully deployed.");
 	}
