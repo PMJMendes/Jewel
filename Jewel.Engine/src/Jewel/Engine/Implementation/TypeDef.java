@@ -124,7 +124,10 @@ public class TypeDef
 
             try
             {
-				parrParams.add(new SerialBlob(((FileXfer)pobjValue).GetVarData()));
+            	if ( pobjValue instanceof FileXfer )
+            		parrParams.add(new SerialBlob(((FileXfer)pobjValue).GetVarData()));
+            	else
+            		parrParams.add(new SerialBlob((byte [])pobjValue));
 			}
             catch (Throwable e)
             {

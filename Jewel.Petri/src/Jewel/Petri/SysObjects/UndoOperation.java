@@ -16,22 +16,39 @@ public abstract class UndoOperation
 	}
 
 	public UUID midSourceLog;
+	public UUID midNameSpace;
 
 	public transient PNLog mrefLog;
-	public transient UndoableOperation mobjSourceOp;
+	public transient Operation mobjSourceOp;
 
 	public String LongDesc(String pstrLineBreak)
 	{
-		if ( mobjSourceOp instanceof UndoableOperation )
-			return ((UndoableOperation)mobjSourceOp).UndoLongDesc(pstrLineBreak);
+		try
+		{
+			if ( mobjSourceOp == null )
+			{
+				if ( mrefLog == null )
+					mrefLog = PNLog.GetInstance(midNameSpace, midSourceLog);
+			}
+			mobjSourceOp = mrefLog.GetOperationData();
+			if ( !(mobjSourceOp instanceof UndoableOperation) )
+				throw new JewelPetriException("Unexpected: Operation does not support Undo methods.");
+		}
+		catch (Throwable e)
+		{
+			return "Error obtaining log information from original operation.";
+		}
 
-		return null;
+		return ((UndoableOperation)mobjSourceOp).UndoLongDesc(pstrLineBreak);
 	}
 
 	protected void Run(SQLServer pdb)
 		throws JewelPetriException
 	{
-		mobjSourceOp.Undo(pdb);
+		if ( !(mobjSourceOp instanceof UndoableOperation) )
+			throw new JewelPetriException("Unexpected: Operation does not support Undo methods.");
+
+		((UndoableOperation)mobjSourceOp).Undo(pdb);
 
 		try
 		{
