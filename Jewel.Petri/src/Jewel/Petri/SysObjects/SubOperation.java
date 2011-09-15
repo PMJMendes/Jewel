@@ -15,4 +15,5 @@ public abstract class SubOperation
 	public abstract void UndoDesc(StringBuilder pstrResult, String pstrLineBreak);
 	public abstract void UndoLongDesc(StringBuilder pstrResult, String pstrLineBreak);
 	public abstract void UndoSubOp(SQLServer pdb, UUID pidOwner) throws JewelPetriException;
+	public abstract UndoableOperation.UndoSet[] GetSubSet();
 }
