@@ -18,37 +18,41 @@ public abstract class UndoOperation
 	public UUID midSourceLog;
 	public UUID midNameSpace;
 
-	public transient PNLog mrefLog;
-	public transient Operation mobjSourceOp;
+	private transient PNLog mrefLog;
+	private transient UndoableOperation mobjSourceOp;
+
+	public UndoableOperation GetSource()
+		throws JewelPetriException
+	{
+		Setup();
+		return mobjSourceOp;
+	}
 
 	public String LongDesc(String pstrLineBreak)
 	{
 		try
 		{
-			if ( mobjSourceOp == null )
-			{
-				if ( mrefLog == null )
-					mrefLog = PNLog.GetInstance(midNameSpace, midSourceLog);
-			}
-			mobjSourceOp = mrefLog.GetOperationData();
-			if ( !(mobjSourceOp instanceof UndoableOperation) )
-				throw new JewelPetriException("Unexpected: Operation does not support Undo methods.");
+			Setup();
 		}
 		catch (Throwable e)
 		{
 			return "Error obtaining log information from original operation.";
 		}
 
-		return ((UndoableOperation)mobjSourceOp).UndoLongDesc(pstrLineBreak);
+		return mobjSourceOp.UndoLongDesc(pstrLineBreak);
+	}
+
+	public UUID GetExternalProcess()
+	{
+		return null;
 	}
 
 	protected void Run(SQLServer pdb)
 		throws JewelPetriException
 	{
-		if ( !(mobjSourceOp instanceof UndoableOperation) )
-			throw new JewelPetriException("Unexpected: Operation does not support Undo methods.");
+		Setup();
 
-		((UndoableOperation)mobjSourceOp).Undo(pdb);
+		mobjSourceOp.ExecuteUndo(marrTriggers, pdb);
 
 		try
 		{
@@ -58,6 +62,23 @@ public abstract class UndoOperation
 		catch (Throwable e)
 		{
 			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	private void Setup()
+		throws JewelPetriException
+	{
+		Operation lobjOp;
+
+		if ( mrefLog == null )
+			mrefLog = PNLog.GetInstance(midNameSpace, midSourceLog);
+
+		if ( mobjSourceOp == null )
+		{
+			lobjOp = mrefLog.GetOperationData();
+			if ( !(lobjOp instanceof UndoableOperation) )
+				throw new JewelPetriException("Unexpected: Operation does not support Undo methods.");
+			mobjSourceOp = (UndoableOperation)lobjOp;
 		}
 	}
 }

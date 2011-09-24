@@ -26,4 +26,28 @@ public abstract class UndoableOperation
 	public abstract String UndoLongDesc(String pstrLineBreak);
 	protected abstract void Undo(SQLServer pdb) throws JewelPetriException;
 	public abstract UndoSet[] GetSets();
+
+	public void ExecuteUndo(QueueContext parrQueue, SQLServer pdb)
+		throws JewelPetriException
+	{
+		QueueContext larrOldContext;
+
+		larrOldContext = marrTriggers;
+		marrTriggers = parrQueue;
+
+		try
+		{
+			Undo(pdb);
+		}
+		catch (JewelPetriException e)
+		{
+			marrTriggers = larrOldContext;
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			marrTriggers = larrOldContext;
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
 }

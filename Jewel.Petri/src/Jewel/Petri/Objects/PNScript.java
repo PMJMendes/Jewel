@@ -108,7 +108,7 @@ public class PNScript
 		return (UUID)getAt(2);
 	}
 
-	public void CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb)
+	public IProcess CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb)
 		throws JewelPetriException
 	{
 		ObjectBase lobjAux;
@@ -155,6 +155,8 @@ public class PNScript
 		{
 			throw new JewelPetriException(e.getMessage(), e);
 		}
+
+		return lobjProc;
 	}
 
 	public void CreateInstance(java.lang.Object[] parrParams)

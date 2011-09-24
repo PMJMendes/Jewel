@@ -16,6 +16,9 @@ public interface IProcess
     public INode[] GetNodes();
     public IStep[] GetValidSteps();
     public IStep GetOperation(UUID pidOperation) throws JewelPetriException;
+    public IProcess GetParent() throws JewelPetriException;
+    public UUID GetManagerID();
+    public void SetManagerID(UUID pidManager, SQLServer pdb) throws JewelPetriException;
 	public boolean Lock();
 	public void Unlock();
 	public void RecalcSteps(SQLServer pdb) throws JewelPetriException;

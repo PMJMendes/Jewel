@@ -64,7 +64,7 @@ public abstract class Operation
 	private transient IStep mrefStep;
 	private transient boolean mbDone;
 	private transient ILog mobjLog;
-	private transient QueueContext marrTriggers;
+	protected transient QueueContext marrTriggers;
 
 	public Operation(UUID pidProcess)
 	{
@@ -76,12 +76,8 @@ public abstract class Operation
 	protected abstract UUID OpID();
 	public abstract String ShortDesc();
 	public abstract String LongDesc(String pstrLineBreak);
+	public abstract UUID GetExternalProcess();
 	protected abstract void Run(SQLServer pdb) throws JewelPetriException;
-
-	public QueueContext GetQueue()
-	{
-		return marrTriggers;
-	}
 
 	public void Enqueue(QueueContext parrTriggers)
 	{
@@ -386,6 +382,7 @@ public abstract class Operation
 			lobjLog.setAt(4, pidSource);
 			lobjLog.setAt(5, false);
 			lobjLog.setAt(6, lobjFile);
+			lobjLog.setAt(7, GetExternalProcess());
 			lobjLog.SaveToDb(pdb);
 		}
 		catch (Throwable e)

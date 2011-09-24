@@ -12,5 +12,5 @@ public interface IScript
 	IOperation[] getOperations();
 	IController[] getControllers();
 	UUID GetDataType(); 
-	void CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb) throws JewelPetriException;
+	IProcess CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb) throws JewelPetriException;
 }

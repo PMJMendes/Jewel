@@ -117,4 +117,9 @@ public class PNLog
 
 		return !((Boolean)getAt(5));
 	}
+
+	public UUID GetExternalProcess()
+	{
+		return (UUID)getAt(7);
+	}
 }

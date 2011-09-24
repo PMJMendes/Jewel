@@ -27,6 +27,7 @@ public class PNProcess
 	private IScript mrefScript;
 	private INode[] marrNodes;
 	private IStep[] marrSteps;
+	private IProcess mrefParent;
 	private int mlngLock;
 
     public static PNProcess GetInstance(UUID pidNameSpace, UUID pidKey)
@@ -67,6 +68,7 @@ public class PNProcess
 		ResultSet lrsSteps;
 
 		mrefScript = null;
+		mrefParent = null;
 		mlngLock = 0;
 
 		larrMembers = new int[1];
@@ -162,6 +164,39 @@ public class PNProcess
 
 		return lobjResult;
 	}
+
+	public IProcess GetParent()
+		throws JewelPetriException
+	{
+		if ( (mrefParent == null) && (getAt(3) != null) )
+			mrefParent = (IProcess)PNProcess.GetInstance(getNameSpace(), (UUID)getAt(3));
+
+		return mrefParent;
+	}
+
+	public UUID GetManagerID()
+	{
+		return (UUID)getAt(2);
+	}
+
+    public void SetManagerID(UUID pidManager, SQLServer pdb)
+    	throws JewelPetriException
+    {
+    	if ( pidManager == null )
+    		throw new JewelPetriException("Process manager cannot be null.");
+
+    	internalSetAt(2, pidManager);
+
+    	try
+    	{
+			SaveToDb(pdb);
+		}
+    	catch (Throwable e)
+    	{
+    		throw new JewelPetriException(e.getMessage(), e);
+		}
+    }
+
 
 	public synchronized final boolean Lock()
 	{
