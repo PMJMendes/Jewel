@@ -50,4 +50,9 @@ public abstract class UndoableOperation
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 	}
+
+	public boolean LocalCanUndo()
+	{
+		return true;
+	}
 }

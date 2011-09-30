@@ -112,10 +112,14 @@ public class PNLog
 		if ( mrefOp.GetUndoOp() == null )
 			return false;
 
-		if ( !(GetOperationData() instanceof UndoableOperation) )
+		GetOperationData();
+		if ( !(mobjData instanceof UndoableOperation) )
 			return false;
 
-		return !((Boolean)getAt(5));
+		if ( (Boolean)getAt(5) )
+			return false;
+
+		return ((UndoableOperation)mobjData).LocalCanUndo();
 	}
 
 	public UUID GetExternalProcess()

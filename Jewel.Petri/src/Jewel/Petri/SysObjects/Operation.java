@@ -167,6 +167,7 @@ public abstract class Operation
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 	}
+
 	private synchronized final void Execute(UUID pidSourceLog, QueueContext parrTriggers, SQLServer pdb)
 		throws JewelPetriException
 	{
@@ -363,6 +364,9 @@ public abstract class Operation
 		ObjectOutputStream lstreamObj;
 		FileXfer lobjFile;
 
+		if ( IsSilent() )
+			return;
+
 		lobjLog = PNLog.GetInstance(Engine.getCurrentNameSpace(), (UUID)null);
 
 		try
@@ -437,5 +441,10 @@ public abstract class Operation
 		while ( (lobjQueue = parrTriggers.poll()) != null )
 			lobjQueue.mobjQueued.Execute(lobjQueue.mobjSource == null ? null : lobjQueue.mobjSource.getLog().getKey(),
 					parrTriggers, pdb);
+	}
+
+	protected boolean IsSilent()
+	{
+		return false;
 	}
 }
