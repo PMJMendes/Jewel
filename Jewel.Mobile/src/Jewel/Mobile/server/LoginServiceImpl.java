@@ -125,7 +125,7 @@ public class LoginServiceImpl
 	        getSession().setAttribute("UserID", lidUser);
 	        getSession().setAttribute("UserNSpace", lidNSpace);
 	
-	        NameSpace.GetInstance(lidNSpace).DoLogin(lidUser);
+	        NameSpace.GetInstance(lidNSpace).DoLogin(lidUser, false);
 	        
 	        return User.GetInstance(lidNSpace, lidUser).getDisplayName();
         }

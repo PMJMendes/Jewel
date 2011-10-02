@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
     <jar path="Jewel.Web/war/WEB-INF/lib/Jewel.Petri.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/Jewel.Petri/Jewel.Petri.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
@@ -11,6 +11,10 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Jewel.Petri"/>
+        <file path="/Jewel.Petri/.project"/>
+        <javaElement handleIdentifier="=Jewel.Petri/src"/>
+        <file path="/Jewel.Petri/.classpath"/>
+        <file path="/Jewel.Petri/Jewel.Petri.Manifest"/>
+        <file path="/Jewel.Petri/Jewel.Petri.jardesc"/>
     </selectedElements>
 </jardesc>

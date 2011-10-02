@@ -11,6 +11,14 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Jewel.Engine/src"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine.Constants"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine.Extensions"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine.SysObjects"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine.Interfaces"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine.Security"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine.Implementation"/>
+        <javaElement handleIdentifier="=Jewel.Engine/src&lt;Jewel.Engine.DataAccess"/>
     </selectedElements>
 </jardesc>

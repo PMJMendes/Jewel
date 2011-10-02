@@ -1,10 +1,18 @@
 package Jewel.Mobile.server;
 
+import java.sql.ResultSet;
 import java.util.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import Jewel.Engine.Engine;
+import Jewel.Engine.Constants.Miscellaneous;
+import Jewel.Engine.Constants.ObjectGUIDs;
+import Jewel.Engine.DataAccess.MasterDB;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.NameSpace;
+import Jewel.Engine.Implementation.User;
 import Jewel.Engine.Interfaces.*;
 import Jewel.Engine.SysObjects.*;
 
@@ -40,6 +48,9 @@ public class EngineImplementor
     {
     	return grefSession.theSession.get();
     }
+
+    private IUser mrefPushedUser;
+    private INameSpace mrefPushedNSpace;
 
     public EngineImplementor()
     {
@@ -143,6 +154,93 @@ public class EngineImplementor
 
         return larrUserData;
     }
+
+	public void pushNameSpace(UUID pidNameSpace)
+		throws JewelEngineException
+	{
+		User lobjUser;
+		INameSpace lrefNSpace;
+        IEntity lrefUsers;
+        MasterDB ldb;
+        ResultSet lrs;
+        int[] larrMembers;
+        java.lang.Object[] larrParams;
+        UUID lidUser;
+
+		if ( mrefPushedUser != null )
+			throw new JewelEngineException("Error: Nested Name Space push not allowed.");
+		if ( mrefPushedNSpace != null )
+			throw new JewelEngineException("Unexpected: Inconsistent internal state during Name Space push.");
+
+		lrefNSpace = NameSpace.GetInstance(getCurrentNameSpace());
+		lobjUser = User.GetInstance(lrefNSpace.getKey(), getCurrentUser());
+
+        lidUser = null;
+
+        larrMembers = new int[2];
+        larrMembers[0] = Miscellaneous.Username_In_User;
+        larrMembers[1] = Miscellaneous.Password_In_User;
+        larrParams = new java.lang.Object[2];
+        larrParams[0] = "!" + lobjUser.getAt(Miscellaneous.Username_In_User);
+        larrParams[1] = lobjUser.getAt(Miscellaneous.Password_In_User);
+
+        try
+        {
+	        lrefUsers = Entity.GetInstance(Engine.FindEntity(pidNameSpace, ObjectGUIDs.O_User));
+		
+	        ldb = new MasterDB();
+	        lrs = lrefUsers.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+
+	        if (lrs.next())
+	        {
+	            lidUser = UUID.fromString(lrs.getString(1));
+	            if (lrs.next())
+	            {
+	    	        lrs.close();
+	    	        ldb.Disconnect();
+	                throw new JewelEngineException("Unexpected: Username is not unique!");
+	            }
+	        }
+	        else
+	        {
+		        lrs.close();
+		        ldb.Disconnect();
+	            throw new JewelEngineException("Invalid Username or Password!");
+	        }
+
+	        lrs.close();
+	        ldb.Disconnect();
+
+	        mrefPushedUser = lobjUser;
+	        mrefPushedNSpace = lrefNSpace;
+
+	        getSession().setAttribute("UserID", lidUser);
+	        getSession().setAttribute("UserNSpace", pidNameSpace);
+
+	        NameSpace.GetInstance(pidNameSpace).DoLogin(lidUser, true);
+        }
+        catch (JewelEngineException e)
+        {
+        	throw e;
+        }
+        catch (Throwable e)
+        {
+        	throw new JewelEngineException(e.getMessage(), e);
+        }
+	}
+
+	public void popNameSpace()
+		throws JewelEngineException
+	{
+		if ( mrefPushedUser == null )
+			throw new JewelEngineException("Error: No previous Name Space push.");
+		if ( mrefPushedNSpace == null )
+			throw new JewelEngineException("Unexpected: Inconsistent internal state during Name Space pop.");
+        getSession().setAttribute("UserID", mrefPushedUser.getKey());
+        getSession().setAttribute("UserNSpace", mrefPushedNSpace.getKey());
+        mrefPushedUser = null;
+        mrefPushedNSpace = null;
+	}
 
     public String getCurrentPath()
     {
