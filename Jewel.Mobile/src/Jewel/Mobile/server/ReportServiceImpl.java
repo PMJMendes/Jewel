@@ -82,7 +82,7 @@ public class ReportServiceImpl
 			return;
 		}
 
-        resp.setContentType("text/html");
+        resp.setContentType("text/html; charset=UTF-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         ldoc.output(resp.getWriter());
 	}
