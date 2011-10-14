@@ -112,9 +112,6 @@ public class PNNode
 	public void DoSafeSave()
 		throws JewelPetriException
 	{
-		if ( mbPending )
-			throw new JewelPetriException("Unexpected: Attempted operation while node is pending.");
-
 		if ( mbSaved )
 			return;
 
