@@ -129,7 +129,7 @@ public final class SecureFunctions
     public static String Decrypt(String pstrInput)
     	throws JewelEngineException
     {
-        int i, llngLen;
+        int i, llngLen, j;
     	byte[] buffer;
     	ByteArrayInputStream ms;
     	CipherInputStream encStream;
@@ -144,7 +144,10 @@ public final class SecureFunctions
         buffer = new byte[llngLen];
 
         for (i = 0; i < llngLen; i++)
-            buffer[i] = Byte.valueOf(pstrInput.substring(i * 3, 2), 16);
+        {
+        	j = Short.parseShort(pstrInput.substring(i * 3, 2 + i * 3), 16);
+            buffer[i] = (byte)(j > Byte.MAX_VALUE ? j-256 : j);
+        }
 
         try
         {
