@@ -139,12 +139,12 @@ public class CodeExecuter
         Class<?>[] larrTypes;
         java.lang.Object[] larrParams;
 
-        larrTypes = new Class<?>[2];
+        larrTypes = new Class<?>[3];
         larrTypes[0] = UUID.class;
         larrTypes[1] = UUID.class;
         larrTypes[2] = boolean.class;
 
-        larrParams = new java.lang.Object[2];
+        larrParams = new java.lang.Object[3];
         larrParams[0] = pidNameSpace;
         larrParams[1] = pidUser;
         larrParams[2] = pbNested;
