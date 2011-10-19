@@ -8,6 +8,7 @@ import Jewel.Engine.Engine;
 import Jewel.Engine.DataAccess.MasterDB;
 import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Interfaces.IEntity;
 import Jewel.Engine.SysObjects.JewelEngineException;
 import Jewel.Engine.SysObjects.ObjectBase;
 import Jewel.Petri.Constants;
@@ -452,6 +453,98 @@ public class PNProcess
 		catch (Throwable e)
 		{
 			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	public IProcess[] GetCurrentSubProcesses()
+		throws JewelPetriException
+	{
+		ArrayList<IProcess> larrAux;
+		int[] larrMembers;
+		java.lang.Object[] larrParams;
+		IEntity lrefProcess;
+	    MasterDB ldb;
+	    ResultSet lrsInfo;
+
+		larrAux = new ArrayList<IProcess>();
+
+		larrMembers = new int[1];
+		larrMembers[0] = Constants.FKParent_In_Process;
+		larrParams = new java.lang.Object[1];
+		larrParams[0] = getKey();
+
+		try
+		{
+			lrefProcess = Entity.GetInstance(Engine.FindEntity(Engine.getCurrentNameSpace(), Constants.ObjID_PNProcess)); 
+			ldb = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			lrsInfo = lrefProcess.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			while ( lrsInfo.next() )
+				larrAux.add(PNProcess.GetInstance(getNameSpace(), lrsInfo));
+		}
+		catch (JewelPetriException e)
+		{
+			try { lrsInfo.close(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			try { lrsInfo.close(); } catch (Throwable e1) {}
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			lrsInfo.close();
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		return larrAux.toArray(new IProcess[larrAux.size()]);
+	}
+
+	public void SetParentProcId(UUID pidParent, SQLServer pdb)
+		throws JewelPetriException
+	{
+    	internalSetAt(3, pidParent);
+
+    	try
+    	{
+			SaveToDb(pdb);
+		}
+    	catch (Throwable e)
+    	{
+    		throw new JewelPetriException(e.getMessage(), e);
 		}
 	}
 }

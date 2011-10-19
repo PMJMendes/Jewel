@@ -30,4 +30,5 @@ public class Constants
     public static final int FKController_In_Node = 1;
     public static final int FKProcess_In_Log = 0;
     public static final int FKOperation_In_Permission = 0;
+    public static final int FKParent_In_Process = 3;
 }
