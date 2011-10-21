@@ -1,6 +1,7 @@
 package Jewel.Petri.Objects;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import Jewel.Petri.Interfaces.IScript;
 import Jewel.Petri.Interfaces.IStep;
 import Jewel.Petri.SysObjects.JewelPetriException;
 import Jewel.Petri.SysObjects.Operation;
+import Jewel.Petri.SysObjects.ProcessData;
 
 public class PNProcess
 	extends ObjectBase
@@ -119,6 +121,84 @@ public class PNProcess
 		}
 
 		marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
+	}
+	
+	public void Setup(java.lang.Object[] parrParams)
+		throws JewelPetriException
+	{
+		MasterDB ldb;
+		ProcessData lobjData;
+
+		try
+		{
+			ldb = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.BeginTrans();
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (SQLException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			Setup(ldb, new Operation.QueueContext(), false);
+		}
+		catch (JewelPetriException e)
+		{
+			try { ldb.Rollback(); } catch (SQLException e1) {}
+			try { ldb.Disconnect(); } catch (SQLException e1) {}
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Rollback(); } catch (SQLException e1) {}
+			try { ldb.Disconnect(); } catch (SQLException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		if ( parrParams[1] instanceof ProcessData )
+		{
+			lobjData = (ProcessData)parrParams[1];
+			lobjData.SetProcessID(getKey());
+			try
+			{
+				lobjData.SaveToDb(ldb);
+			}
+			catch (Throwable e)
+			{
+				try { ldb.Rollback(); } catch (SQLException e1) {}
+				try { ldb.Disconnect(); } catch (SQLException e1) {}
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+		}
+
+		try
+		{
+			ldb.Commit();
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (SQLException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
 	}
 
 	public UUID GetScriptID()
