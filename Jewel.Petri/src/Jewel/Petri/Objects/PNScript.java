@@ -167,15 +167,15 @@ public class PNScript
 		UUID lidParent;
 		MasterDB ldb;
 
-		if ( (parrParams == null) || (parrParams.length < 4) || (parrParams[3] == null) || !(parrParams[3] instanceof UUID))
+		if ( (parrParams == null) || (parrParams.length < 5) || (parrParams[4] == null) || !(parrParams[4] instanceof UUID))
 			throw new JewelPetriException("Invalid Argument: Name Space to start up in is null or not an identifier.");
-		lidNSpace = (UUID)parrParams[3];
-		if ( (parrParams.length >= 5) && (parrParams[4] != null) && (parrParams[4] instanceof UUID))
-			lidData = (UUID)parrParams[4];
+		lidNSpace = (UUID)parrParams[4];
+		if ( (parrParams.length >= 6) && (parrParams[5] != null) && (parrParams[5] instanceof UUID))
+			lidData = (UUID)parrParams[5];
 		else
 			lidData = null;
-		if ( (parrParams.length >= 6) && (parrParams[5] != null) && (parrParams[5] instanceof UUID))
-			lidParent = (UUID)parrParams[5];
+		if ( (parrParams.length >= 7) && (parrParams[6] != null) && (parrParams[6] instanceof UUID))
+			lidParent = (UUID)parrParams[6];
 		else
 			lidParent = null;
 
