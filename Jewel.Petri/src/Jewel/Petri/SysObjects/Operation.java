@@ -15,6 +15,7 @@ import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.SysObjects.FileXfer;
 import Jewel.Petri.Constants;
 import Jewel.Petri.Interfaces.ILog;
+import Jewel.Petri.Interfaces.IOperation;
 import Jewel.Petri.Interfaces.IProcess;
 import Jewel.Petri.Interfaces.IStep;
 import Jewel.Petri.Objects.PNLog;
@@ -104,7 +105,14 @@ public abstract class Operation
 	public void Execute(SQLServer pdb)
 		throws JewelPetriException
 	{
-		Execute(null, new QueueContext(), pdb);
+		try
+		{
+			Execute(null, new QueueContext(), pdb);
+		}
+		catch (NotRunnableException e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
 	}
 
 	private void Execute(UUID pidSourceLog, QueueContext parrTriggers)
@@ -169,7 +177,7 @@ public abstract class Operation
 	}
 
 	private synchronized final void Execute(UUID pidSourceLog, QueueContext parrTriggers, SQLServer pdb)
-		throws JewelPetriException
+		throws JewelPetriException, NotRunnableException
 	{
 		if ( mbDone )
 			throw new JewelPetriException("Error: Attempt to run operation twice.");
@@ -184,6 +192,11 @@ public abstract class Operation
 			CheckRunnable();
 		}
 		catch (JewelPetriException e)
+		{
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (NotRunnableException e)
 		{
 			mrefProcess.Unlock();
 			throw e;
@@ -313,14 +326,14 @@ public abstract class Operation
 	}
 
 	private void CheckRunnable()
-		throws JewelPetriException
+		throws JewelPetriException, NotRunnableException
 	{
 		MasterDB ldb;
 
 		mrefStep = mrefProcess.GetOperation(OpID());
 
 		if ( mrefStep == null )
-			throw new JewelPetriException("Error: Operation not currently available in this process.");
+			throw new NotRunnableException("Error: Operation not currently available in this process.");
 
 		if ( !mrefStep.IsRunnable() )
 		{
@@ -352,7 +365,7 @@ public abstract class Operation
 				throw new JewelPetriException(e.getMessage(), e);
 			}
 
-			throw new JewelPetriException("Error: Operation not currently available in this process.");
+			throw new NotRunnableException("Error: Operation not currently available in this process.");
 		}
 	}
 
@@ -409,21 +422,23 @@ public abstract class Operation
 	protected boolean TriggerOp(Operation pobjQueued)
 		throws JewelPetriException
 	{
-		IProcess lobjProcess;
-		IStep lobjStep;
+		IOperation[] larrOps;
+		int i;
 		QueuedOp lobjQueue;
 
 		if ( marrTriggers == null )
 			throw new JewelPetriException("Invalid: Attempted to queue operation outside of execution.");
 
-		lobjProcess = pobjQueued.GetProcess();
-		lobjStep = lobjProcess.GetOperation(pobjQueued.OpID());
-
-		if ( lobjStep == null )
-			return false;
-
-		if ( !Constants.RoleID_Triggered.equals(lobjStep.GetRole()) )
-			throw new JewelPetriException("Error: Attempted to queue non-triggerable operation.");
+		larrOps = pobjQueued.GetProcess().GetScript().getOperations();
+		for ( i = 0; i < larrOps.length; i++ )
+		{
+			if ( larrOps[i].getKey().equals(pobjQueued.OpID()) )
+			{
+				if ( !Constants.RoleID_Triggered.equals(larrOps[i].GetRole()) )
+					throw new JewelPetriException("Error: Attempted to queue non-triggerable operation.");
+				break;
+			}
+		}
 
 		lobjQueue = new QueuedOp();
 		lobjQueue.mobjQueued = pobjQueued;
@@ -439,8 +454,16 @@ public abstract class Operation
 		QueuedOp lobjQueue;
 
 		while ( (lobjQueue = parrTriggers.poll()) != null )
-			lobjQueue.mobjQueued.Execute(lobjQueue.mobjSource == null ? null : lobjQueue.mobjSource.getLog().getKey(),
-					parrTriggers, pdb);
+		{
+			try
+			{
+				lobjQueue.mobjQueued.Execute(lobjQueue.mobjSource == null ? null : lobjQueue.mobjSource.getLog().getKey(),
+						parrTriggers, pdb);
+			}
+			catch (NotRunnableException e)
+			{
+			}
+		}
 	}
 
 	protected boolean IsSilent()

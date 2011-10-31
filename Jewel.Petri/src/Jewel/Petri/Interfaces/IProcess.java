@@ -29,6 +29,6 @@ public interface IProcess
 	public boolean IsRunning();
 	public void Restart(SQLServer pdb) throws JewelPetriException;
 	public void Stop(SQLServer pdb) throws JewelPetriException;
-	public IProcess[] GetCurrentSubProcesses() throws JewelPetriException;
+	public IProcess[] GetCurrentSubProcesses(SQLServer pdb) throws JewelPetriException;
 	public void SetParentProcId(UUID pidParent, SQLServer pdb) throws JewelPetriException;
 }

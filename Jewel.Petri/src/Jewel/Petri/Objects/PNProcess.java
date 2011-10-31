@@ -536,14 +536,13 @@ public class PNProcess
 		}
 	}
 
-	public IProcess[] GetCurrentSubProcesses()
+	public IProcess[] GetCurrentSubProcesses(SQLServer pdb)
 		throws JewelPetriException
 	{
 		ArrayList<IProcess> larrAux;
 		int[] larrMembers;
 		java.lang.Object[] larrParams;
 		IEntity lrefProcess;
-	    MasterDB ldb;
 	    ResultSet lrsInfo;
 
 		larrAux = new ArrayList<IProcess>();
@@ -556,20 +555,10 @@ public class PNProcess
 		try
 		{
 			lrefProcess = Entity.GetInstance(Engine.FindEntity(Engine.getCurrentNameSpace(), Constants.ObjID_PNProcess)); 
-			ldb = new MasterDB();
+			lrsInfo = lrefProcess.SelectByMembers(pdb, larrMembers, larrParams, new int[0]);
 		}
 		catch (Throwable e)
 		{
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			lrsInfo = lrefProcess.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
@@ -581,29 +570,17 @@ public class PNProcess
 		catch (JewelPetriException e)
 		{
 			try { lrsInfo.close(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			throw e;
 		}
 		catch (Throwable e)
 		{
 			try { lrsInfo.close(); } catch (Throwable e1) {}
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
 		try
 		{
 			lrsInfo.close();
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			ldb.Disconnect();
 		}
 		catch (Throwable e)
 		{
