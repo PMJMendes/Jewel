@@ -452,13 +452,14 @@ public abstract class Operation
 		throws JewelPetriException
 	{
 		QueuedOp lobjQueue;
+		ILog lobjSourceLog;
 
 		while ( (lobjQueue = parrTriggers.poll()) != null )
 		{
+			lobjSourceLog = ( lobjQueue.mobjSource == null ? null : lobjQueue.mobjSource.getLog() );
 			try
 			{
-				lobjQueue.mobjQueued.Execute(lobjQueue.mobjSource == null ? null : lobjQueue.mobjSource.getLog().getKey(),
-						parrTriggers, pdb);
+				lobjQueue.mobjQueued.Execute(lobjSourceLog == null ? null : lobjSourceLog.getKey(), parrTriggers, pdb);
 			}
 			catch (NotRunnableException e)
 			{

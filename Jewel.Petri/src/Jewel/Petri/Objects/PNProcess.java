@@ -62,65 +62,11 @@ public class PNProcess
 	public void Initialize()
 		throws JewelEngineException
 	{
-		int[] larrMembers;
-		java.lang.Object[] larrParams;
-		MasterDB ldb;
-		ArrayList<INode> larrAuxNodes;
-		ResultSet lrsNodes;
-		ArrayList<IStep> larrAuxSteps;
-		ResultSet lrsSteps;
-
 		mrefScript = null;
 		mrefParent = null;
 		mlngLock = 0;
-
-		larrMembers = new int[1];
-		larrParams = new java.lang.Object[1];
-		larrParams[0] = getKey();
-
-		try
-		{
-			ldb = new MasterDB();
-
-			larrMembers[0] = Constants.FKProcess_In_Node;
-			larrAuxNodes = new ArrayList<INode>();
-			lrsNodes = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode))
-					.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-			while ( lrsNodes.next() )
-			{
-				larrAuxNodes.add((INode)PNNode.GetInstance(getNameSpace(), lrsNodes));
-			}
-			lrsNodes.close();
-			ldb.Disconnect();
-		}
-		catch (Throwable e)
-		{
-			throw new JewelEngineException(e.getMessage(), e);
-		}
-
-		marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
-
-		try
-		{
-			ldb = new MasterDB();
-
-			larrMembers[0] = Constants.FKProcess_In_Step;
-			larrAuxSteps = new ArrayList<IStep>();
-			lrsSteps = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep))
-					.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-			while ( lrsSteps.next() )
-			{
-				larrAuxSteps.add((IStep)PNStep.GetInstance(getNameSpace(), lrsSteps));
-			}
-			lrsSteps.close();
-			ldb.Disconnect();
-		}
-		catch (Throwable e)
-		{
-			throw new JewelEngineException(e.getMessage(), e);
-		}
-
-		marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
+		marrNodes = null;
+		marrSteps = null;
 	}
 	
 	public void Setup(java.lang.Object[] parrParams)
@@ -216,12 +162,154 @@ public class PNProcess
 	}
 
 	public INode[] GetNodes()
+		throws JewelPetriException
 	{
+		int[] larrMembers;
+		java.lang.Object[] larrParams;
+		MasterDB ldb;
+		ArrayList<INode> larrAuxNodes;
+		ResultSet lrsNodes;
+
+		if ( marrNodes == null )
+		{
+			larrMembers = new int[1];
+			larrMembers[0] = Constants.FKProcess_In_Node;
+			larrParams = new java.lang.Object[1];
+			larrParams[0] = getKey();
+			larrAuxNodes = new ArrayList<INode>();
+
+			try
+			{
+				ldb = new MasterDB();
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				lrsNodes = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode))
+						.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+			}
+			catch (Throwable e)
+			{
+				try {ldb.Disconnect();} catch (Throwable e1) {}
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				while ( lrsNodes.next() )
+				{
+					larrAuxNodes.add((INode)PNNode.GetInstance(getNameSpace(), lrsNodes));
+				}
+			}
+			catch (Throwable e)
+			{
+				try {lrsNodes.close();} catch (SQLException e1) {}
+				try {ldb.Disconnect();} catch (Throwable e1) {}
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				lrsNodes.close();
+			}
+			catch (Throwable e)
+			{
+				try {ldb.Disconnect();} catch (Throwable e1) {}
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				ldb.Disconnect();
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
+		}
+
 		return marrNodes;
 	}
 
-	public IStep[] GetValidSteps()
+	public IStep[] GetValidSteps() 
+		throws JewelPetriException
 	{
+		if ( marrSteps == null )
+		{
+			int[] larrMembers;
+			java.lang.Object[] larrParams;
+			MasterDB ldb;
+			ArrayList<IStep> larrAuxSteps;
+			ResultSet lrsSteps;
+
+			larrMembers = new int[1];
+			larrParams = new java.lang.Object[1];
+			larrParams[0] = getKey();
+			larrMembers[0] = Constants.FKProcess_In_Step;
+			larrAuxSteps = new ArrayList<IStep>();
+
+			try
+			{
+				ldb = new MasterDB();
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				lrsSteps = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep))
+						.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+			}
+			catch (Throwable e)
+			{
+				try {ldb.Disconnect();} catch (Throwable e1) {}
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				while ( lrsSteps.next() )
+				{
+					larrAuxSteps.add((IStep)PNStep.GetInstance(getNameSpace(), lrsSteps));
+				}
+			}
+			catch (Throwable e)
+			{
+				try {lrsSteps.close();} catch (SQLException e1) {}
+				try {ldb.Disconnect();} catch (Throwable e1) {}
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				lrsSteps.close();
+			}
+			catch (Throwable e)
+			{
+				try {ldb.Disconnect();} catch (Throwable e1) {}
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			try
+			{
+				ldb.Disconnect();
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
+		}
+
 		return marrSteps;
 	}
 
@@ -230,6 +318,8 @@ public class PNProcess
 	{
 		IStep lobjResult;
 		int i;
+
+		GetValidSteps();
 
 		lobjResult = null;
 
@@ -301,6 +391,8 @@ public class PNProcess
 		PNStep lobjAux;
 		int i;
 
+		GetValidSteps();
+
 		larrAux = new ArrayList<IStep>();
 
 		for ( i = 0; i < marrSteps.length; i++ )
@@ -354,6 +446,8 @@ public class PNProcess
 	{
 		ArrayList<IStep> larrAux;
 		int i;
+
+		GetValidSteps();
 
 		pobjStep.Delete(pdb);
 
@@ -461,6 +555,8 @@ public class PNProcess
 	{
 		int i;
 		Operation lobjOp;
+
+		GetValidSteps();
 
 		if ( !Lock() )
 			throw new JewelPetriException("Unexpected: Process locked during autorun.");
