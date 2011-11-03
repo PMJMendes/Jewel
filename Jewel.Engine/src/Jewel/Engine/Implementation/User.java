@@ -1,5 +1,6 @@
 package Jewel.Engine.Implementation;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -19,6 +20,12 @@ public class User
     	throws JewelEngineException
 	{
         return (User)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, ObjectGUIDs.O_User), pidKey);
+	}
+
+    public static User GetInstance(UUID pidNameSpace, ResultSet prsObject)
+    	throws JewelEngineException, SQLException
+	{
+        return (User)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, ObjectGUIDs.O_User), prsObject);
 	}
 
 	public void Initialize()
