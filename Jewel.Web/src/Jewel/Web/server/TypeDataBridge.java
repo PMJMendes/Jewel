@@ -13,6 +13,7 @@ import Jewel.Web.shared.*;
 
 public class TypeDataBridge
 {
+	@SuppressWarnings("deprecation")
 	public static java.lang.Object ParseValue(ITypeDef prefType, String pstrValue)
 		throws JewelEngineException
 	{
@@ -43,7 +44,7 @@ public class TypeDataBridge
         	return UUID.fromString(pstrValue);
 
         if (TypeDefGUIDs.T_Date.equals(prefType.getKey()))
-        	return Timestamp.valueOf(pstrValue);
+        	return new Timestamp(Timestamp.parse(pstrValue));
 
         if (TypeDefGUIDs.T_Binary.equals(prefType.getKey()))
         	return FileServiceImpl.GetFileXferStorage().get(UUID.fromString(pstrValue.split("!", 2)[0]));

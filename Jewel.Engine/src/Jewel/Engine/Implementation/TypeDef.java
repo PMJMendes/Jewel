@@ -31,7 +31,8 @@ public class TypeDef
         return (String)getAt(2);
     }
 
-    public String TranslateValue(java.lang.Object pobjValue, boolean pbForFilter, ArrayList<Blob> parrParams)
+    @SuppressWarnings("deprecation")
+	public String TranslateValue(java.lang.Object pobjValue, boolean pbForFilter, ArrayList<Blob> parrParams)
     	throws JewelEngineException
     {
         UUID lidAux;
@@ -98,9 +99,9 @@ public class TypeDef
             if (pobjValue instanceof Timestamp)
                 ldtAux = (Timestamp)pobjValue;
             else
-                ldtAux = Timestamp.valueOf((String)pobjValue);
+                ldtAux = new Timestamp(Timestamp.parse((String)pobjValue));
 
-            if (pbForFilter && (ldtAux.equals(Timestamp.valueOf(ldtAux.toString().substring(0, 10)))))
+            if (pbForFilter && (ldtAux.equals(new Timestamp(Timestamp.parse(ldtAux.toString().substring(0, 10))))))
                 return "'" + ldtAux.toString().substring(0, 10) + "%'";
 
             return "'" + ldtAux.toString() + "'";
