@@ -160,7 +160,7 @@ public class DatePopup
 		}
 		else
 		{
-			ltAux = new Timestamp(Timestamp.parse(pstrValue));
+			ltAux = Timestamp.valueOf(pstrValue);
 			mtxtHours.setText(Integer.toString(ltAux.getHours()));
 			mtxtMinutes.setText(Integer.toString(ltAux.getMinutes()));
 			mtxtSeconds.setText(Integer.toString(ltAux.getSeconds()));

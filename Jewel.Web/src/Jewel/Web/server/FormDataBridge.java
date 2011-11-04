@@ -402,7 +402,6 @@ public class FormDataBridge
         return larrAux;
 	}
 
-	@SuppressWarnings("deprecation")
 	private static java.lang.Object ParseValue(IFormField prefField, String pstrValue)
 		throws JewelEngineException
 	{
@@ -421,7 +420,7 @@ public class FormDataBridge
         	return pstrValue;
 
         if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
-        	return new Timestamp(Timestamp.parse(pstrValue));
+        	return Timestamp.valueOf(pstrValue);
 
         if (FieldTypeGUIDs.FT_Numeric.equals(prefField.getType()))
         	return new BigDecimal(pstrValue);
