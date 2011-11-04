@@ -108,6 +108,11 @@ public class PNScript
 		return (UUID)getAt(2);
 	}
 
+	public boolean IsTopLevel()
+	{
+		return (Boolean)getAt(3);
+	}
+
 	public IProcess CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb)
 		throws JewelPetriException
 	{
