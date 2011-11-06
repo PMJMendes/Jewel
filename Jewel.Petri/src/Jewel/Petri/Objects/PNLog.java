@@ -54,14 +54,6 @@ public class PNLog
 	public void Initialize()
 		throws JewelEngineException
 	{
-		try
-		{
-			mrefOp = PNOperation.GetInstance(getNameSpace(), (UUID)getAt(1));
-		}
-		catch (Throwable e)
-		{
-	    	throw new JewelEngineException(e.getMessage(), e);
-		}
 	}
 
 	public Operation GetOperationData()
@@ -74,7 +66,20 @@ public class PNLog
 	}
 
 	public IOperation GetOperation()
+		throws JewelEngineException
 	{
+		if ( mrefOp == null )
+		{
+			try
+			{
+				mrefOp = PNOperation.GetInstance(getNameSpace(), (UUID)getAt(1));
+			}
+			catch (Throwable e)
+			{
+		    	throw new JewelEngineException(e.getMessage(), e);
+			}
+		}
+
 		return mrefOp;
 	}
 

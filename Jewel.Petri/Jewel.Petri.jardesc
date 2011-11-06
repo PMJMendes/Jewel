@@ -11,10 +11,10 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <file path="/Jewel.Petri/.project"/>
-        <javaElement handleIdentifier="=Jewel.Petri/src"/>
-        <file path="/Jewel.Petri/.classpath"/>
-        <file path="/Jewel.Petri/Jewel.Petri.Manifest"/>
-        <file path="/Jewel.Petri/Jewel.Petri.jardesc"/>
+        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.Objects"/>
+        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri"/>
+        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.Interfaces"/>
+        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.SysObjects"/>
+        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.Forms"/>
     </selectedElements>
 </jardesc>
