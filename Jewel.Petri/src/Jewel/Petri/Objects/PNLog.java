@@ -66,7 +66,7 @@ public class PNLog
 	}
 
 	public IOperation GetOperation()
-		throws JewelEngineException
+		throws JewelPetriException
 	{
 		if ( mrefOp == null )
 		{
@@ -76,7 +76,7 @@ public class PNLog
 			}
 			catch (Throwable e)
 			{
-		    	throw new JewelEngineException(e.getMessage(), e);
+		    	throw new JewelPetriException(e.getMessage(), e);
 			}
 		}
 
@@ -114,7 +114,7 @@ public class PNLog
 	public boolean CanUndo()
 		throws JewelPetriException
 	{
-		if ( mrefOp.GetUndoOp() == null )
+		if ( GetOperation().GetUndoOp() == null )
 			return false;
 
 		GetOperationData();
