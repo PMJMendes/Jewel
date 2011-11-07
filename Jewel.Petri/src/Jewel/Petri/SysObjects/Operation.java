@@ -189,7 +189,7 @@ public abstract class Operation
 
 		try
 		{
-			CheckRunnable();
+			CheckRunnable(pdb);
 		}
 		catch (JewelPetriException e)
 		{
@@ -325,11 +325,9 @@ public abstract class Operation
 		}
 	}
 
-	private void CheckRunnable()
+	private void CheckRunnable(SQLServer pdb)
 		throws JewelPetriException, NotRunnableException
 	{
-		MasterDB ldb;
-
 		mrefStep = mrefProcess.GetOperation(OpID());
 
 		if ( mrefStep == null )
@@ -339,32 +337,12 @@ public abstract class Operation
 		{
 			try
 			{
-				ldb = new MasterDB();
-			}
-			catch (Throwable e)
-			{
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
-			try
-			{
-				mrefProcess.RemoveStep(ldb, mrefStep);
+				mrefProcess.RemoveStep(pdb, mrefStep);
 			}
 			catch (JewelPetriException e)
 			{
-				try { ldb.Disconnect(); } catch (Throwable e1) {}
 				throw e;
 			}
-
-			try
-			{
-				ldb.Disconnect();
-			}
-			catch (Throwable e)
-			{
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
 			throw new NotRunnableException("Error: Operation not currently available in this process.");
 		}
 	}
