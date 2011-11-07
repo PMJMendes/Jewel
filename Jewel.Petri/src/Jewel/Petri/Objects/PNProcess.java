@@ -242,71 +242,26 @@ public class PNProcess
 	{
 		if ( marrSteps == null )
 		{
-			int[] larrMembers;
-			java.lang.Object[] larrParams;
-			MasterDB ldb;
 			ArrayList<IStep> larrAuxSteps;
 			ResultSet lrsSteps;
 
-			larrMembers = new int[1];
-			larrParams = new java.lang.Object[1];
-			larrParams[0] = getKey();
-			larrMembers[0] = Constants.FKProcess_In_Step;
 			larrAuxSteps = new ArrayList<IStep>();
-
+			lrsSteps = null;
 			try
 			{
-				ldb = new MasterDB();
-			}
-			catch (Throwable e)
-			{
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
-			try
-			{
-				lrsSteps = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep))
-						.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
-			}
-			catch (Throwable e)
-			{
-				try {ldb.Disconnect();} catch (Throwable e1) {}
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
-			try
-			{
+				lrsSteps = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep)).SelectByMembers(pdb,
+						new int[] {Constants.FKProcess_In_Step}, new java.lang.Object[] {getKey()}, new int[0]);
 				while ( lrsSteps.next() )
 				{
 					larrAuxSteps.add((IStep)PNStep.GetInstance(getNameSpace(), lrsSteps));
 				}
-			}
-			catch (Throwable e)
-			{
-				try {lrsSteps.close();} catch (SQLException e1) {}
-				try {ldb.Disconnect();} catch (Throwable e1) {}
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
-			try
-			{
 				lrsSteps.close();
 			}
 			catch (Throwable e)
 			{
-				try {ldb.Disconnect();} catch (Throwable e1) {}
+				if ( lrsSteps != null ) try {lrsSteps.close();} catch (Throwable e1) {}
 				throw new JewelPetriException(e.getMessage(), e);
 			}
-
-			try
-			{
-				ldb.Disconnect();
-			}
-			catch (Throwable e)
-			{
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
 			marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
 		}
 
