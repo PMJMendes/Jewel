@@ -237,7 +237,7 @@ public class PNProcess
 		return marrNodes;
 	}
 
-	public IStep[] GetValidSteps() 
+	public IStep[] GetValidSteps(SQLServer pdb) 
 		throws JewelPetriException
 	{
 		if ( marrSteps == null )
@@ -313,13 +313,13 @@ public class PNProcess
 		return marrSteps;
 	}
 
-	public IStep GetOperation(UUID pidOperation)
+	public IStep GetOperation(UUID pidOperation, SQLServer pdb)
 		throws JewelPetriException
 	{
 		IStep lobjResult;
 		int i;
 
-		GetValidSteps();
+		GetValidSteps(pdb);
 
 		lobjResult = null;
 
@@ -391,7 +391,7 @@ public class PNProcess
 		PNStep lobjAux;
 		int i;
 
-		GetValidSteps();
+		GetValidSteps(pdb);
 
 		larrAux = new ArrayList<IStep>();
 
@@ -406,7 +406,7 @@ public class PNProcess
 			lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
 			for ( i = 0; i < larrOps.length; i++ )
 			{
-				if ( GetOperation(larrOps[i].getKey()) != null )
+				if ( GetOperation(larrOps[i].getKey(), pdb) != null )
 					continue;
 
 				lobjAux = PNStep.GetInstance(getNameSpace(), (UUID)null);
@@ -447,7 +447,7 @@ public class PNProcess
 		ArrayList<IStep> larrAux;
 		int i;
 
-		GetValidSteps();
+		GetValidSteps(pdb);
 
 		pobjStep.Delete(pdb);
 
@@ -556,7 +556,7 @@ public class PNProcess
 		int i;
 		Operation lobjOp;
 
-		GetValidSteps();
+		GetValidSteps(pdb);
 
 		if ( !Lock() )
 			throw new JewelPetriException("Unexpected: Process locked during autorun.");

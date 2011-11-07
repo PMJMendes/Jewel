@@ -328,7 +328,7 @@ public abstract class Operation
 	private void CheckRunnable(SQLServer pdb)
 		throws JewelPetriException, NotRunnableException
 	{
-		mrefStep = mrefProcess.GetOperation(OpID());
+		mrefStep = mrefProcess.GetOperation(OpID(), pdb);
 
 		if ( mrefStep == null )
 			throw new NotRunnableException("Error: Operation not currently available in this process.");
