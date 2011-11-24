@@ -198,6 +198,7 @@ public abstract class ObjectBase
     }
 
     public String AfterSave()
+    	throws JewelEngineException
     {
         return "";
     }
