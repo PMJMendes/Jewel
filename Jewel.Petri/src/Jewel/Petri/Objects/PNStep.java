@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.DataAccess.SQLServer;
-import Jewel.Engine.Implementation.Entity;
 import Jewel.Engine.SysObjects.JewelEngineException;
 import Jewel.Engine.SysObjects.ObjectBase;
 import Jewel.Petri.Constants;
@@ -30,7 +29,7 @@ public class PNStep
 	{
 	    try
 	    {
-			return (PNStep)Engine.GetWorkInstance(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNStep), pidKey);
+			return (PNStep)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNStep), pidKey);
 		}
 	    catch (Throwable e)
 	    {
@@ -43,7 +42,7 @@ public class PNStep
 	{
 	    try
 	    {
-			return (PNStep)Engine.GetWorkInstance(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNStep), prsObject);
+			return (PNStep)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNStep), prsObject);
 		}
 	    catch (Throwable e)
 	    {
@@ -157,10 +156,16 @@ public class PNStep
 		return marrOutputs;
 	}
 
-	public boolean IsRunnable()
+	public UUID GetLevel()
 	{
-		int i;
+		return (UUID)getAt(2);
+	}
+
+	public void CalcRunnable(SQLServer pdb)
+		throws JewelPetriException
+	{
 		boolean b;
+		int i;
 
 		for ( i = 0; i < marrInputs.length; i++ )
 			marrInputs[i].PrepCount();
@@ -172,7 +177,38 @@ public class PNStep
 		for ( i = 0; b && i < marrInputs.length; i++ )
 			b = marrInputs[i].CheckCount();
 
-		return b;
+		if ( b )
+		{
+			if ( Constants.LevelID_Invalid.equals(GetLevel()) )
+			{
+				internalSetAt(2, GetOperation().getDefaultLevel());
+				b = true;
+			}
+			else
+				b = false;
+		}
+		else
+		{
+			if ( !Constants.LevelID_Invalid.equals(GetLevel()) )
+			{
+				internalSetAt(2, Constants.LevelID_Invalid);
+				b = true;
+			}
+			else
+				b = false;
+		}
+
+		if ( b )
+		{
+			try
+			{
+				SaveToDb(pdb);
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+		}
 	}
 
 	public void DoSafeRun()
@@ -214,22 +250,6 @@ public class PNStep
 
 		for ( i = 0; i < marrOutputs.length; i++ )
 			marrOutputs[i].CommitSafeSave(pdb);
-	}
-
-	public void Delete(SQLServer pdb)
-		throws JewelPetriException
-	{
-		Entity lrefSteps;
-
-		try
-		{
-			lrefSteps = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep));
-			lrefSteps.Delete(pdb, getKey());
-		}
-		catch (Throwable e) 
-		{
-			throw new JewelPetriException(e.getMessage(), e);
-		}
 	}
 
 	public UUID GetRole()

@@ -19,6 +19,8 @@ public class Constants
     public static final UUID RoleID_Autorun     = UUID.fromString("344449BF-60CB-45A6-AED3-9F090146F24D");
     public static final UUID RoleID_Triggered   = UUID.fromString("F720401E-96C5-485B-9E8C-9F090146EA2B");
 
+    public static final UUID LevelID_Invalid    = UUID.fromString("6FDEA9C9-55E0-4214-8BC2-9EB1007E9BA5");
+
     public static final int FKScript_In_Operation  = 1;
     public static final int FKSourceOp_In_Operation  = 4;
     public static final int FKScript_In_Controller = 1;

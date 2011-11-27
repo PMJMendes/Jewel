@@ -331,20 +331,10 @@ public abstract class Operation
 		mrefStep = mrefProcess.GetOperation(OpID(), pdb);
 
 		if ( mrefStep == null )
-			throw new NotRunnableException("Error: Operation not currently available in this process.");
+			throw new JewelPetriException("Error: Operation not found in this process.");
 
-		if ( !mrefStep.IsRunnable() )
-		{
-			try
-			{
-				mrefProcess.RemoveStep(pdb, mrefStep);
-			}
-			catch (JewelPetriException e)
-			{
-				throw e;
-			}
+		if ( Constants.LevelID_Invalid.equals(mrefStep.GetLevel()) )
 			throw new NotRunnableException("Error: Operation not currently available in this process.");
-		}
 	}
 
 	private void BuildLog(SQLServer pdb, UUID pidSource)

@@ -14,6 +14,7 @@ public interface IProcess
     public UUID GetScriptID();
     public IScript GetScript() throws JewelPetriException;
     public INode[] GetNodes() throws JewelPetriException;
+    public IStep[] GetSteps(SQLServer pdb) throws JewelPetriException;
     public IStep[] GetValidSteps(SQLServer pdb) throws JewelPetriException;
     public IStep GetOperation(UUID pidOperation, SQLServer pdb) throws JewelPetriException;
     public IProcess GetParent() throws JewelPetriException;
@@ -22,7 +23,6 @@ public interface IProcess
 	public boolean Lock();
 	public void Unlock();
 	public void RecalcSteps(SQLServer pdb) throws JewelPetriException;
-	public void RemoveStep(SQLServer pdb, IStep pobjStep) throws JewelPetriException;
 	public void Setup(SQLServer pdb, Operation.QueueContext pobjContext, boolean pbInitialize) throws JewelPetriException;
 	public void RunAutoSteps(Operation.QueueContext pobjContext, SQLServer pdb) throws JewelPetriException;
 	public ObjectBase GetData() throws JewelPetriException;

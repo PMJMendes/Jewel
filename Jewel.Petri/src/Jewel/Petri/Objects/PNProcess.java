@@ -237,14 +237,14 @@ public class PNProcess
 		return marrNodes;
 	}
 
-	public IStep[] GetValidSteps(SQLServer pdb) 
+	public IStep[] GetSteps(SQLServer pdb) 
 		throws JewelPetriException
 	{
+		ArrayList<IStep> larrAuxSteps;
+		ResultSet lrsSteps;
+
 		if ( marrSteps == null )
 		{
-			ArrayList<IStep> larrAuxSteps;
-			ResultSet lrsSteps;
-
 			larrAuxSteps = new ArrayList<IStep>();
 			lrsSteps = null;
 			try
@@ -268,13 +268,31 @@ public class PNProcess
 		return marrSteps;
 	}
 
+	public IStep[] GetValidSteps(SQLServer pdb) 
+		throws JewelPetriException
+	{
+		ArrayList<IStep> larrAuxSteps;
+		int i;
+
+		GetSteps(pdb);
+
+		larrAuxSteps = new ArrayList<IStep>();
+		for ( i = 0; i < marrSteps.length; i++ )
+		{
+			if ( !Constants.LevelID_Invalid.equals(marrSteps[i].GetLevel()) )
+				larrAuxSteps.add(marrSteps[i]);
+		}
+
+		return larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
+	}
+
 	public IStep GetOperation(UUID pidOperation, SQLServer pdb)
 		throws JewelPetriException
 	{
 		IStep lobjResult;
 		int i;
 
-		GetValidSteps(pdb);
+		GetSteps(pdb);
 
 		lobjResult = null;
 
@@ -340,79 +358,12 @@ public class PNProcess
 	public void RecalcSteps(SQLServer pdb)
 		throws JewelPetriException
 	{
-		UUID lidSteps;
-		ArrayList<IStep> larrAux;
-		IOperation[] larrOps;
-		PNStep lobjAux;
 		int i;
 
-		GetValidSteps(pdb);
-
-		larrAux = new ArrayList<IStep>();
+		GetSteps(pdb);
 
 		for ( i = 0; i < marrSteps.length; i++ )
-			if ( marrSteps[i].IsRunnable() )
-				larrAux.add(marrSteps[i]);
-
-		larrOps = GetScript().getOperations();
-
-		try
-		{
-			lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
-			for ( i = 0; i < larrOps.length; i++ )
-			{
-				if ( GetOperation(larrOps[i].getKey(), pdb) != null )
-					continue;
-
-				lobjAux = PNStep.GetInstance(getNameSpace(), (UUID)null);
-				lobjAux.setAt(0, getKey());
-				lobjAux.setAt(1, larrOps[i].getKey());
-				lobjAux.setAt(2, larrOps[i].getDefaultLevel());
-				lobjAux.setAt(3, null);
-				lobjAux.setAt(4, null);
-				lobjAux.SetupNodes(this);
-
-				if ( lobjAux.IsRunnable() )
-				{
-					lobjAux.SaveToDb(pdb);
-					Engine.GetCache(true).setAt(lidSteps, lobjAux.getKey(), lobjAux);
-					larrAux.add((IStep)lobjAux);
-				}
-			}
-		}
-		catch (JewelPetriException e)
-		{
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		for ( i = 0; i < marrSteps.length; i++ )
-			if ( !marrSteps[i].IsRunnable() )
-				marrSteps[i].Delete(pdb);
-
-		marrSteps = larrAux.toArray(new IStep[larrAux.size()]);
-	}
-
-	public void RemoveStep(SQLServer pdb, IStep pobjStep)
-		throws JewelPetriException
-	{
-		ArrayList<IStep> larrAux;
-		int i;
-
-		GetValidSteps(pdb);
-
-		pobjStep.Delete(pdb);
-
-		larrAux = new ArrayList<IStep>();
-
-		for ( i = 0; i < marrSteps.length; i++ )
-			if ( !marrSteps[i].getKey().equals(pobjStep) )
-				larrAux.add(marrSteps[i]);
-
-		marrSteps = larrAux.toArray(new IStep[larrAux.size()]);
+			marrSteps[i].CalcRunnable(pdb);
 	}
 
 	public void Setup(SQLServer pdb, Operation.QueueContext pobjContext, boolean pbInitialize)
@@ -424,7 +375,7 @@ public class PNProcess
 		ArrayList<INode> larrAuxNodes;
 		int i;
 		PNNode lobjNode;
-		ArrayList<IStep> larrAux;
+		ArrayList<IStep> larrAuxSteps;
 		IOperation[] larrOps;
 		PNStep lobjStep;
 
@@ -462,27 +413,24 @@ public class PNProcess
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
-		larrAux = new ArrayList<IStep>();
+		larrAuxSteps = new ArrayList<IStep>();
 		larrOps = GetScript().getOperations();
 		try
 		{
 			lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
 			for ( i = 0; i < larrOps.length; i++ )
 			{
-				lobjStep = PNStep.GetInstance(getNameSpace(), (UUID)null);
+				lobjStep = (PNStep)Engine.GetWorkInstance(lidSteps, (UUID)null);
 				lobjStep.setAt(0, getKey());
 				lobjStep.setAt(1, larrOps[i].getKey());
 				lobjStep.setAt(2, larrOps[i].getDefaultLevel());
 				lobjStep.setAt(3, null);
 				lobjStep.setAt(4, null);
 				lobjStep.SetupNodes(this);
-
-				if ( lobjStep.IsRunnable() )
-				{
-					lobjStep.SaveToDb(pdb);
-					Engine.GetCache(true).setAt(lidSteps, lobjStep.getKey(), lobjStep);
-					larrAux.add((IStep)lobjStep);
-				}
+				lobjStep.SaveToDb(pdb);
+				lobjStep.CalcRunnable(pdb);
+				Engine.GetCache(true).setAt(lidSteps, lobjStep.getKey(), lobjStep);
+				larrAuxSteps.add(lobjStep);
 			}
 		}
 		catch (JewelPetriException e)
@@ -496,7 +444,7 @@ public class PNProcess
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
-		marrSteps = larrAux.toArray(new IStep[larrAux.size()]);
+		marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
 
 		Restart(pdb);
 
@@ -511,14 +459,13 @@ public class PNProcess
 		int i;
 		Operation lobjOp;
 
-		GetValidSteps(pdb);
-
 		if ( !Lock() )
 			throw new JewelPetriException("Unexpected: Process locked during autorun.");
 
 		for ( i = 0; i < marrSteps.length; i++ )
 		{
-			if ( Constants.RoleID_Autorun.equals(marrSteps[i].GetRole()) )
+			if ( Constants.RoleID_Autorun.equals(marrSteps[i].GetRole()) &&
+					!Constants.LevelID_Invalid.equals(marrSteps[i].GetLevel()) )
 			{
 				lobjOp = marrSteps[i].GetOperation().GetNewInstance(getKey());
 				Unlock();

@@ -16,10 +16,10 @@ public interface IStep
 	public IOperation GetOperation();
     public INode[] getInputs();
     public INode[] getOutputs();
-    public boolean IsRunnable();
+    public UUID GetLevel();
+    public void CalcRunnable(SQLServer pdb) throws JewelPetriException;
     public void DoSafeRun() throws JewelPetriException;
 	public void RollbackSafeRun();
 	public void CommitSafeRun(SQLServer pdb) throws JewelPetriException;
-    public void Delete(SQLServer pdb) throws JewelPetriException;
     public UUID GetRole();
 }
