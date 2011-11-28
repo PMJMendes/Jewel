@@ -10,21 +10,8 @@ import javax.servlet.ServletResponse;
 public class JewelWebFilterChain
 	implements FilterChain
 {
-	boolean mbCalled;
-
-	public JewelWebFilterChain()
-	{
-		mbCalled = false;
-	}
-
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
 		throws IOException, ServletException
 	{
-		mbCalled = true;
-	}
-
-	public boolean isChainCalled()
-	{
-		return mbCalled;
 	}
 }

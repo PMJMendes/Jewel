@@ -16,23 +16,17 @@ public final class JewelWebHttpFilter
 {
 	private final transient SpnegoHttpFilter mrefSpnego = new SpnegoHttpFilter();
 
-	public void init(FilterConfig arg0)
+	public void init(FilterConfig filterConfig)
 		throws ServletException
 	{
-		mrefSpnego.init(arg0);
+		mrefSpnego.init(filterConfig);
 	}
 
-	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 		throws IOException, ServletException
 	{
-		try
-		{
-			mrefSpnego.doFilter(arg0, arg1, arg2);
-		}
-		catch (Throwable e)
-		{
-			
-		}
+		mrefSpnego.doFilter(servletRequest, new JewelWebResponseWrapper(), new JewelWebFilterChain());
+		filterChain.doFilter(servletRequest, servletResponse);
 	}
 
 	public void destroy()
