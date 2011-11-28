@@ -11,10 +11,6 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.Objects"/>
-        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri"/>
-        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.Interfaces"/>
-        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.SysObjects"/>
-        <javaElement handleIdentifier="=Jewel.Petri/src&lt;Jewel.Petri.Forms"/>
+        <javaElement handleIdentifier="=Jewel.Petri/src"/>
     </selectedElements>
 </jardesc>
