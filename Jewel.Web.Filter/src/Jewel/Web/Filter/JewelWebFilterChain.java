@@ -13,5 +13,6 @@ public class JewelWebFilterChain
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
 		throws IOException, ServletException
 	{
+		return;
 	}
 }
