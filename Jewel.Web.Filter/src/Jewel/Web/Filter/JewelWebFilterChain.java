@@ -10,9 +10,21 @@ import javax.servlet.ServletResponse;
 public class JewelWebFilterChain
 	implements FilterChain
 {
+	private ServletRequest mrefRequest;
+
+	public JewelWebFilterChain()
+	{
+		mrefRequest = null;
+	}
+
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
 		throws IOException, ServletException
 	{
-		return;
+		mrefRequest = servletRequest;
+	}
+
+	public ServletRequest getRequest()
+	{
+		return mrefRequest;
 	}
 }

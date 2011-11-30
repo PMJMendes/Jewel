@@ -8,7 +8,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.spnego.SpnegoHttpFilter;
 
@@ -26,9 +25,18 @@ public final class JewelWebHttpFilter
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 		throws IOException, ServletException
 	{
-		mrefSpnego.doFilter(servletRequest, new JewelWebResponseWrapper(), new JewelWebFilterChain());
-		String s = ((HttpServletRequest)servletRequest).getRemoteUser();
-		filterChain.doFilter(servletRequest, servletResponse);
+		JewelWebFilterChain lrefChain;
+		ServletRequest lrefRequest;
+
+		lrefChain = new JewelWebFilterChain();
+
+		mrefSpnego.doFilter(servletRequest, new JewelWebResponseWrapper(), lrefChain);
+
+		lrefRequest = lrefChain.getRequest();
+		if ( lrefRequest == null  )
+			lrefRequest = servletRequest;
+
+		filterChain.doFilter(lrefRequest, servletResponse);
 	}
 
 	public void destroy()
