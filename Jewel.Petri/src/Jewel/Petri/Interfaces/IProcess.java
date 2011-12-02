@@ -13,7 +13,7 @@ public interface IProcess
 {
     public UUID GetScriptID();
     public IScript GetScript() throws JewelPetriException;
-    public INode[] GetNodes() throws JewelPetriException;
+    public INode[] GetNodes(SQLServer pdb) throws JewelPetriException;
     public IStep[] GetSteps(SQLServer pdb) throws JewelPetriException;
     public IStep[] GetValidSteps(SQLServer pdb) throws JewelPetriException;
     public IStep GetOperation(UUID pidOperation, SQLServer pdb) throws JewelPetriException;
@@ -29,6 +29,7 @@ public interface IProcess
 	public boolean IsRunning();
 	public void Restart(SQLServer pdb) throws JewelPetriException;
 	public void Stop(SQLServer pdb) throws JewelPetriException;
+	public void SetDataObjectID(UUID pidData, SQLServer pdb) throws JewelPetriException;
 	public IProcess[] GetCurrentSubProcesses(SQLServer pdb) throws JewelPetriException;
 	public void SetParentProcId(UUID pidParent, SQLServer pdb) throws JewelPetriException;
 }

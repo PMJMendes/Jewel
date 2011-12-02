@@ -387,9 +387,10 @@ public abstract class Operation
 		return mrefProcess;
 	}
 
-	protected boolean TriggerOp(Operation pobjQueued)
+	protected boolean TriggerOp(Operation pobjQueued, SQLServer pdb)
 		throws JewelPetriException
 	{
+		IProcess lrefProcess;
 		IOperation[] larrOps;
 		int i;
 		QueuedOp lobjQueue;
@@ -397,7 +398,10 @@ public abstract class Operation
 		if ( marrTriggers == null )
 			throw new JewelPetriException("Invalid: Attempted to queue operation outside of execution.");
 
-		larrOps = pobjQueued.GetProcess().GetScript().getOperations();
+		lrefProcess = pobjQueued.GetProcess();
+		lrefProcess.GetNodes(pdb);
+		lrefProcess.GetSteps(pdb);
+		larrOps = lrefProcess.GetScript().getOperations();
 		for ( i = 0; i < larrOps.length; i++ )
 		{
 			if ( larrOps[i].getKey().equals(pobjQueued.OpID()) )

@@ -161,12 +161,11 @@ public class PNProcess
 		return mrefScript;
 	}
 
-	public INode[] GetNodes()
+	public INode[] GetNodes(SQLServer pdb)
 		throws JewelPetriException
 	{
 		int[] larrMembers;
 		java.lang.Object[] larrParams;
-		MasterDB ldb;
 		ArrayList<INode> larrAuxNodes;
 		ResultSet lrsNodes;
 
@@ -180,21 +179,11 @@ public class PNProcess
 
 			try
 			{
-				ldb = new MasterDB();
-			}
-			catch (Throwable e)
-			{
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
-			try
-			{
 				lrsNodes = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode))
-						.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+						.SelectByMembers(pdb, larrMembers, larrParams, new int[0]);
 			}
 			catch (Throwable e)
 			{
-				try {ldb.Disconnect();} catch (Throwable e1) {}
 				throw new JewelPetriException(e.getMessage(), e);
 			}
 
@@ -208,23 +197,12 @@ public class PNProcess
 			catch (Throwable e)
 			{
 				try {lrsNodes.close();} catch (SQLException e1) {}
-				try {ldb.Disconnect();} catch (Throwable e1) {}
 				throw new JewelPetriException(e.getMessage(), e);
 			}
 
 			try
 			{
 				lrsNodes.close();
-			}
-			catch (Throwable e)
-			{
-				try {ldb.Disconnect();} catch (Throwable e1) {}
-				throw new JewelPetriException(e.getMessage(), e);
-			}
-
-			try
-			{
-				ldb.Disconnect();
 			}
 			catch (Throwable e)
 			{
@@ -426,7 +404,7 @@ public class PNProcess
 				lobjStep.setAt(2, larrOps[i].getDefaultLevel());
 				lobjStep.setAt(3, null);
 				lobjStep.setAt(4, null);
-				lobjStep.SetupNodes(this);
+				lobjStep.SetupNodes(this, pdb);
 				lobjStep.SaveToDb(pdb);
 				lobjStep.CalcRunnable(pdb);
 				Engine.GetCache(true).setAt(lidSteps, lobjStep.getKey(), lobjStep);
@@ -524,6 +502,20 @@ public class PNProcess
 		throws JewelPetriException
 	{
 		internalSetAt(4, false);
+		try
+		{
+			SaveToDb(pdb);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
+	public void SetDataObjectID(UUID pidData, SQLServer pdb)
+		throws JewelPetriException
+	{
+		internalSetAt(1, pidData);
 		try
 		{
 			SaveToDb(pdb);

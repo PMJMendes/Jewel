@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.UUID;
 
 import Jewel.Engine.Engine;
+import Jewel.Engine.DataAccess.MasterDB;
 import Jewel.Engine.DataAccess.SQLServer;
 import Jewel.Engine.SysObjects.JewelEngineException;
 import Jewel.Engine.SysObjects.ObjectBase;
@@ -53,9 +54,30 @@ public class PNStep
 	public void Initialize()
 		throws JewelEngineException
 	{
+		MasterDB ldb;
+
 		try
 		{
-			SetupNodes((IProcess)PNProcess.GetInstance(getNameSpace(), (UUID)getAt(0)));
+			ldb = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelEngineException(e.getMessage(), e);
+		}
+
+		try
+		{
+			SetupNodes((IProcess)PNProcess.GetInstance(getNameSpace(), (UUID)getAt(0)), ldb);
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw new JewelEngineException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.Disconnect();
 		}
 		catch (Throwable e)
 		{
@@ -63,7 +85,7 @@ public class PNStep
 		}
 	}
 
-	public void SetupNodes(IProcess prefProcess)
+	public void SetupNodes(IProcess prefProcess, SQLServer pdb)
 		throws JewelPetriException
 	{
 		IController[] larrCtls;
@@ -81,7 +103,7 @@ public class PNStep
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
-		larrNodes = mrefProcess.GetNodes();
+		larrNodes = mrefProcess.GetNodes(pdb);
 
 		larrCtls = mrefOperation.getInputs();
 		marrInputs = new INode[larrCtls.length];
