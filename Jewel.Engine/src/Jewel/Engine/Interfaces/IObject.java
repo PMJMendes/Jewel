@@ -22,6 +22,7 @@ public interface IObject
         //String ColumnForModifyTable(UUID pidNSpace, int plngMember);
 		String ColumnForTableDrop(int plngMember);
 		String ColumnsForMultiSelect(UUID pidNSpace, String pstrColPrefix, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
+		String ColumnsForSimpleSelect(UUID pidNSpace, String pstrColPrefix, R<Integer> plngNextTbl) throws JewelEngineException, SQLException;
 		String TablesForMultiSelect(UUID pidNSpace, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
         String ColumnForReportFilter(UUID pidNSpace, String pstrAlias, String pstrColPrefix, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
 

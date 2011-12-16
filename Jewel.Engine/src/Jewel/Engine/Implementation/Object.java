@@ -240,6 +240,22 @@ public class Object
 		return lstrAux;
 	}
 
+	public String ColumnsForSimpleSelect(UUID pidNSpace, String pstrColPrefix, R<Integer> plngNextTbl)
+		throws JewelEngineException, SQLException
+	{
+		String lstrAux;
+		int llngTblNum;
+		int i;
+
+		lstrAux = "";
+		llngTblNum = plngNextTbl.get();
+		plngNextTbl.set(llngTblNum * 100 + 1);
+		for ( i = 0; i < marrDataDefs.length; i++ )
+			lstrAux += marrDataDefs[i].ColumnsForSimpleSelect(pidNSpace, pstrColPrefix, llngTblNum, plngNextTbl);
+		plngNextTbl.set(llngTblNum);
+		return lstrAux;
+	}
+
 	public String TablesForMultiSelect(UUID pidNSpace, R<Integer> plngNextTbl, boolean pbRecurse)
 		throws JewelEngineException, SQLException
 	{

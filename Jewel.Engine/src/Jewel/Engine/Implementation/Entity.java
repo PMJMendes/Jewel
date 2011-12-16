@@ -160,6 +160,19 @@ public class Entity
 		return lstrAux;
 	}
 
+	public String SQLForSelectSingle() throws JewelEngineException, SQLException
+	{
+		String lstrAux;
+		R<Integer> llngCurrTbl;
+
+		llngCurrTbl = new R<Integer>(new Integer(1));
+		lstrAux = "SELECT [t1].[PK] [PK]" + mrefObject.ColumnsForSimpleSelect(mrefSpace.getKey(), "", llngCurrTbl);
+		llngCurrTbl = new R<Integer>(new Integer(1));
+		lstrAux += " FROM " + Storage() + " [t1]";
+
+		return lstrAux;
+	}
+
 	public String SQLForSelectMultiFiltered(int[] parrMembers, java.lang.Object[] parrValues)
 		throws JewelEngineException, SQLException
 	{

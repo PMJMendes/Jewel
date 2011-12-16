@@ -203,6 +203,20 @@ public class ObjMember
 		return lstrAux;
 	}
 
+	public String ColumnsForSimpleSelect(UUID pidNSpace, String pstrColPrefix, int plngTblNum, R<Integer> plngNextTbl)
+		throws JewelEngineException, SQLException
+	{
+		String lstrAux;
+
+		if (getAt(9) == null)
+			return "";
+
+		lstrAux = ", [t" + Integer.toString(plngTblNum) + "].[" + (String)getAt(9) + "] [" + pstrColPrefix + ":" + (String)getAt(2) + "]";
+
+		plngNextTbl.set(plngNextTbl.get() + 1);
+		return lstrAux;
+	}
+
 	public String TablesForMultiSelect(UUID pidNSpace, int plngTblNum, R<Integer> plngNextTbl, boolean pbRecurse)
 		throws JewelEngineException, SQLException
 	{

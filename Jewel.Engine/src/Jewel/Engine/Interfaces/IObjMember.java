@@ -20,6 +20,7 @@ public interface IObjMember
     //String ColumnForModifyTable(UUID pidNSpace);
 	String ColumnForTableDrop();
 	String ColumnsForMultiSelect(UUID pidNSpace, String pstrColPrefix, int plngTblNum, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
+	String ColumnsForSimpleSelect(UUID pidNSpace, String pstrColPrefix, int plngTblNum, R<Integer> plngNextTbl) throws JewelEngineException, SQLException;
     String TablesForMultiSelect(UUID pidNSpace, int plngTblNum, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
     String ColumnForReportFilter(UUID pidNSpace, String pstrAlias, String pstrColPrefix, int plngTblNum, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
 

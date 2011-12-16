@@ -15,6 +15,7 @@ public interface IEntity
 	String SQLTablesForMultiSelect(R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
     String SQLColumnForReportFilter(String pstrAlias, String pstrColPrefix, R<Integer> plngNextTbl, boolean pbRecurse) throws JewelEngineException, SQLException;
 	String SQLForSelectMulti() throws JewelEngineException, SQLException;
+	String SQLForSelectSingle() throws JewelEngineException, SQLException;
     String SQLForSelectMultiFiltered(int[] parrMembers, Object[] parrValues) throws JewelEngineException, SQLException;
     String SQLForSelectAll();
     String SQLForSelectAllSort(int[] parrSorts);
