@@ -44,7 +44,7 @@ public abstract class UndoOperation
 
 	public UUID GetExternalProcess()
 	{
-		return null;
+		return mobjSourceOp.GetExternalProcess();
 	}
 
 	protected void Run(SQLServer pdb)

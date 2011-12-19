@@ -49,6 +49,8 @@ public abstract class UndoableOperation
 			marrTriggers = larrOldContext;
 			throw new JewelPetriException(e.getMessage(), e);
 		}
+
+		marrTriggers = larrOldContext;
 	}
 
 	public boolean LocalCanUndo()
