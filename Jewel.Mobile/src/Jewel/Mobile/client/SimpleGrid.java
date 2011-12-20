@@ -80,13 +80,6 @@ public class SimpleGrid
 		lhorz.add(mbtnNew);
 		mbtnNew.getElement().getParentElement().setClassName("simpleGrid-NewButton-Wrapper");
 
-		mgrdTable = new Grid();
-		mgrdTable.setCellPadding(2);
-		mgrdTable.setCellSpacing(0);
-		mgrdTable.setStylePrimaryName("simpleGrid-Grid");
-		mpnMain.add(mgrdTable);
-		mgrdTable.getElement().getParentElement().setClassName("simpleGrid-Grid-Wrapper");
-
 		lhorz = new HorizontalPanel();
 		lhorz.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		lhorz.setStylePrimaryName("simpleGrid-Pagebar");
@@ -120,6 +113,13 @@ public class SimpleGrid
 		mbtnLast.setStylePrimaryName("simpleGrid-PageLastButton");
 		lhorz.add(mbtnLast);
 		mbtnLast.getElement().getParentElement().setClassName("simpleGrid-PageLastButton-Wrapper");
+
+		mgrdTable = new Grid();
+		mgrdTable.setCellPadding(2);
+		mgrdTable.setCellSpacing(0);
+		mgrdTable.setStylePrimaryName("simpleGrid-Grid");
+		mpnMain.add(mgrdTable);
+		mgrdTable.getElement().getParentElement().setClassName("simpleGrid-Grid-Wrapper");
 
 		initWidget(mpnMain);
 

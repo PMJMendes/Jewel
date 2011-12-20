@@ -35,13 +35,13 @@ public class EditorForm
 		louter = new VerticalPanel();
 		louter.setStylePrimaryName("editorForm");
 
-		mfrmData = new SimpleForm();
-		louter.add(mfrmData);
-		mfrmData.getElement().getParentElement().setClassName("editorForm-Form-Wrapper");
-
 		msetCommands = new CommandSet();
 		louter.add(msetCommands);
 		msetCommands.getElement().getParentElement().setClassName("editorForm-Commands-Wrapper");
+
+		mfrmData = new SimpleForm();
+		louter.add(mfrmData);
+		mfrmData.getElement().getParentElement().setClassName("editorForm-Form-Wrapper");
 
 		initWidget(louter);
 
