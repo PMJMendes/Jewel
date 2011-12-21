@@ -189,6 +189,7 @@ public class DynaForm
 				mtblForm.getFlexCellFormatter().getElement(r, c).getStyle().setWidth(((int)((parrCtls[i].mlngColumn - x) * 100 - 5)),
 						Unit.PX);
 				x = parrCtls[i].mlngColumn;
+				c++;
 			}
 
 			llblAux = new Label();
