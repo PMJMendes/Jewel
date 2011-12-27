@@ -52,7 +52,7 @@ public abstract class UndoOperation
 	{
 		Setup();
 
-		mobjSourceOp.ExecuteUndo(marrTriggers, pdb);
+		mobjSourceOp.ExecuteUndo(marrTriggers, pdb, midProcess);
 
 		try
 		{

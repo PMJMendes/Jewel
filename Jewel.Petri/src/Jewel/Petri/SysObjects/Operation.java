@@ -60,7 +60,7 @@ public abstract class Operation
 		private static final long serialVersionUID = 1L;
 	}
 
-	private transient UUID midProcess;
+	protected transient UUID midProcess;
 	private transient IProcess mrefProcess;
 	private transient IStep mrefStep;
 	private transient boolean mbDone;

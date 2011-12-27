@@ -27,10 +27,12 @@ public abstract class UndoableOperation
 	protected abstract void Undo(SQLServer pdb) throws JewelPetriException;
 	public abstract UndoSet[] GetSets();
 
-	public void ExecuteUndo(QueueContext parrQueue, SQLServer pdb)
+	public void ExecuteUndo(QueueContext parrQueue, SQLServer pdb, UUID pidProcess)
 		throws JewelPetriException
 	{
 		QueueContext larrOldContext;
+
+		midProcess = pidProcess;
 
 		larrOldContext = marrTriggers;
 		marrTriggers = parrQueue;
