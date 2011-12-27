@@ -328,6 +328,8 @@ public abstract class Operation
 	private void CheckRunnable(SQLServer pdb)
 		throws JewelPetriException, NotRunnableException
 	{
+		mrefProcess.GetNodes(pdb);
+		mrefProcess.GetSteps(pdb);
 		mrefStep = mrefProcess.GetOperation(OpID(), pdb);
 
 		if ( mrefStep == null )
