@@ -460,6 +460,11 @@ public class PNProcess
 		Unlock();
 	}
 
+	public UUID GetDataKey()
+	{
+		return (UUID)getAt(1);
+	}
+
 	public ObjectBase GetData()
 		throws JewelPetriException
 	{
