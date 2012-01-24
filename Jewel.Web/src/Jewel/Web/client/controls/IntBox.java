@@ -26,7 +26,7 @@ public class IntBox
 
 				lstrAux = getText();
 
-				if ((lstrAux == null) || (lstrAux.equals("")))
+				if ( (lstrAux == null) || (lstrAux.equals("")) )
 				{
 					mstrValue = null;
 					return;
@@ -39,7 +39,8 @@ public class IntBox
 				}
 				catch(NumberFormatException e)
 				{
-					innerSetText(mstrValue);
+					if ( !"-".equals(lstrAux) )
+						innerSetText(mstrValue);
 				}
 			}
 		});
