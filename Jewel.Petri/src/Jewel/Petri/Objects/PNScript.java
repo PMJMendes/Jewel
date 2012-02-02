@@ -33,6 +33,19 @@ public class PNScript
 		}
 	}
 
+    public static PNScript GetInstance(UUID pidNameSpace, ResultSet prsObject)
+		throws JewelPetriException
+	{
+	    try
+	    {
+			return (PNScript)Engine.GetCache(true).getAt(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNScript), prsObject);
+		}
+	    catch (Throwable e)
+	    {
+	    	throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
+
 	public void Initialize()
 		throws JewelEngineException
 	{
