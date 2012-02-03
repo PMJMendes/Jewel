@@ -184,7 +184,7 @@ public abstract class ObjectBase
 
             if ( !mbReadOnly )
             {
-        		Engine.GetCache(true).DeleteAt(getKey(), midKey);
+        		Engine.GetCache(true).DeleteAt(midEntity, midKey);
             	Engine.GetCache(false).getAt(midEntity, midKey).setData(getData());
             }
         }
