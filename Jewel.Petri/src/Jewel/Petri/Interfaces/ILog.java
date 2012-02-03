@@ -17,5 +17,6 @@ public interface ILog
 	IUser GetUser() throws JewelPetriException;
 	Timestamp GetTimestamp();
 	boolean CanUndo() throws JewelPetriException;
+	boolean IsUndone();
 	UUID GetExternalProcess();
 }
