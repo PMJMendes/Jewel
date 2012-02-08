@@ -189,6 +189,8 @@ public class Object
 		{
 			if ( parrMembers[i] >= 0 )
 				lstrAux += pstrTblAlias + "." + marrDataDefs[parrMembers[i]].ColumnForSort("ASC");
+			else if ( parrMembers[i] == Integer.MIN_VALUE )
+				lstrAux += pstrTblAlias + "." + marrDataDefs[0].ColumnForSort("DESC");
 			else
 				lstrAux += pstrTblAlias + "." + marrDataDefs[-parrMembers[i]].ColumnForSort("DESC");
 		}
