@@ -588,6 +588,7 @@ public class PNProcess
 	public void SetParentProcId(UUID pidParent, SQLServer pdb)
 		throws JewelPetriException
 	{
+    	mrefParent = null;
     	internalSetAt(3, pidParent);
 
     	try
