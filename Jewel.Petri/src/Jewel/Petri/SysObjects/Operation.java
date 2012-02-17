@@ -389,6 +389,11 @@ public abstract class Operation
 		return mrefProcess;
 	}
 
+	protected QueueContext GetContext()
+	{
+		return marrTriggers;
+	}
+
 	protected boolean TriggerOp(Operation pobjQueued, SQLServer pdb)
 		throws JewelPetriException
 	{

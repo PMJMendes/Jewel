@@ -11,6 +11,7 @@ import Jewel.Engine.SysObjects.*;
 import Jewel.Petri.*;
 import Jewel.Petri.Interfaces.*;
 import Jewel.Petri.SysObjects.JewelPetriException;
+import Jewel.Petri.SysObjects.Operation;
 import Jewel.Petri.SysObjects.ProcessData;
 
 public class PNScript
@@ -126,7 +127,7 @@ public class PNScript
 		return (Boolean)getAt(3);
 	}
 
-	public IProcess CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb)
+	public IProcess CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, Operation.QueueContext pobjContext, SQLServer pdb)
 		throws JewelPetriException
 	{
 		ObjectBase lobjAux;
@@ -167,7 +168,7 @@ public class PNScript
 				lobjProc.SaveToDb(pdb);
 			}
 
-			lobjProc.Setup(pdb, null, false);
+			lobjProc.Setup(pdb, pobjContext, false);
 		}
 		catch (Throwable e)
 		{
@@ -218,7 +219,7 @@ public class PNScript
 
 		try
 		{
-			CreateInstance(lidNSpace, lidData, lidParent, ldb);
+			CreateInstance(lidNSpace, lidData, lidParent, null, ldb);
 		}
 		catch (JewelPetriException e)
 		{

@@ -13,5 +13,6 @@ public interface IScript
 	IController[] getControllers();
 	UUID GetDataType();
 	boolean IsTopLevel();
-	IProcess CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, SQLServer pdb) throws JewelPetriException;
+	IProcess CreateInstance(UUID pidNSpace, UUID pidData, UUID pidParent, Operation.QueueContext pobjContext, SQLServer pdb)
+			throws JewelPetriException;
 }
