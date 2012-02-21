@@ -275,6 +275,30 @@ public abstract class Operation
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
+		mrefProcess.Unlock();
+
+		try
+		{
+			mrefProcess.RunAutoSteps(parrTriggers, pdb);
+			RunTriggers(parrTriggers, pdb);
+		}
+		catch (JewelPetriException e)
+		{
+			ForceLock();
+			mrefStep.RollbackSafeRun();
+			mrefProcess.Unlock();
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			ForceLock();
+			mrefStep.RollbackSafeRun();
+			mrefProcess.Unlock();
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		ForceLock();
+
 		try
 		{
 			mrefStep.CommitSafeRun(pdb);
@@ -293,10 +317,6 @@ public abstract class Operation
 		mrefProcess.Unlock();
 
 		mbDone = true;
-
-		mrefProcess.RunAutoSteps(parrTriggers, pdb);
-
-		RunTriggers(parrTriggers, pdb);
 	}
 	
 	public ILog getLog()
@@ -323,6 +343,11 @@ public abstract class Operation
 			{
 			}
 		}
+	}
+
+	private void ForceLock()
+	{
+		while ( !mrefProcess.Lock() );
 	}
 
 	private void CheckRunnable(SQLServer pdb)
