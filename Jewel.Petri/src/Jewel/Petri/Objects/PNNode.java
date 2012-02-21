@@ -87,9 +87,6 @@ public class PNNode
 	public synchronized void DecCount()
 		throws JewelPetriException
 	{
-		if ( mbPending )
-			throw new JewelPetriException("Unexpected: Attempted operation while node is pending.");
-
 		if ( mlngCount <= 0 )
 			throw new JewelPetriException("Invalid: Node is empty.");
 
@@ -100,9 +97,6 @@ public class PNNode
 	public synchronized void IncCount()
 		throws JewelPetriException
 	{
-		if ( mbPending )
-			throw new JewelPetriException("Unexpected: Attempted operation while node is pending.");
-
 		if ( (GetController().getMaxCount()) <= 0 || (mlngCount < GetController().getMaxCount()) )
 			mlngCount++;
 
