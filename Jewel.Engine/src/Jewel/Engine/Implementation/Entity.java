@@ -245,7 +245,7 @@ public class Entity
             }
         }
 
-        if (parrSorts.length >= 0)
+        if (parrSorts != null)
         {
             lstrAux += " ORDER BY ";
             for (i = 0; i < parrSorts.length; i++)
