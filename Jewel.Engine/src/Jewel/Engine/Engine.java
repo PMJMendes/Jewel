@@ -51,7 +51,7 @@ public class Engine
 
         try {
 			ldb = new MasterDB();
-	        lrs = Entity.GetInstance(EntityGUIDs.E_Entity).SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+	        lrs = Entity.GetInstance(EntityGUIDs.E_Entity).SelectByMembers(ldb, larrMembers, larrParams, null);
 	        if (lrs.next())
 	            lidAux = UUID.fromString(lrs.getString(1));
 	        else
