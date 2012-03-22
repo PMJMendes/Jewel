@@ -140,7 +140,8 @@ public abstract class ObjectBase
             return false;
 
         for (i = 0; i < marrMembers.length; i++)
-            if (!(((parrData[i] == null) && (marrMembers[i] == null)) || ((parrData[i] != null) && (parrData[i].equals(marrMembers[i])))))
+            if (!(((parrData[i] == null) && (marrMembers[i] == null)) ||
+            		((parrData[i] != null) && (parrData[i].equals(marrMembers[i])))))
                 return false;
 
         return true;

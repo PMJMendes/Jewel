@@ -903,6 +903,7 @@ public class DynaGridServiceImpl
     	laux = new GridActionResponse();
     	laux.mstrResult = "";
     	laux.mobjData = ViewDataBridge.ServerToClient(lidView, lobjLocal, lrefWSpace.GetNameSpace());
+    	ViewDataBridge.SetNonObjectParams(lidView, plngOrder, lobjLocal, laux.mobjData, larrNonObject, lobjData.getNameSpace());
     	return laux;
 	}
 

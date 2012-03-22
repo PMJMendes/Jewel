@@ -402,6 +402,61 @@ public class FormDataBridge
         return larrAux;
 	}
 
+	public static void SetNonObjectParams(UUID pidForm, java.lang.Object[] parrObjParams, String[] parrData, 
+			java.lang.Object[] parrParams, UUID pidNSpace)
+		throws JewelWebException
+	{
+		IForm lrefForm;
+		IObject lrefObject;
+		IFormField[] larrFields;
+		int llngCount;
+        int llngMaxLen;
+		int i, j, k, l;
+
+		try
+		{
+			lrefForm = Form.GetInstance(pidForm);
+		}
+		catch(Throwable e)
+		{
+        	throw new JewelWebException(e.getMessage(), e);
+		}
+        lrefObject = lrefForm.getEditedObject();
+		larrFields = lrefForm.getFields();
+		llngCount = larrFields.length;
+
+        llngMaxLen = parrObjParams.length;
+        for (i = 0; i < llngCount; i++)
+        {
+            j = larrFields[i].getMemberNumber();
+            k = lrefObject.MemberByNOrd(j);
+            if (k == -1)
+                llngMaxLen++;
+        }
+
+        if (llngMaxLen == parrObjParams.length)
+            return;
+
+        l = parrObjParams.length;
+        for (i = 0; i < llngCount; i++)
+        {
+            j = larrFields[i].getMemberNumber();
+            k = lrefObject.MemberByNOrd(j);
+            if (k == -1)
+            {
+                try
+                {
+                	parrData[i] = BuildValue(larrFields[i], parrParams[l], pidNSpace);
+				}
+                catch (JewelEngineException e)
+                {
+		        	throw new JewelWebException(e.getMessage(), e);
+				}
+                l++;
+            }
+        }
+	}
+
 	private static java.lang.Object ParseValue(IFormField prefField, String pstrValue)
 		throws JewelEngineException
 	{

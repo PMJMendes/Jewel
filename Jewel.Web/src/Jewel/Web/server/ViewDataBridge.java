@@ -98,4 +98,23 @@ public class ViewDataBridge
 		return FormDataBridge.GetNonObjectParams(lrefView.getTabs()[plngOrder].getFormID(), pobjSource.getData(),
 				prefValues.marrData[plngOrder]);
 	}
+
+	public static void SetNonObjectParams(UUID pidView, int plngOrder, ObjectBase pobjSource, DataObject prefValues,
+			java.lang.Object[] parrParams, UUID pidNSpace)
+		throws JewelWebException
+	{
+		IView lrefView;
+		
+		try
+		{
+			lrefView = View.GetInstance(pidView);
+		}
+		catch (Throwable e)
+		{
+	    	throw new JewelWebException(e.getMessage(), e);
+		}
+		
+		FormDataBridge.SetNonObjectParams(lrefView.getTabs()[plngOrder].getFormID(), pobjSource.getData(),
+				prefValues.marrData[plngOrder], parrParams, pidNSpace);
+	}
 }
