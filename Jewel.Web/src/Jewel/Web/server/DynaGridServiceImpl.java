@@ -879,6 +879,7 @@ public class DynaGridServiceImpl
 		{
 			lrefAction = Form.GetInstance(View.GetInstance(lidView).getTabs()[plngOrder].getFormID()).getActions()[plngAction];
 			lrefAction.Run(lobjData, larrNonObject);
+			lobjLocal.setDataRange(larrNonObject);
 		}
 		catch (InvocationTargetException e)
 		{

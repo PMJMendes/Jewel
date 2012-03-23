@@ -132,6 +132,15 @@ public abstract class ObjectBase
         marrMembers = value;
     }
 
+    public void setDataRange(Object[] value)
+		throws JewelEngineException
+    {
+        if (mbReadOnly)
+            throw new JewelEngineException("Object is read-only.");
+
+        marrMembers = Arrays.copyOfRange(value, 0, marrMembers.length);
+    }
+
     public boolean CheckSaved(Object[] parrData)
     {
         int i;
