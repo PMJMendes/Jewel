@@ -17,6 +17,7 @@ public interface IProcess
     public IStep[] GetSteps(SQLServer pdb) throws JewelPetriException;
     public IStep[] GetValidSteps(SQLServer pdb) throws JewelPetriException;
     public IStep GetOperation(UUID pidOperation, SQLServer pdb) throws JewelPetriException;
+    public IStep GetValidOperation(UUID pidOperation) throws JewelPetriException;
     public IProcess GetParent() throws JewelPetriException;
     public UUID GetManagerID();
     public void SetManagerID(UUID pidManager, SQLServer pdb) throws JewelPetriException;
@@ -33,4 +34,5 @@ public interface IProcess
 	public void SetDataObjectID(UUID pidData, SQLServer pdb) throws JewelPetriException;
 	public IProcess[] GetCurrentSubProcesses(SQLServer pdb) throws JewelPetriException;
 	public void SetParentProcId(UUID pidParent, SQLServer pdb) throws JewelPetriException;
+	public ILog GetLog(UUID pidOpCode) throws JewelPetriException;
 }

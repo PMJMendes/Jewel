@@ -14,6 +14,7 @@ import Jewel.Engine.SysObjects.JewelEngineException;
 import Jewel.Engine.SysObjects.ObjectBase;
 import Jewel.Petri.Constants;
 import Jewel.Petri.Interfaces.IController;
+import Jewel.Petri.Interfaces.ILog;
 import Jewel.Petri.Interfaces.INode;
 import Jewel.Petri.Interfaces.IOperation;
 import Jewel.Petri.Interfaces.IProcess;
@@ -286,6 +287,52 @@ public class PNProcess
 
 		return lobjResult;
 	}
+
+    public IStep GetValidOperation(UUID pidOperation)
+    	throws JewelPetriException
+	{
+    	MasterDB ldb;
+    	IStep lobjResult;
+
+    	try
+    	{
+			ldb = new MasterDB();
+		}
+    	catch (Throwable e)
+    	{
+    		throw new JewelPetriException(e.getMessage(), e);
+		}
+
+    	try
+    	{
+    		lobjResult = GetOperation(pidOperation, ldb);
+    	}
+    	catch (JewelPetriException e)
+    	{
+    		try { ldb.Disconnect(); } catch (Throwable e1) {}
+    		throw e;
+    	}
+    	catch (Throwable e)
+    	{
+    		try { ldb.Disconnect(); } catch (Throwable e1) {}
+    		throw new JewelPetriException(e.getMessage(), e);
+    	}
+
+    	try
+    	{
+        	ldb.Disconnect();
+		}
+    	catch (Throwable e)
+    	{
+    		throw new JewelPetriException(e.getMessage(), e);
+		}
+
+    	if ( Constants.LevelID_Invalid.equals(lobjResult.GetLevel()) )
+    		return null;
+
+    	return lobjResult;
+	}
+
 
 	public IProcess GetParent()
 		throws JewelPetriException
@@ -599,5 +646,70 @@ public class PNProcess
     	{
     		throw new JewelPetriException(e.getMessage(), e);
 		}
+	}
+
+	public ILog GetLog(UUID pidOpCode)
+		throws JewelPetriException
+	{
+		IEntity lrefLogs;
+		MasterDB ldb;
+		ResultSet lrsLogs;
+		ILog lobjResult;
+
+		lobjResult = null;
+
+		try
+		{
+			lrefLogs = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNLog));
+			ldb = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			lrsLogs = lrefLogs.SelectByMembers(ldb, new int[] {Constants.FKOperation_In_Log, Constants.Undone_In_Log},
+					new java.lang.Object[] {pidOpCode, false}, null);
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			if ( lrsLogs.next() )
+				lobjResult = PNLog.GetInstance(getNameSpace(), lrsLogs); 
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			try { lrsLogs.close(); } catch (Throwable e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			lrsLogs.close();
+		}
+		catch (Throwable e)
+		{
+			try { ldb.Disconnect(); } catch (Throwable e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		return lobjResult;
 	}
 }
