@@ -648,7 +648,7 @@ public class PNProcess
 		}
 	}
 
-	public ILog GetLog(UUID pidOpCode)
+	public ILog GetLiveLog(UUID pidOpCode)
 		throws JewelPetriException
 	{
 		IEntity lrefLogs;
@@ -670,8 +670,8 @@ public class PNProcess
 
 		try
 		{
-			lrsLogs = lrefLogs.SelectByMembers(ldb, new int[] {Constants.FKOperation_In_Log, Constants.Undone_In_Log},
-					new java.lang.Object[] {pidOpCode, false}, null);
+			lrsLogs = lrefLogs.SelectByMembers(ldb, new int[] {Constants.FKProcess_In_Log, Constants.FKOperation_In_Log,
+					Constants.Undone_In_Log}, new java.lang.Object[] {getKey(), pidOpCode, false}, null);
 		}
 		catch (Throwable e)
 		{
