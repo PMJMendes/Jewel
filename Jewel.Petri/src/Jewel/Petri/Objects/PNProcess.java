@@ -651,16 +651,11 @@ public class PNProcess
 	public ILog GetLiveLog(UUID pidOpCode)
 		throws JewelPetriException
 	{
-		IEntity lrefLogs;
 		MasterDB ldb;
-		ResultSet lrsLogs;
 		ILog lobjResult;
-
-		lobjResult = null;
 
 		try
 		{
-			lrefLogs = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNLog));
 			ldb = new MasterDB();
 		}
 		catch (Throwable e)
@@ -670,30 +665,7 @@ public class PNProcess
 
 		try
 		{
-			lrsLogs = lrefLogs.SelectByMembers(ldb, new int[] {Constants.FKProcess_In_Log, Constants.FKOperation_In_Log,
-					Constants.Undone_In_Log}, new java.lang.Object[] {getKey(), pidOpCode, false}, null);
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			if ( lrsLogs.next() )
-				lobjResult = PNLog.GetInstance(getNameSpace(), lrsLogs); 
-		}
-		catch (Throwable e)
-		{
-			try { ldb.Disconnect(); } catch (Throwable e1) {}
-			try { lrsLogs.close(); } catch (Throwable e1) {}
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			lrsLogs.close();
+			lobjResult = GetLiveLog(pidOpCode, ldb);
 		}
 		catch (Throwable e)
 		{
@@ -704,6 +676,49 @@ public class PNProcess
 		try
 		{
 			ldb.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		return lobjResult;
+	}
+
+	public ILog GetLiveLog(UUID pidOpCode, SQLServer pdb)
+		throws JewelPetriException
+	{
+		IEntity lrefLogs;
+		ResultSet lrsLogs;
+		ILog lobjResult;
+
+		lobjResult = null;
+
+		try
+		{
+			lrefLogs = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNLog));
+			lrsLogs = lrefLogs.SelectByMembers(pdb, new int[] {Constants.FKProcess_In_Log, Constants.FKOperation_In_Log,
+					Constants.Undone_In_Log}, new java.lang.Object[] {getKey(), pidOpCode, false}, null);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			if ( lrsLogs.next() )
+				lobjResult = PNLog.GetInstance(getNameSpace(), lrsLogs); 
+		}
+		catch (Throwable e)
+		{
+			try { lrsLogs.close(); } catch (Throwable e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			lrsLogs.close();
 		}
 		catch (Throwable e)
 		{

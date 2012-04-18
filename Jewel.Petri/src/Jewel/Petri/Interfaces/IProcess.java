@@ -35,4 +35,5 @@ public interface IProcess
 	public IProcess[] GetCurrentSubProcesses(SQLServer pdb) throws JewelPetriException;
 	public void SetParentProcId(UUID pidParent, SQLServer pdb) throws JewelPetriException;
 	public ILog GetLiveLog(UUID pidOpCode) throws JewelPetriException;
+	public ILog GetLiveLog(UUID pidOpCode, SQLServer pdb) throws JewelPetriException;
 }
