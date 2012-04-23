@@ -183,7 +183,7 @@ public abstract class Operation
 			throw new JewelPetriException("Error: Attempt to run operation twice.");
 
 		if ( (!GetProcess().IsRunning()) && (!(this instanceof UndoOperation)) )
-			throw new JewelPetriException("Error: Attempt to run operation on stopped process.");
+			throw new NotRunnableException("Error: Attempt to run operation on stopped process.");
 
 		LockProcess();
 
