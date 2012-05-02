@@ -4,11 +4,14 @@ import java.sql.*;
 
 import Jewel.Engine.Constants.*;
 
-public class MasterDB extends SQLServer {
+public class MasterDB extends SQLServer
+{
+	private static String gstrServer =
+			( System.getenv("JEWEL_DBSERVER") == null ? DBConstants.DBServer : System.getenv("JEWEL_DBSERVER") );
 
 	public MasterDB()
 		throws SQLException
 	{
-		super(DBConstants.DBServer, DBConstants.MasterDB, DBConstants.User, DBConstants.Password);
+		super(gstrServer, DBConstants.MasterDB, DBConstants.User, DBConstants.Password);
 	}
 }
