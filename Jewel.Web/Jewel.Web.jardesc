@@ -11,6 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Jewel.Web/src&lt;Jewel.Web.server{EngineImplementor.java"/>
+        <javaElement handleIdentifier="=Jewel.Web/src&lt;Jewel.Web.interfaces"/>
+        <javaElement handleIdentifier="=Jewel.Web/src&lt;Jewel.Web.shared"/>
+        <javaElement handleIdentifier="=Jewel.Web/src&lt;Jewel.Web.server"/>
     </selectedElements>
 </jardesc>
