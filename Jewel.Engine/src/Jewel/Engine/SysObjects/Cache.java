@@ -109,7 +109,7 @@ public class Cache
     {
         int i;
 
-        marrElements = new Hashtable<String, ObjectBase>(1000000);
+        marrElements = new Hashtable<String, ObjectBase>(50000000);
         marrConstructors = new Hashtable<UUID, Constructor<?>>(1000);
 
         if (mbIsGlobal)
