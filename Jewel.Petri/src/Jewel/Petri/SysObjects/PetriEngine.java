@@ -56,7 +56,7 @@ public class PetriEngine
 
 		try
 		{
-			lrsProcesses = lrefProcesses.SelectAll(ldbRead);
+			lrsProcesses = lrefProcesses.SelectByMembers(ldbRead, new int[] {4}, new java.lang.Object[] {false}, null);
 		}
 		catch (Throwable e)
 		{
@@ -76,7 +76,7 @@ public class PetriEngine
 				ldbWrite.BeginTrans();
 				try
 				{
-					lobjProc.Setup(ldbWrite, null, true);
+					lobjProc.ShortSetup(ldbWrite, null, true);
 				}
 				catch (Throwable e)
 				{

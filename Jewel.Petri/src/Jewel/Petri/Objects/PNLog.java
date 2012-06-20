@@ -59,6 +59,9 @@ public class PNLog
 	public Operation GetOperationData()
 		throws JewelPetriException
 	{
+		if ( getAt(6) == null )
+			return null;
+
 		if ( mobjData == null )
 			mobjData = Operation.getOperation((getAt(6) instanceof FileXfer ? (FileXfer)getAt(6) : new FileXfer((byte[])getAt(6))));
 
@@ -115,6 +118,8 @@ public class PNLog
 		throws JewelPetriException
 	{
 		if ( GetOperation().GetUndoOp() == null )
+			return false;
+		if ( getAt(6) == null )
 			return false;
 
 		GetOperationData();

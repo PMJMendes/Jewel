@@ -25,6 +25,7 @@ public interface IProcess
 	public void Unlock();
 	public void RecalcSteps(SQLServer pdb) throws JewelPetriException;
 	public void Setup(SQLServer pdb, Operation.QueueContext pobjContext, boolean pbInitialize) throws JewelPetriException;
+	public void ShortSetup(SQLServer pdb, Operation.QueueContext pobjContext, boolean pbInitialize) throws JewelPetriException;
 	public void RunAutoSteps(Operation.QueueContext pobjContext, SQLServer pdb) throws JewelPetriException;
 	public UUID GetDataKey();
 	public ObjectBase GetData() throws JewelPetriException;
