@@ -76,7 +76,7 @@ public class PetriEngine
 				ldbWrite.BeginTrans();
 				try
 				{
-					lobjProc.ShortSetup(ldbWrite, null, true);
+					lobjProc.Setup(ldbWrite, null, true);
 				}
 				catch (Throwable e)
 				{

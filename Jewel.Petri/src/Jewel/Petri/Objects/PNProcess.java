@@ -478,28 +478,6 @@ public class PNProcess
 		RunAutoSteps(pobjContext, pdb);
 	}
 
-	public void ShortSetup(SQLServer pdb, Operation.QueueContext pobjContext, boolean pbInitialize)
-		throws JewelPetriException
-	{
-		if ( !Lock() )
-			throw new JewelPetriException("Unexpected: Process locked during setup.");
-
-		if ( IsRunning() )
-		{
-			Unlock();
-			return;
-		}
-
-		GetNodes(pdb);
-		GetSteps(pdb);
-
-		Restart(pdb);
-
-		Unlock();
-
-		RunAutoSteps(pobjContext, pdb);
-	}
-
 	public void RunAutoSteps(Operation.QueueContext pobjContext, SQLServer pdb)
 		throws JewelPetriException
 	{
