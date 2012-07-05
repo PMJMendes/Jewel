@@ -1,17 +1,38 @@
 package Jewel.Mobile.server;
 
-import java.lang.reflect.*;
-import java.sql.*;
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.UUID;
 
-import Jewel.Engine.*;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.DataAccess.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Mobile.interfaces.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Engine.Engine;
+import Jewel.Engine.Constants.QueryTypeGUIDs;
+import Jewel.Engine.DataAccess.MasterDB;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.Form;
+import Jewel.Engine.Implementation.QueryDef;
+import Jewel.Engine.Implementation.TypeDef;
+import Jewel.Engine.Implementation.View;
+import Jewel.Engine.Interfaces.IEntity;
+import Jewel.Engine.Interfaces.IFormAction;
+import Jewel.Engine.Interfaces.IObject;
+import Jewel.Engine.Interfaces.IQueryDef;
+import Jewel.Engine.Interfaces.IQueryField;
+import Jewel.Engine.Interfaces.IQueryParam;
+import Jewel.Engine.Interfaces.ITypeDef;
+import Jewel.Engine.SysObjects.ObjectBase;
+import Jewel.Engine.SysObjects.ObjectMaster;
+import Jewel.Mobile.interfaces.GridService;
+import Jewel.Mobile.shared.DataObject;
+import Jewel.Mobile.shared.GridActionResponse;
+import Jewel.Mobile.shared.GridResponse;
+import Jewel.Mobile.shared.GridSaveResponse;
+import Jewel.Mobile.shared.JewelMobileException;
+import Jewel.Mobile.shared.ParamInfo;
+import Jewel.Mobile.shared.QueryColumnObj;
 
 public class GridServiceImpl
 	extends EngineImplementor
@@ -939,6 +960,7 @@ public class GridServiceImpl
     	laux = new GridActionResponse();
     	laux.mstrResult = "";
     	laux.mobjData = ViewDataBridge.ServerToClient(lidView, lobjLocal, lrefWSpace.GetNameSpace());
+    	ViewDataBridge.SetNonObjectParams(lidView, plngOrder, lobjLocal, laux.mobjData, larrNonObject, lobjData.getNameSpace());
     	return laux;
 	}
 

@@ -1,16 +1,23 @@
 package Jewel.Mobile.server;
 
-import java.math.*;
-import java.sql.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.UUID;
 
 import Jewel.Engine.Engine;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.Security.*;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Engine.Constants.FieldTypeGUIDs;
+import Jewel.Engine.Implementation.Form;
+import Jewel.Engine.Interfaces.IForm;
+import Jewel.Engine.Interfaces.IFormField;
+import Jewel.Engine.Interfaces.IObject;
+import Jewel.Engine.Security.Password;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Engine.SysObjects.JewelEngineException;
+import Jewel.Engine.SysObjects.ObjectBase;
+import Jewel.Mobile.shared.JewelMobileException;
+import Jewel.Mobile.shared.ParamInfo;
 
 public class FormDataBridge
 {
@@ -400,6 +407,61 @@ public class FormDataBridge
 	        larrAux[i] = null;
 
 	    return larrAux;
+	}
+
+	public static void SetNonObjectParams(UUID pidForm, java.lang.Object[] parrObjParams, String[] parrData, 
+			java.lang.Object[] parrParams, UUID pidNSpace)
+		throws JewelMobileException
+	{
+		IForm lrefForm;
+		IObject lrefObject;
+		IFormField[] larrFields;
+		int llngCount;
+        int llngMaxLen;
+		int i, j, k, l;
+
+		try
+		{
+			lrefForm = Form.GetInstance(pidForm);
+		}
+		catch(Throwable e)
+		{
+        	throw new JewelMobileException(e.getMessage(), e);
+		}
+        lrefObject = lrefForm.getEditedObject();
+		larrFields = lrefForm.getFields();
+		llngCount = larrFields.length;
+
+        llngMaxLen = parrObjParams.length;
+        for (i = 0; i < llngCount; i++)
+        {
+            j = larrFields[i].getMemberNumber();
+            k = lrefObject.MemberByNOrd(j);
+            if (k == -1)
+                llngMaxLen++;
+        }
+
+        if (llngMaxLen == parrObjParams.length)
+            return;
+
+        l = parrObjParams.length;
+        for (i = 0; i < llngCount; i++)
+        {
+            j = larrFields[i].getMemberNumber();
+            k = lrefObject.MemberByNOrd(j);
+            if (k == -1)
+            {
+                try
+                {
+                	parrData[i] = BuildValue(larrFields[i], parrParams[l], pidNSpace);
+				}
+                catch (JewelEngineException e)
+                {
+		        	throw new JewelMobileException(e.getMessage(), e);
+				}
+                l++;
+            }
+        }
 	}
 
 	private static java.lang.Object ParseValue(IFormField prefField, String pstrValue)

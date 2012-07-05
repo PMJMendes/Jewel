@@ -360,7 +360,7 @@ public class SimpleGrid
 			{
 				if (result != null)
 				{
-					if ( result.mstrResult != null )
+					if ( !"".equals(result.mstrResult) )
 						Jewel_Mobile.getReference().showError(result.mstrResult);
 					if ( result.mobjData != null )
 						mrefEventMgr.fireEvent(new SelectEvent(result.mobjData));

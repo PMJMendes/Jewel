@@ -1,12 +1,14 @@
 package Jewel.Mobile.server;
 
-import java.util.*;
+import java.util.UUID;
 
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Engine.Constants.ViewTypeGUIDs;
+import Jewel.Engine.Implementation.View;
+import Jewel.Engine.Interfaces.IView;
+import Jewel.Engine.Interfaces.IViewTab;
+import Jewel.Engine.SysObjects.ObjectBase;
+import Jewel.Mobile.shared.DataObject;
+import Jewel.Mobile.shared.JewelMobileException;
 
 public class ViewDataBridge
 {
@@ -97,5 +99,24 @@ public class ViewDataBridge
 		
 		return FormDataBridge.GetNonObjectParams(lrefView.getTabs()[plngOrder].getFormID(), pobjSource.getData(),
 				prefValues.marrData[plngOrder]);
+	}
+
+	public static void SetNonObjectParams(UUID pidView, int plngOrder, ObjectBase pobjSource, DataObject prefValues,
+			java.lang.Object[] parrParams, UUID pidNSpace)
+		throws JewelMobileException
+	{
+		IView lrefView;
+		
+		try
+		{
+			lrefView = View.GetInstance(pidView);
+		}
+		catch (Throwable e)
+		{
+	    	throw new JewelMobileException(e.getMessage(), e);
+		}
+		
+		FormDataBridge.SetNonObjectParams(lrefView.getTabs()[plngOrder].getFormID(), pobjSource.getData(),
+				prefValues.marrData[plngOrder], parrParams, pidNSpace);
 	}
 }
