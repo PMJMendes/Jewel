@@ -140,4 +140,9 @@ public class EditorForm
 	{
 		return mrefEventMgr.addHandler(ActionEvent.TYPE, handler);
 	}
+	
+	public boolean hasActions()
+	{
+		return msetCommands.hasActions();
+	}
 }

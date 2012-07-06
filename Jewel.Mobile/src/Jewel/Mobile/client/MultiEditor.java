@@ -1,15 +1,32 @@
 package Jewel.Mobile.client;
 
-import Jewel.Mobile.client.events.*;
-import Jewel.Mobile.interfaces.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Mobile.client.events.ActionEvent;
+import Jewel.Mobile.client.events.CancelEvent;
+import Jewel.Mobile.client.events.DeleteEvent;
+import Jewel.Mobile.client.events.InitEvent;
+import Jewel.Mobile.client.events.SaveEvent;
+import Jewel.Mobile.client.events.SelectEvent;
+import Jewel.Mobile.interfaces.MultiEditorService;
+import Jewel.Mobile.interfaces.MultiEditorServiceAsync;
+import Jewel.Mobile.shared.DataObject;
+import Jewel.Mobile.shared.EditorResponse;
+import Jewel.Mobile.shared.TabObj;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class MultiEditor
 	extends Composite
@@ -330,5 +347,20 @@ public class MultiEditor
 	public HandlerRegistration addDeleteRowHandler(DeleteEvent.Handler handler)
 	{
 		return mrefEventMgr.addHandler(DeleteEvent.TYPE, handler);
+	}
+	
+
+	public boolean hasActions()
+	{
+		Widget lwdgtAux;
+		
+		for (int  i = 0; i < mpnContent.getWidgetCount(); i++ )
+		{
+			lwdgtAux = mpnContent.getWidget(i);
+			if (  lwdgtAux instanceof EditorForm ) {
+				if ( ((EditorForm) lwdgtAux).hasActions() ) { return true; }
+			}
+		}
+		return false;
 	}
 }

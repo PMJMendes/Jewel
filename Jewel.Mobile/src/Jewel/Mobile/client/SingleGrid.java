@@ -89,7 +89,9 @@ public class SingleGrid
 			public void onSave(SaveEvent event)
 			{
 				mdvEditor.EnableButtons();
-				HideEditor();
+				if ( !mdvEditor.hasActions() ) {
+					HideEditor();
+				}
 			}
 		});
 		mgrdTable.addErrorHandler(new JErrorEvent.Handler()

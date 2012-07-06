@@ -118,4 +118,14 @@ public class CommandSet
 	{
 		return mrefEventMgr.addHandler(ActionEvent.TYPE, handler);
 	}
+	
+	public boolean hasActions()
+	{
+		boolean rvalue = false;
+		
+		if ( marrButtons != null ) {
+			rvalue = marrButtons.length > 0;
+		}
+		return rvalue;
+	}
 }
