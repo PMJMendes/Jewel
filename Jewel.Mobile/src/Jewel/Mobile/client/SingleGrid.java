@@ -4,6 +4,7 @@ import Jewel.Mobile.client.events.ActionEvent;
 import Jewel.Mobile.client.events.CancelEvent;
 import Jewel.Mobile.client.events.DeleteEvent;
 import Jewel.Mobile.client.events.InitEvent;
+import Jewel.Mobile.client.events.JErrorEvent;
 import Jewel.Mobile.client.events.OkEvent;
 import Jewel.Mobile.client.events.SaveEvent;
 import Jewel.Mobile.client.events.SelectEvent;
@@ -89,6 +90,13 @@ public class SingleGrid
 			{
 				mdvEditor.EnableButtons();
 				HideEditor();
+			}
+		});
+		mgrdTable.addErrorHandler(new JErrorEvent.Handler()
+		{
+			public void onError(JErrorEvent event) {
+				mdvEditor.EnableButtons();
+				return;
 			}
 		});
 		mgrdTable.addDeleteRowHandler(new DeleteEvent.Handler()

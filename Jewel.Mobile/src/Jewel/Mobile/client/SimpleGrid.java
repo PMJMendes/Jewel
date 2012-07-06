@@ -2,6 +2,7 @@ package Jewel.Mobile.client;
 
 import Jewel.Mobile.client.events.DeleteEvent;
 import Jewel.Mobile.client.events.InitEvent;
+import Jewel.Mobile.client.events.JErrorEvent;
 import Jewel.Mobile.client.events.OkEvent;
 import Jewel.Mobile.client.events.SaveEvent;
 import Jewel.Mobile.client.events.SelectEvent;
@@ -32,6 +33,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class SimpleGrid
 	extends Composite
 	implements ClosableContent, InitEvent.HasEvent, SelectEvent.HasEvent, OkEvent.HasEvent, SaveEvent.HasEvent, DeleteEvent.HasEvent
+		, JErrorEvent.HasEvent
 {
 	private GridServiceAsync gridSvc;
 
@@ -309,7 +311,9 @@ public class SimpleGrid
 				while ( ex.getCause() != null )
 					ex = ex.getCause();
 
+				mrefEventMgr.fireEvent(new JErrorEvent());
 				Jewel_Mobile.getReference().showError(ex.getMessage());
+				return;
 			}
 		};
 
@@ -819,5 +823,9 @@ public class SimpleGrid
 	public HandlerRegistration addDeleteRowHandler(DeleteEvent.Handler handler)
 	{
 		return mrefEventMgr.addHandler(DeleteEvent.TYPE, handler);
+	}
+
+	public HandlerRegistration addErrorHandler(JErrorEvent.Handler handler) {
+		return mrefEventMgr.addHandler(JErrorEvent.TYPE, handler);
 	}
 }
