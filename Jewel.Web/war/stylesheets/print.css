@@ -1,0 +1,18 @@
+@media only print {
+	
+}
+
+body {
+	margin:0mm;
+	width: 210mm;
+	height: 297mm;
+	pading:15mm;
+}
+
+img.signature {
+	width:45mm !important;
+}
+
+img.ipac {
+	height:20mm !important;
+}
