@@ -111,8 +111,16 @@ public class Cache
 
         if ( mbIsGlobal )
         {
-        	marrElements = new Hashtable<String, ObjectBase>(50000000);
-        	marrConstructors = new Hashtable<UUID, Constructor<?>>(1000);
+        	if ( "1".equals(System.getenv(DBConstants.Env_LargeCache)) )
+        	{
+        		marrElements = new Hashtable<String, ObjectBase>(50000000);
+            	marrConstructors = new Hashtable<UUID, Constructor<?>>(1000);
+        	}
+        	else
+        	{
+        		marrElements = new Hashtable<String, ObjectBase>();
+            	marrConstructors = new Hashtable<UUID, Constructor<?>>();
+        	}
         }
         else
         {
