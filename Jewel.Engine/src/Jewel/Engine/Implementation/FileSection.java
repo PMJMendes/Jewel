@@ -225,13 +225,13 @@ public class FileSection
         FileFieldData lobjData;
         FileSectionData lobjSubData;
         String lstrBuffer;
-        StringReader lrdr;
+        BufferedReader lrdr;
         int i, j;
 
         lstrBuffer = FileSpec.ReadToSeparator(pstream, getTerminator());
         if (lstrBuffer == null)
             return null;
-        lrdr = new StringReader(lstrBuffer);
+        lrdr = new BufferedReader(new StringReader(lstrBuffer));
 
         if (marrFields.length == 0)
         {

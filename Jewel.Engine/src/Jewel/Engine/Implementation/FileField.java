@@ -54,6 +54,11 @@ public class FileField
         return (String)getAt(0);
     }
 
+    public Integer getLength()
+    {
+    	return (Integer)getAt(5);
+    }
+
     public FileFieldData ParseStream(java.lang.Object pstream, java.lang.Object pobjCtrl)
     	throws JewelEngineException
     {
@@ -107,7 +112,10 @@ public class FileField
         StringReader lrdr;
         int i;
 
-        lstrBuffer = FileSpec.ReadToSeparator(pstream, mrefSection.getSeparator());
+        if ( getLength() != null )
+            lstrBuffer = FileSpec.ReadLength(pstream, getLength());
+        else
+        	lstrBuffer = FileSpec.ReadToSeparator(pstream, mrefSection.getSeparator());
         if (lstrBuffer == null)
             lstrBuffer = "";
 

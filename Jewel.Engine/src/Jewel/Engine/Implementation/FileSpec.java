@@ -204,13 +204,8 @@ public class FileSpec
         String lstrBuffer, lstrSep;
         int lchData;
 
-        if (pstrSeparator == "")
-        {
-            lstrBuffer = pstream.readLine();
-            if (lstrBuffer == null)
-                return null;
-            return lstrBuffer;
-        }
+        if ( (pstrSeparator == null) || (pstrSeparator.length() == 0) )
+    		return pstream.readLine();
 
         lchData = pstream.read();
         if (lchData == -1)
@@ -243,10 +238,24 @@ public class FileSpec
         return lstrBuffer;
     }
 
+    protected static String ReadLength(BufferedReader pstream, Integer plngLen)
+    	throws IOException
+    {
+    	char[] larrBuffer;
+
+        if ( (plngLen == null) || (plngLen < 1) )
+    		return pstream.readLine();
+
+        larrBuffer = new char[plngLen];
+        pstream.read(larrBuffer, 0, plngLen);
+
+        return new String(larrBuffer);
+    }
+
     protected static void WriteSeparator(BufferedWriter pstream, String pstrSeparator)
     	throws IOException
     {
-        if (pstrSeparator == "")
+        if ( (pstrSeparator == null) || (pstrSeparator.length() == 0) )
             pstream.newLine();
         else
             pstream.write(pstrSeparator);
