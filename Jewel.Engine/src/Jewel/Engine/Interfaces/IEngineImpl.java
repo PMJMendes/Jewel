@@ -20,4 +20,6 @@ public interface IEngineImpl
     void UnloadEngine();
 
     void OutputFile(FileXfer pobjFile);
+
+    JewelWorkerThread getThread(Runnable prefThread);
 }

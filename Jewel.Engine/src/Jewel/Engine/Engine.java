@@ -1,14 +1,22 @@
 package Jewel.Engine;
 
-import java.lang.reflect.*;
-import java.sql.*;
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Hashtable;
+import java.util.UUID;
 
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.DataAccess.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.SysObjects.*;
+import Jewel.Engine.Constants.EntityGUIDs;
+import Jewel.Engine.DataAccess.MasterDB;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.NameSpace;
+import Jewel.Engine.Interfaces.IEngineImpl;
+import Jewel.Engine.Interfaces.INameSpace;
+import Jewel.Engine.SysObjects.Cache;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Engine.SysObjects.JewelEngineException;
+import Jewel.Engine.SysObjects.JewelWorkerThread;
+import Jewel.Engine.SysObjects.ObjectBase;
 
 public class Engine
 {
@@ -152,5 +160,10 @@ public class Engine
     public static void OutputFile(FileXfer pobjFile)
     {
         grefEngine.OutputFile(pobjFile);
+    }
+
+    public static JewelWorkerThread getThread(Runnable prefThread)
+    {
+    	return grefEngine.getThread(prefThread);
     }
 }

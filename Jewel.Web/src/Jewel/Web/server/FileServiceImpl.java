@@ -46,7 +46,7 @@ public class FileServiceImpl
 
     	if ( req.getMethod().equals("POST") && ServletFileUpload.isMultipartContent(req) )
     	{
-			grefSession.theSession.set(req.getSession());
+			setSession(req.getSession());
 			try
 			{
 				overridePost(req, resp);
@@ -61,7 +61,7 @@ public class FileServiceImpl
 			}
 			finally
 			{
-				grefSession.theSession.set(null);
+				clearSession();
 			}
     	}
     	else

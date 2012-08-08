@@ -24,6 +24,7 @@ import Jewel.Engine.Interfaces.IUser;
 import Jewel.Engine.SysObjects.Cache;
 import Jewel.Engine.SysObjects.FileXfer;
 import Jewel.Engine.SysObjects.JewelEngineException;
+import Jewel.Engine.SysObjects.JewelWorkerThread;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -58,6 +59,16 @@ public class EngineImplementor
     	return grefSession.theSession.get();
     }
 
+    protected static void setSession(HttpSession value)
+    {
+    	grefSession.theSession.set(value);
+    }
+
+    protected static void clearSession()
+    {
+    	grefSession.theSession.set(null);
+    }
+
     private IUser mrefPushedUser;
     private INameSpace mrefPushedNSpace;
 
@@ -84,14 +95,14 @@ public class EngineImplementor
     protected void service(HttpServletRequest req, HttpServletResponse resp)
     	throws ServletException, java.io.IOException
     {
-    	grefSession.theSession.set(req.getSession());
+    	setSession(req.getSession());
     	try
     	{
     		super.service(req, resp);
     	}
     	finally
     	{
-    		grefSession.theSession.set(null);
+    		clearSession();
     	}
     }
 
@@ -279,4 +290,9 @@ public class EngineImplementor
 //        lpgHandler.ClientScript.RegisterStartupScript(lpgHandler.GetType(), "outputfile",
 //            "window.open('FileDLoad.aspx?donotcache=" + Environment.TickCount.ToString() + "&clear=yes&fileref=" + lstrAux + "');");
     }
+
+	public JewelWorkerThread getThread(Runnable prefThread)
+	{
+		return new WebServerThread(prefThread, getSession());
+	}
 }
