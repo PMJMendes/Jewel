@@ -43,7 +43,7 @@ public class FileXfer
 		byte[] larrAux, larrContentType, larrFileName;
         int llngStart;
 
-		lobjEncoder = Charset.forName("US-ASCII");
+		lobjEncoder = Charset.forName("UTF-8");
 		larrContentType = mstrContentType.getBytes(lobjEncoder);
 		larrFileName = mstrFileName.getBytes(lobjEncoder);
 		larrAux = new byte[mlngLen + 3*SIZEOFINT + larrContentType.length + larrFileName.length];
@@ -79,7 +79,7 @@ public class FileXfer
 		byte[] larrAux;
 		int llngTypeLen, llngNameLen, llngStart;
 
-		lobjEncoder = Charset.forName("US-ASCII");
+		lobjEncoder = Charset.forName("UTF-8");
         llngStart = 0;
 
 		larrAux = new byte[SIZEOFINT];
