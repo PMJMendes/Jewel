@@ -267,4 +267,9 @@ public class EngineImplementor
 //        lpgHandler.ClientScript.RegisterStartupScript(lpgHandler.GetType(), "outputfile",
 //            "window.open('FileDLoad.aspx?donotcache=" + Environment.TickCount.ToString() + "&clear=yes&fileref=" + lstrAux + "');");
     }
+
+	public JewelWorkerThread getThread(Runnable prefThread)
+	{
+    	throw new UnsupportedOperationException();
+	}
 }
