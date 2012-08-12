@@ -298,7 +298,7 @@ public class SimpleGrid
 				if (result != null)
 				{
 					RenderRow(result.mlngRow, result.marrRow);
-					mrefEventMgr.fireEvent(new SaveEvent());
+					mrefEventMgr.fireEvent(new SaveEvent(result.mobjData));
 				}
 				else
 				{

@@ -107,7 +107,7 @@ public class MultiEditor
 	        {
 				mbEnabled = false;
 				ResetButtons();
-				mrefEventMgr.fireEvent(new SaveEvent());
+				mrefEventMgr.fireEvent(new SaveEvent(GetData()));
 	        }
 	    });
 		mbtnCancel.addClickHandler(new ClickHandler()

@@ -1,5 +1,7 @@
 package Jewel.Mobile.client.events;
 
+import Jewel.Mobile.shared.DataObject;
+
 import com.google.gwt.event.shared.*;
 
 public class SaveEvent
@@ -17,6 +19,18 @@ public class SaveEvent
 	}
 
 	public static final Type<Handler> TYPE = new Type<Handler>();
+
+	private DataObject mobjResult;
+
+	public SaveEvent(DataObject pstrResult)
+	{
+		mobjResult = pstrResult;
+	}
+
+	public DataObject getData()
+	{
+		return mobjResult;
+	}
 
 	protected void dispatch(Handler handler)
 	{

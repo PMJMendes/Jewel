@@ -89,7 +89,12 @@ public class SingleGrid
 			public void onSave(SaveEvent event)
 			{
 				mdvEditor.EnableButtons();
-				if ( !mdvEditor.hasActions() ) {
+				if ( mdvEditor.hasActions() )
+				{
+					mdvEditor.LoadData(event.getData());
+				}
+				else
+				{
 					HideEditor();
 				}
 			}
@@ -207,7 +212,7 @@ public class SingleGrid
 		{
 			public void onSave(SaveEvent event)
 			{
-				mgrdTable.SaveData(mdvEditor.GetData());
+				mgrdTable.SaveData(event.getData());
 			}
 		});
 		mdvEditor.addDeleteRowHandler(new DeleteEvent.Handler()
