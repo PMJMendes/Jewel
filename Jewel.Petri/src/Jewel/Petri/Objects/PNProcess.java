@@ -698,7 +698,7 @@ public class PNProcess
 		{
 			lrefLogs = Entity.GetInstance(Engine.FindEntity(getNameSpace(), Constants.ObjID_PNLog));
 			lrsLogs = lrefLogs.SelectByMembers(pdb, new int[] {Constants.FKProcess_In_Log, Constants.FKOperation_In_Log,
-					Constants.Undone_In_Log}, new java.lang.Object[] {getKey(), pidOpCode, false}, null);
+					Constants.Undone_In_Log}, new java.lang.Object[] {getKey(), pidOpCode, false}, new int[] {-Constants.Timestamp_In_Log});
 		}
 		catch (Throwable e)
 		{
