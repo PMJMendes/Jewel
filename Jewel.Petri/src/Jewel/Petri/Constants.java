@@ -37,5 +37,6 @@ public class Constants
     public static final int TopLevel_In_Script = 3;
     public static final int FKProcess_In_Log = 0;
     public static final int FKOperation_In_Log = 1;
+    public static final int Timestamp_In_Log = 2;
     public static final int Undone_In_Log = 5;
 }
