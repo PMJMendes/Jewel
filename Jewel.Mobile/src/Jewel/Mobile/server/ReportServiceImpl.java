@@ -1,14 +1,22 @@
 package Jewel.Mobile.server;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ecs.Document;
+import org.apache.tools.ant.filters.StringInputStream;
+import org.apache.xerces.parsers.DOMParser;
+import org.xhtmlrenderer.simple.Graphics2DRenderer;
+import org.xml.sax.InputSource;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.Implementation.Report;
@@ -71,6 +79,10 @@ public class ReportServiceImpl
 		try
 		{
 			ldoc = BuildReport(lobjReport);
+
+			resp.setContentType("image/png");
+			resp.addHeader("Content-Disposition", "inline; filename=\"report.png\"");
+			ImageIO.write(RenderReport(ldoc), "png", resp.getOutputStream());
 		}
 		catch (JewelMobileException e)
 		{
@@ -82,9 +94,9 @@ public class ReportServiceImpl
 			return;
 		}
 
-        resp.setContentType("text/html; charset=UTF-8");
-        resp.setStatus(HttpServletResponse.SC_OK);
-        ldoc.output(resp.getWriter());
+//        resp.setContentType("text/html; charset=UTF-8");
+//        resp.setStatus(HttpServletResponse.SC_OK);
+//        ldoc.output(resp.getWriter());
 	}
 
 	public String GetParamFormID(String pstrReportID)
@@ -151,5 +163,40 @@ public class ReportServiceImpl
 			throw new JewelMobileException("Error building report: " + lstrRes);
 
 		return ldoc;
+    }
+
+    private BufferedImage RenderReport(Document pobjReport)
+    	throws JewelMobileException
+    {
+    	String lstr;
+    	DOMParser lobjParser;
+    	Graphics2DRenderer lobjRenderer;
+    	BufferedImage limgResult;
+    	Graphics2D lobjGraphics;
+
+    	lstr = pobjReport.toString().replace("&nbsp;", " ");
+
+    	lobjParser = new DOMParser();
+    	try
+    	{
+			lobjParser.parse(new InputSource(new StringInputStream(lstr)));
+		}
+    	catch (Throwable e)
+    	{
+    		throw new JewelMobileException(e.getMessage(), e);
+		}
+
+    	lobjRenderer = new Graphics2DRenderer();
+    	lobjRenderer.setDocument(lobjParser.getDocument(), lobjParser.getDocument().getDocumentURI());
+
+    	limgResult = new BufferedImage(1280, 800, BufferedImage.TYPE_BYTE_GRAY);
+
+    	lobjGraphics = (Graphics2D)limgResult.getGraphics();
+
+    	lobjRenderer.layout(lobjGraphics, new Dimension(1280, 800));
+    	lobjRenderer.render(lobjGraphics);
+    	lobjGraphics.dispose();
+
+    	return limgResult;
     }
 }
