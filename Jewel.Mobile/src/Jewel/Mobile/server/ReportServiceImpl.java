@@ -3,6 +3,7 @@ package Jewel.Mobile.server;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.UUID;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ecs.Document;
-import org.apache.tools.ant.filters.StringInputStream;
 import org.apache.xerces.parsers.DOMParser;
 import org.xhtmlrenderer.simple.Graphics2DRenderer;
 import org.xml.sax.InputSource;
@@ -179,7 +179,7 @@ public class ReportServiceImpl
     	lobjParser = new DOMParser();
     	try
     	{
-			lobjParser.parse(new InputSource(new StringInputStream(lstr)));
+			lobjParser.parse(new InputSource(new ByteArrayInputStream(lstr.getBytes("UTF-8"))));
 		}
     	catch (Throwable e)
     	{
