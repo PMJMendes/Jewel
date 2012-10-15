@@ -43,6 +43,17 @@ public class User
 
 	public IProfile getProfile()
 	{
+		if ( mrefProfile == null )
+		{
+			try
+			{
+				Initialize();
+			}
+			catch (Throwable e)
+			{
+			}
+		}
+
 		return mrefProfile;
     }
 
