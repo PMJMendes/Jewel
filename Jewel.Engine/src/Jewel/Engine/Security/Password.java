@@ -1,9 +1,14 @@
 package Jewel.Engine.Security;
 
+import java.io.Serializable;
+
 import Jewel.Engine.SysObjects.JewelEngineException;
 
 public final class Password
+	implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private String mstrPwd;
 
 	public Password()
