@@ -231,20 +231,7 @@ public abstract class Operation
 		try
 		{
 			BuildLog(pdb, pidSourceLog);
-		}
-		catch (JewelPetriException e)
-		{
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
 
-		try
-		{
 			mrefStep.DoSafeRun();
 		}
 		catch (JewelPetriException e)
@@ -261,6 +248,8 @@ public abstract class Operation
 		try
 		{
 			mrefProcess.RecalcSteps(pdb);
+
+			mrefProcess.RunAutoSteps(parrTriggers, pdb);
 		}
 		catch (JewelPetriException e)
 		{
@@ -279,7 +268,6 @@ public abstract class Operation
 
 		try
 		{
-			mrefProcess.RunAutoSteps(parrTriggers, pdb);
 			RunTriggers(parrTriggers, pdb);
 		}
 		catch (JewelPetriException e)

@@ -84,7 +84,7 @@ public class PNNode
 		return (mlngCount >= mlngTryCount);
 	}
 
-	public synchronized void DecCount()
+	public void DecCount()
 		throws JewelPetriException
 	{
 		if ( mlngCount <= 0 )
@@ -94,7 +94,7 @@ public class PNNode
 		mbSaved = false;
 	}
 
-	public synchronized void IncCount()
+	public void IncCount()
 		throws JewelPetriException
 	{
 		if ( (GetController().getMaxCount()) <= 0 || (mlngCount < GetController().getMaxCount()) )

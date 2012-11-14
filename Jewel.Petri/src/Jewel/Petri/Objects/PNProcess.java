@@ -407,75 +407,74 @@ public class PNProcess
 		if ( !Lock() )
 			throw new JewelPetriException("Unexpected: Process locked during setup.");
 
-		if ( IsRunning() )
-		{
-			Unlock();
-			return;
-		}
-
-		larrAuxNodes = new ArrayList<INode>();
-		larrControllers = GetScript().getControllers();
 		try
 		{
-			lidNodes = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode);
-			for ( i = 0; i < larrControllers.length; i++ )
+			if ( IsRunning() )
+				return;
+
+			larrAuxNodes = new ArrayList<INode>();
+			larrControllers = GetScript().getControllers();
+			try
 			{
-				lobjNode = (PNNode)Engine.GetWorkInstance(lidNodes, (UUID)null);
-				lobjNode.setAt(0, getKey());
-				lobjNode.setAt(1, larrControllers[i].getKey());
-				lobjNode.setAt(2, larrControllers[i].getInitialCount());
-				lobjNode.SaveToDb(pdb);
-				lobjNode.Initialize();
-				Engine.GetCache(true).setAt(lidNodes, lobjNode.getKey(), lobjNode);
-				larrAuxNodes.add(lobjNode);
+				lidNodes = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNNode);
+				for ( i = 0; i < larrControllers.length; i++ )
+				{
+					lobjNode = (PNNode)Engine.GetWorkInstance(lidNodes, (UUID)null);
+					lobjNode.setAt(0, getKey());
+					lobjNode.setAt(1, larrControllers[i].getKey());
+					lobjNode.setAt(2, larrControllers[i].getInitialCount());
+					lobjNode.SaveToDb(pdb);
+					lobjNode.Initialize();
+					Engine.GetCache(true).setAt(lidNodes, lobjNode.getKey(), lobjNode);
+					larrAuxNodes.add(lobjNode);
+				}
+	
+				marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
 			}
 
-			marrNodes = larrAuxNodes.toArray(new INode[larrAuxNodes.size()]);
-		}
-		catch (Throwable e)
-		{
-			Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		larrAuxSteps = new ArrayList<IStep>();
-		larrOps = GetScript().getOperations();
-		try
-		{
-			lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
-			for ( i = 0; i < larrOps.length; i++ )
+			larrAuxSteps = new ArrayList<IStep>();
+			larrOps = GetScript().getOperations();
+			try
 			{
-				lobjStep = (PNStep)Engine.GetWorkInstance(lidSteps, (UUID)null);
-				lobjStep.setAt(0, getKey());
-				lobjStep.setAt(1, larrOps[i].getKey());
-				lobjStep.setAt(2, larrOps[i].getDefaultLevel());
-				lobjStep.setAt(3, null);
-				lobjStep.setAt(4, null);
-				lobjStep.SetupNodes(this, pdb);
-				lobjStep.SaveToDb(pdb);
-				lobjStep.CalcRunnable(pdb);
-				Engine.GetCache(true).setAt(lidSteps, lobjStep.getKey(), lobjStep);
-				larrAuxSteps.add(lobjStep);
+				lidSteps = Engine.FindEntity(getNameSpace(), Constants.ObjID_PNStep);
+				for ( i = 0; i < larrOps.length; i++ )
+				{
+					lobjStep = (PNStep)Engine.GetWorkInstance(lidSteps, (UUID)null);
+					lobjStep.setAt(0, getKey());
+					lobjStep.setAt(1, larrOps[i].getKey());
+					lobjStep.setAt(2, larrOps[i].getDefaultLevel());
+					lobjStep.setAt(3, null);
+					lobjStep.setAt(4, null);
+					lobjStep.SetupNodes(this, pdb);
+					lobjStep.SaveToDb(pdb);
+					lobjStep.CalcRunnable(pdb);
+					Engine.GetCache(true).setAt(lidSteps, lobjStep.getKey(), lobjStep);
+					larrAuxSteps.add(lobjStep);
+				}
 			}
+			catch (JewelPetriException e)
+			{
+				throw e;
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+
+			marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
+
+			Restart(pdb);
+
+			RunAutoSteps(pobjContext, pdb);
 		}
-		catch (JewelPetriException e)
+		finally
 		{
 			Unlock();
-			throw e;
 		}
-		catch (Throwable e)
-		{
-			Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		marrSteps = larrAuxSteps.toArray(new IStep[larrAuxSteps.size()]);
-
-		Restart(pdb);
-
-		Unlock();
-
-		RunAutoSteps(pobjContext, pdb);
 	}
 
 	public void RunAutoSteps(Operation.QueueContext pobjContext, SQLServer pdb)
@@ -483,9 +482,6 @@ public class PNProcess
 	{
 		int i;
 		Operation lobjOp;
-
-		if ( !Lock() )
-			throw new JewelPetriException("Unexpected: Process locked during autorun.");
 
 		for ( i = 0; i < marrSteps.length; i++ )
 		{
@@ -503,8 +499,6 @@ public class PNProcess
 				return;
 			}
 		}
-
-		Unlock();
 	}
 
 	public UUID GetDataKey()
