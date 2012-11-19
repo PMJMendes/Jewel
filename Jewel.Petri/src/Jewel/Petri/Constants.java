@@ -32,6 +32,7 @@ public class Constants
     public static final int FKProcess_In_Node = 0;
     public static final int FKController_In_Node = 1;
     public static final int FKOperation_In_Permission = 0;
+    public static final int FKScript_In_Process = 0;
     public static final int FKData_In_Process = 1;
     public static final int FKParent_In_Process = 3;
     public static final int FKClass_In_Script = 2;
