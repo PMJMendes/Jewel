@@ -19,7 +19,7 @@ public class Object
     private IApplication mrefApplication;
     private Class<?> mrefType;
     private Constructor<?> mrefConstructor;
-    private Hashtable<Integer, Integer> marrMemberByNOrd = null;
+    private HashMap<Integer, Integer> marrMemberByNOrd = null;
 
     private static Class<?>[] garrTypes = {};
     private static java.lang.Object[] garrParams = {};
@@ -350,7 +350,7 @@ public class Object
 		int i;
 
         if (marrMemberByNOrd == null)
-            marrMemberByNOrd = new Hashtable<Integer, Integer>();
+            marrMemberByNOrd = new HashMap<Integer, Integer>();
 
         if (marrMemberByNOrd.get(plngNOrd) != null)
             return (int)marrMemberByNOrd.get(plngNOrd);

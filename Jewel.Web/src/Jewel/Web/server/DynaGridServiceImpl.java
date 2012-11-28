@@ -106,7 +106,7 @@ public class DynaGridServiceImpl
 		private int[] marrMembers;
 		private java.lang.Object[] marrValues;
         private ArrayList<Row> marrData;
-		private Hashtable<String, java.lang.Object> marrExternParams;
+		private HashMap<String, java.lang.Object> marrExternParams;
         private int mlngCurrentPage;
         private int[] marrSortOrder;
         private int mlngColCount;
@@ -182,7 +182,7 @@ public class DynaGridServiceImpl
 			return mrefQuery.getCanCreate();
 		}
 
-        public void LoadQuery(boolean pbForceParam, java.lang.Object pobjParamValue, Hashtable<String, java.lang.Object> parrExtParams,
+        public void LoadQuery(boolean pbForceParam, java.lang.Object pobjParamValue, HashMap<String, java.lang.Object> parrExtParams,
         		int[] parrMembers, java.lang.Object[] parrValues)
         	throws JewelWebException
 		{
@@ -573,7 +573,7 @@ public class DynaGridServiceImpl
 		QueryWSpace lrefWSpace;
 		UUID lidAux;
 		java.lang.Object lobjParam;
-		Hashtable<String, java.lang.Object> larrExtParams;
+		HashMap<String, java.lang.Object> larrExtParams;
 
 		if ( Engine.getCurrentUser() == null )
 			return null;

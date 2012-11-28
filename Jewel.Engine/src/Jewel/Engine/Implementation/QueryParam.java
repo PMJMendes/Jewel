@@ -28,7 +28,7 @@ public class QueryParam
 	{
 	}
 
-    public String ColumnForFiltering(String pstrSeparator, Hashtable<String, java.lang.Object> parrValues)
+    public String ColumnForFiltering(String pstrSeparator, HashMap<String, java.lang.Object> parrValues)
     	throws JewelEngineException
     {
     	StringTokenizer lobjTokens;

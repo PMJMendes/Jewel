@@ -109,7 +109,7 @@ public class QueryDef
             mstrType = "OR";
 	}
 
-	public ResultSet SelectAll(SQLServer pdb, UUID pidNSpace, Hashtable<String, java.lang.Object> parrValues)
+	public ResultSet SelectAll(SQLServer pdb, UUID pidNSpace, HashMap<String, java.lang.Object> parrValues)
 		throws SQLException, JewelEngineException
 	{
 		IEntity lrefEntity;
@@ -130,7 +130,7 @@ public class QueryDef
 		return pdb.OpenRecordset(lstrAux);
 	}
 
-	public ResultSet SelectByParam(SQLServer pdb, UUID pidNSpace, java.lang.Object pobjParamValue, Hashtable<String, java.lang.Object> parrValues)
+	public ResultSet SelectByParam(SQLServer pdb, UUID pidNSpace, java.lang.Object pobjParamValue, HashMap<String, java.lang.Object> parrValues)
 		throws SQLException, JewelEngineException
 	{
 		IEntity lrefEntity;
@@ -174,7 +174,7 @@ public class QueryDef
 		return pdb.OpenRecordset(lstrAux);
 	}
 
-    public ResultSet SelectByMembers(SQLServer pdb, UUID pidNSpace, int[] parrMembers, java.lang.Object[] parrValues, Hashtable<String, java.lang.Object> parrPValues)
+    public ResultSet SelectByMembers(SQLServer pdb, UUID pidNSpace, int[] parrMembers, java.lang.Object[] parrValues, HashMap<String, java.lang.Object> parrPValues)
     	throws SQLException, JewelEngineException
 	{
 		IEntity lrefEntity;
@@ -260,7 +260,7 @@ public class QueryDef
         return (UUID)getAt(12);
     }
 
-    private String BuildParamSQL(Hashtable<String, java.lang.Object> parrValues)
+    private String BuildParamSQL(HashMap<String, java.lang.Object> parrValues)
     	throws JewelEngineException
     {
         String lstrAux;

@@ -7,7 +7,7 @@ import Jewel.Engine.SysObjects.JewelEngineException;
 public interface IQueryParam
 	extends IJewelBase
 {
-	String ColumnForFiltering(String pstrSeparator, Hashtable<String, java.lang.Object> parrValues) throws JewelEngineException;
+	String ColumnForFiltering(String pstrSeparator, HashMap<String, java.lang.Object> parrValues) throws JewelEngineException;
 
     int getParamAppliesTo();
     Object getParamValue() throws JewelEngineException;
