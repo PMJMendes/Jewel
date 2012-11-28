@@ -3,7 +3,7 @@ package Jewel.Mobile.server;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.UUID;
 
 import Jewel.Engine.Engine;
@@ -573,12 +573,12 @@ public class FormDataBridge
 		throw new JewelMobileException("Unimplemented form field type in BuildValue.");
 	}
 
-	public static Hashtable<String, java.lang.Object> ParseExtParams(UUID pidForm, ParamInfo[] parrData)
+	public static HashMap<String, java.lang.Object> ParseExtParams(UUID pidForm, ParamInfo[] parrData)
 		throws JewelMobileException
 	{
 		IForm lrefForm;
 		IFormField[] larrFields;
-		Hashtable<String, java.lang.Object> larrRes;
+		HashMap<String, java.lang.Object> larrRes;
 		int i;
 		java.lang.Object lobjAux;
 
@@ -593,7 +593,7 @@ public class FormDataBridge
 
 		larrFields = lrefForm.getFields();
 
-		larrRes = new Hashtable<String, java.lang.Object>();
+		larrRes = new HashMap<String, java.lang.Object>();
 		for ( i = 0; i < parrData.length; i++ )
 		{
 			try

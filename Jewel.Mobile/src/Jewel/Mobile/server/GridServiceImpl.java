@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.UUID;
 
@@ -125,7 +126,7 @@ public class GridServiceImpl
 		private int[] marrMembers;
 		private java.lang.Object[] marrValues;
         private ArrayList<Row> marrData;
-		private Hashtable<String, java.lang.Object> marrExternParams;
+		private HashMap<String, java.lang.Object> marrExternParams;
         private int mlngPageSize = 10;
         private int mlngCurrentPage;
         private int[] marrSortOrder;
@@ -203,7 +204,7 @@ public class GridServiceImpl
 			return mrefQuery.getCanCreate();
 		}
 
-        public void LoadQuery(boolean pbForceParam, java.lang.Object pobjParamValue, Hashtable<String, java.lang.Object> parrExtParams,
+        public void LoadQuery(boolean pbForceParam, java.lang.Object pobjParamValue, HashMap<String, java.lang.Object> parrExtParams,
         		int[] parrMembers, java.lang.Object[] parrValues)
         	throws JewelMobileException
 		{
@@ -610,7 +611,7 @@ public class GridServiceImpl
 		QueryWSpace lrefWSpace;
 		UUID lidAux;
 		java.lang.Object lobjParam;
-		Hashtable<String, java.lang.Object> larrExtParams;
+		HashMap<String, java.lang.Object> larrExtParams;
 
 		if ( Engine.getCurrentUser() == null )
 			return null;
