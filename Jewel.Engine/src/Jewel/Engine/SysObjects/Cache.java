@@ -41,8 +41,7 @@ public class Cache
         }
     }
 
-    private HashMap<String, CacheLock> marrLocks;
-    private HashMap<String, ObjectBase> marrElements;
+    private HashMap<UUID, CacheElement> marrElements;
 	private HashMap<UUID, Constructor<?>> marrConstructors;
     private HashMap<String, UUID> marrEntities;
 	private boolean mbIsGlobal;
@@ -51,27 +50,31 @@ public class Cache
     private static java.lang.Object[] garrParams = {};
     private static TypeMapper garrMap = new TypeMapper();
 
-    private class CacheLock
+    private class CacheElement
     {
     	private UUID midEntity;
     	private UUID midKey;
+    	private ObjectBase mobjObject;
 
-    	public CacheLock(UUID pidEntity, UUID pidKey)
+    	public CacheElement(UUID pidEntity, UUID pidKey)
     	{
     		midEntity = pidEntity;
     		midKey = pidKey;
     	}
 
-    	private synchronized ObjectBase GetObject(ResultSet prsObject, boolean pbDoInit)
+    	public ObjectBase GetObjectFast()
+    	{
+    		return mobjObject;
+    	}
+
+    	public synchronized ObjectBase GetObject(ResultSet prsObject, boolean pbDoInit)
     		throws JewelEngineException
     	{
     		ObjectBase lobjAux;
     		Class<?> lrefTheType;
             Constructor<?> lrefConst;
 
-    		lobjAux = marrElements.get(midEntity.toString() + "." + midKey.toString());
-
-    		if ( lobjAux == null )
+    		if ( mobjObject == null )
     		{
                 lrefConst = marrConstructors.get(midEntity);
 
@@ -92,9 +95,9 @@ public class Cache
     	            lobjAux = (ObjectBase)lrefConst.newInstance(garrParams);
 
     	            if (prsObject == null)
-    	                lobjAux.LoadAt(midEntity, midKey);
+    	            	lobjAux.LoadAt(midEntity, midKey);
     				else
-    	                lobjAux.LoadAt(midEntity, prsObject);
+    					lobjAux.LoadAt(midEntity, prsObject);
                 }
                 catch(JewelEngineException e)
                 {
@@ -105,59 +108,64 @@ public class Cache
                 	throw new JewelEngineException("Unexpected error in inner Cache.GetObject", e);
                 }
 
-                marrElements.put(midEntity.toString() + "." + midKey.toString(), lobjAux);
-
                 if (mbIsGlobal)
-                    lobjAux.SetReadonly();
+                	lobjAux.SetReadonly();
+
+    			mobjObject = lobjAux;
 
     			if ( pbDoInit )
     				lobjAux.Initialize();
     		}
 
-    		return lobjAux;
+    		return mobjObject;
     	}
 
     	public synchronized void PutObject(ObjectBase value)
     	{
-    		marrElements.put(midEntity.toString() + "." + midKey.toString(), value);
+    		mobjObject = value;
             if (mbIsGlobal)
                 value.SetReadonly();
     	}
 
     	public synchronized void DeleteObject()
     	{
-    		marrElements.remove(midEntity.toString() + "." + midKey.toString());
+    		mobjObject = null;
     	}
     }
 
-    private synchronized CacheLock GetLock(UUID pidEntity, UUID pidKey)
+    private synchronized CacheElement GetCacheElement(UUID pidEntity, UUID pidKey)
     {
-    	String lstrKey;
-    	CacheLock llock;
+    	CacheElement lobjAux;
 
-    	lstrKey = pidEntity.toString() + "." + pidKey.toString();
+    	lobjAux = marrElements.get(pidKey);
 
-    	llock = marrLocks.get(lstrKey);
-
-    	if ( llock == null )
+    	if ( lobjAux == null )
     	{
-    		llock = new CacheLock(pidEntity, pidKey);
-    		marrLocks.put(lstrKey, llock);
+    		lobjAux = new CacheElement(pidEntity, pidKey);
+    		marrElements.put(pidKey, lobjAux);
     	}
 
-    	return llock;
+    	return lobjAux;
     }
 
     private ObjectBase GetObject(UUID pidEntity, UUID pidKey, ResultSet prsObject, boolean pbDoInit)
     	throws JewelEngineException
 	{
-    	return GetLock(pidEntity, pidKey).GetObject(prsObject, pbDoInit);
+    	CacheElement lobjAux;
+    	ObjectBase lobjResult;
+
+    	lobjAux = GetCacheElement(pidEntity, pidKey);
+
+    	lobjResult = lobjAux.GetObjectFast();
+    	if ( lobjResult == null )
+    		lobjResult = lobjAux.GetObject(prsObject, pbDoInit);
+
+    	return lobjResult;
 	}
 
 	public Cache(boolean pbIsGlobal)
 	{
-		marrLocks = null;
-        marrElements = null;
+		marrElements = null;
         marrConstructors = null;
         marrEntities = null;
 		mbIsGlobal = pbIsGlobal;
@@ -172,21 +180,18 @@ public class Cache
         {
         	if ( "1".equals(System.getenv(DBConstants.Env_LargeCache)) )
         	{
-        		marrLocks = new HashMap<String, CacheLock>(25000000);
-        		marrElements = new HashMap<String, ObjectBase>(25000000);
+        		marrElements = new HashMap<UUID, CacheElement>(50000000);
             	marrConstructors = new HashMap<UUID, Constructor<?>>(1000);
         	}
         	else
         	{
-        		marrLocks = new HashMap<String, CacheLock>();
-        		marrElements = new HashMap<String, ObjectBase>();
+        		marrElements = new HashMap<UUID, CacheElement>();
             	marrConstructors = new HashMap<UUID, Constructor<?>>();
         	}
         }
         else
         {
-    		marrLocks = new HashMap<String, CacheLock>();
-        	marrElements = new HashMap<String, ObjectBase>();
+    		marrElements = new HashMap<UUID, CacheElement>();
         	marrConstructors = new HashMap<UUID, Constructor<?>>();
         }
 
@@ -228,7 +233,7 @@ public class Cache
 
 	public void setAt(UUID pidEntity, UUID pidKey, ObjectBase value)
 	{
-		GetLock(pidEntity, pidKey).PutObject(value);
+		GetCacheElement(pidEntity, pidKey).PutObject(value);
 	}
 
 	public ObjectBase getAt(UUID pidEntity, ResultSet prsObject)
@@ -245,7 +250,7 @@ public class Cache
 
 	public void DeleteAt(UUID pidEntity, UUID pidKey)
 	{
-		GetLock(pidEntity, pidKey).DeleteObject();
+		GetCacheElement(pidEntity, pidKey).DeleteObject();
 	}
 
     public UUID FindEntity(UUID pidNSpace, UUID pidObject)
