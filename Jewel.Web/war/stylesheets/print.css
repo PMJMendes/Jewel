@@ -9,10 +9,29 @@ body {
 	pading:15mm;
 }
 
+body.certificate {
+	margin:0mm;
+	width: 210mm;
+	height: 297mm;
+	pading:15mm;
+	background: transparent url('../images/ResopreReportLogo.jpg') no-repeat;
+	background-position: 0% 70%;
+}
+
 img.signature {
 	width:45mm !important;
 }
 
+img.certificate_signature {
+	width:70mm !important;
+}
+
 img.ipac {
-	height:20mm !important;
+	border:5px;
+	height:50% !important;
+	width:50% !important;
+}
+
+div.footer {
+	
 }
