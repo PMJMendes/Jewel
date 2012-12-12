@@ -62,11 +62,6 @@ public class Cache
     		midKey = pidKey;
     	}
 
-    	public ObjectBase GetObjectFast()
-    	{
-    		return mobjObject;
-    	}
-
     	public synchronized ObjectBase GetObject(ResultSet prsObject, boolean pbDoInit)
     		throws JewelEngineException
     	{
@@ -75,22 +70,38 @@ public class Cache
 
     		if ( mobjObject == null )
     		{
-                lrefConst = marrConstructors.get(midEntity);
+    			synchronized(marrConstructors)
+    			{
+	                lrefConst = marrConstructors.get(midEntity);
+
+	                try
+	                {
+	    	            if (lrefConst == null)
+	    	            {
+	    	                lrefTheType = garrMap.Map(midEntity);
+	    	                if (lrefTheType == null)
+	    	                    lrefTheType = Entity.GetInstance(midEntity).getDefObject().getClassType();
+	    	                if (lrefTheType == null)
+	    	                    lrefTheType = ObjectMaster.class;
+	    	                lrefConst = lrefTheType.getConstructor(garrTypes);
+    	
+	    	                marrConstructors.put(midEntity, lrefConst);
+	    	            }
+	                }
+	                catch(JewelEngineException e)
+	                {
+	                	mobjObject = null;
+	                	throw e;
+	                }
+	                catch(Exception e)
+	                {
+	                	mobjObject = null;
+	                	throw new JewelEngineException("Unexpected error in inner Cache.GetObject", e);
+	                }
+                }
 
                 try
                 {
-    	            if (lrefConst == null)
-    	            {
-    	                lrefTheType = garrMap.Map(midEntity);
-    	                if (lrefTheType == null)
-    	                    lrefTheType = Entity.GetInstance(midEntity).getDefObject().getClassType();
-    	                if (lrefTheType == null)
-    	                    lrefTheType = ObjectMaster.class;
-    	                lrefConst = lrefTheType.getConstructor(garrTypes);
-    	
-    	                marrConstructors.put(midEntity, lrefConst);
-    	            }
-
     	            mobjObject = (ObjectBase)lrefConst.newInstance(garrParams);
 
     	            if (prsObject == null)
@@ -150,16 +161,7 @@ public class Cache
     private ObjectBase GetObject(UUID pidEntity, UUID pidKey, ResultSet prsObject, boolean pbDoInit)
     	throws JewelEngineException
 	{
-    	CacheElement lobjAux;
-    	ObjectBase lobjResult;
-
-    	lobjAux = GetCacheElement(pidEntity, pidKey);
-
-    	lobjResult = lobjAux.GetObjectFast();
-    	if ( lobjResult == null )
-    		lobjResult = lobjAux.GetObject(prsObject, pbDoInit);
-
-    	return lobjResult;
+    	return GetCacheElement(pidEntity, pidKey).GetObject(prsObject, pbDoInit);
 	}
 
 	public Cache(boolean pbIsGlobal)
