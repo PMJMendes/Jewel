@@ -70,7 +70,6 @@ public class Cache
     	public synchronized ObjectBase GetObject(ResultSet prsObject, boolean pbDoInit)
     		throws JewelEngineException
     	{
-    		ObjectBase lobjAux;
     		Class<?> lrefTheType;
             Constructor<?> lrefConst;
 
@@ -92,29 +91,29 @@ public class Cache
     	                marrConstructors.put(midEntity, lrefConst);
     	            }
 
-    	            lobjAux = (ObjectBase)lrefConst.newInstance(garrParams);
+    	            mobjObject = (ObjectBase)lrefConst.newInstance(garrParams);
 
     	            if (prsObject == null)
-    	            	lobjAux.LoadAt(midEntity, midKey);
+    	            	mobjObject.LoadAt(midEntity, midKey);
     				else
-    					lobjAux.LoadAt(midEntity, prsObject);
+    					mobjObject.LoadAt(midEntity, prsObject);
                 }
                 catch(JewelEngineException e)
                 {
+                	mobjObject = null;
                 	throw e;
                 }
                 catch(Exception e)
                 {
+                	mobjObject = null;
                 	throw new JewelEngineException("Unexpected error in inner Cache.GetObject", e);
                 }
 
                 if (mbIsGlobal)
-                	lobjAux.SetReadonly();
-
-    			mobjObject = lobjAux;
+                	mobjObject.SetReadonly();
 
     			if ( pbDoInit )
-    				lobjAux.Initialize();
+    				mobjObject.Initialize();
     		}
 
     		return mobjObject;
