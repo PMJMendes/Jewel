@@ -37,6 +37,7 @@ public final class Miscellaneous
 
 	public static final int Username_In_User = 1;
 	public static final int Password_In_User = 2;
+	public static final int FullName_In_User = 0;
 
     public static final int FKFileSpec_In_FileSection = 6;
     public static final int FKParent_In_FileSection = 5;
