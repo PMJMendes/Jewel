@@ -221,7 +221,7 @@ public class FileSpec
                 while ((char)lchData == pstrSeparator.charAt(lstrSep.length()))
                 {
                     lstrSep += (char)lchData;
-                    if (lstrSep == pstrSeparator)
+                    if (pstrSeparator.equals(lstrSep))
                         return lstrBuffer;
                     lchData = pstream.read();
                 }
