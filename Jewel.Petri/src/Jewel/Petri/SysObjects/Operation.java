@@ -19,6 +19,7 @@ import Jewel.Petri.Interfaces.IOperation;
 import Jewel.Petri.Interfaces.IProcess;
 import Jewel.Petri.Interfaces.IStep;
 import Jewel.Petri.Objects.PNLog;
+import Jewel.Petri.Objects.PNOperation;
 import Jewel.Petri.Objects.PNProcess;
 
 public abstract class Operation
@@ -182,7 +183,8 @@ public abstract class Operation
 		if ( mbDone )
 			throw new JewelPetriException("Error: Attempt to run operation twice.");
 
-		if ( (!GetProcess().IsRunning()) && (!(this instanceof UndoOperation)) )
+		if ( !GetProcess().IsRunning() && !(this instanceof UndoOperation)
+				&& !Jewel.Petri.Constants.LevelID_Override.equals(GetDefinition().getDefaultLevel()) )
 			throw new NotRunnableException("Error: Attempt to run operation on stopped process.");
 
 		LockProcess();
@@ -400,6 +402,12 @@ public abstract class Operation
 			mrefProcess = PNProcess.GetInstance(Engine.getCurrentNameSpace(), midProcess);
 
 		return mrefProcess;
+	}
+
+	protected IOperation GetDefinition()
+		throws JewelPetriException
+	{
+		return PNOperation.GetInstance(Engine.getCurrentNameSpace(), OpID());
 	}
 
 	protected QueueContext GetContext()
