@@ -17,5 +17,8 @@ public class DynaGridResponse
 	public String[][] marrData;
 	public int[] marrRows;
 	public String mstrEditorID;
+	public boolean mbReadOnly;
 	public boolean mbCanCreate;
+	public boolean mbCanEdit;
+	public boolean mbCanDelete;
 }

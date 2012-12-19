@@ -43,6 +43,11 @@ public class SimpleGrid
 	private int mlngSelected;
 	private int[] marrRows;
 	private boolean mbInit;
+	private boolean mbNewRow;
+	private boolean mbReadOnly;
+	private boolean mbCanCreate;
+	private boolean mbCanEdit;
+	private boolean mbCanDelete;
 
 	private VerticalPanel mpnMain;
 	private Grid mgrdTable;
@@ -61,6 +66,7 @@ public class SimpleGrid
 		HorizontalPanel lhorz;
 
 		mbInit = false;
+		mbNewRow = false;
 
 		mpnMain = new VerticalPanel();
 		mpnMain.setStylePrimaryName("simpleGrid");
@@ -391,6 +397,31 @@ public class SimpleGrid
 	{
 		return mstrEditorID;
 	}
+
+	public boolean IsInNewRow()
+	{
+		return mbNewRow;
+	}
+
+	public boolean IsReadOnly()
+	{
+		return mbReadOnly;
+	}
+
+	public boolean CanCreate()
+	{
+		return mbCanCreate;
+	}
+
+	public boolean CanEdit()
+	{
+		return mbCanEdit;
+	}
+
+	public boolean CanDelete()
+	{
+		return mbCanDelete;
+	}
 	
 	private void doNext()
 	{
@@ -513,6 +544,7 @@ public class SimpleGrid
 				if (result != null)
 				{
 					RenderData(result);
+					mbNewRow = true;
 					DoSelect(result.marrData.length);
 				}
 				else
@@ -625,6 +657,7 @@ public class SimpleGrid
 				if (result != null)
 				{
 					mrefEventMgr.fireEvent(new SelectEvent(result));
+					mbNewRow = false;
 				}
 				else
 				{
@@ -665,6 +698,11 @@ public class SimpleGrid
 		boolean b;
 		Label lrefAux;
 
+		mbReadOnly = pobjResp.mbReadOnly;
+		mbCanCreate = pobjResp.mbCanCreate;
+		mbCanEdit = pobjResp.mbCanEdit;
+		mbCanDelete = pobjResp.mbCanDelete;
+
 		mgrdTable.resizeRows(pobjResp.marrData.length + 1);
 		if ( pobjResp.marrColumns != null )
 		{
@@ -688,7 +726,8 @@ public class SimpleGrid
 					mgrdTable.getCellFormatter().setVisible(j, i, true);
 			}
 
-			mbtnNew.setEnabled(pobjResp.mbCanCreate);
+			mbtnNew.setVisible(!mbReadOnly);
+			mbtnNew.setEnabled(mbCanCreate);
 		}
 
         marrRows = pobjResp.marrRows;

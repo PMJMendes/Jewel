@@ -199,9 +199,24 @@ public class GridServiceImpl
 			return larrRes;
 		}
 
+		public boolean IsReadOnly()
+		{
+			return mrefQuery.getReadOnly();
+		}
+
 		public boolean CanCreate()
 		{
-			return mrefQuery.getCanCreate();
+			return mrefQuery.getCanCreate() && !mrefQuery.getReadOnly();
+		}
+
+		public boolean CanEdit()
+		{
+			return mrefQuery.getCanEdit() && !mrefQuery.getReadOnly();
+		}
+
+		public boolean CanDelete()
+		{
+			return mrefQuery.getCanDelete() && !mrefQuery.getReadOnly();
 		}
 
         public void LoadQuery(boolean pbForceParam, java.lang.Object pobjParamValue, HashMap<String, java.lang.Object> parrExtParams,
@@ -313,6 +328,11 @@ public class GridServiceImpl
         	prefResp.mlngPageSize = mlngPageSize;
         	prefResp.mlngRecCount = marrData.size();
         	prefResp.mlngPageCount = (int)Math.ceil((double)marrData.size() / (double)mlngPageSize);
+
+        	prefResp.mbReadOnly = IsReadOnly();
+        	prefResp.mbCanCreate = CanCreate();
+        	prefResp.mbCanEdit = CanEdit();
+        	prefResp.mbCanDelete = CanDelete();
         }
 
         public void SetPageSize(int plngSize)
@@ -408,7 +428,7 @@ public class GridServiceImpl
             int llngRow;
             int i;
 
-        	if ( !mrefQuery.getCanCreate() )
+        	if (  mrefQuery.getReadOnly() || !mrefQuery.getCanCreate() )
         		return false;
 
             larrRow = new java.lang.Object[mlngColCount - 1];
@@ -648,7 +668,6 @@ public class GridServiceImpl
 		lobjAux.mstrWorkspaceID = lidAux.toString();
 		lobjAux.marrColumns = lrefWSpace.GetColumns();
 		lobjAux.mstrEditorID = lrefWSpace.GetEditorID().toString();
-		lobjAux.mbCanCreate = lrefWSpace.CanCreate();
 		if ( pstrInitValue != null )
 			lobjAux.mlngCurrRow = lrefWSpace.FindRow(UUID.fromString(pstrInitValue));
 		else

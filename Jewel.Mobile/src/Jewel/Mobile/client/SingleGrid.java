@@ -24,6 +24,7 @@ public class SingleGrid
 	private String mstrSearchFormID;
 	private String mstrNameSpace;
 	private boolean mbSearchInit;
+	private boolean mbIsNewRow;
 
 	private VerticalPanel mpnMain;
 	private SearchForm mfrmSearch;
@@ -35,6 +36,7 @@ public class SingleGrid
 	public SingleGrid(boolean pbForPopup)
 	{
 		mbForPopup = pbForPopup;
+		mbIsNewRow = false;
 
 		mpnMain = new VerticalPanel();
 		mpnMain.setStylePrimaryName("singleGrid");
@@ -79,6 +81,8 @@ public class SingleGrid
 		{
 			public void onSelect(SelectEvent event)
 			{
+				mbIsNewRow = mgrdTable.IsInNewRow();
+
 				if ( !mbForPopup )
 					LoadEditor(event.getResult());
 				mrefEventMgr.fireEvent(event);
@@ -91,7 +95,7 @@ public class SingleGrid
 				mdvEditor.EnableButtons();
 				if ( mdvEditor.hasActions() )
 				{
-					mdvEditor.LoadData(event.getData());
+					mdvEditor.LoadData(event.getData(), mbIsNewRow);
 				}
 				else
 				{
@@ -133,10 +137,13 @@ public class SingleGrid
 
 	public void LoadEditor(DataObject pobjData)
 	{
+		if ( mgrdTable.IsReadOnly() )
+			return;
+
 		if ( mdvEditor == null )
 			BuildEditor(pobjData);
 		else
-			mdvEditor.LoadData(pobjData);
+			mdvEditor.LoadData(pobjData, mbIsNewRow);
 
 		mgrdTable.setVisible(false);
 		mdvEditor.setVisible(true);
@@ -199,7 +206,8 @@ public class SingleGrid
 		mdvEditor = new MultiEditor();
 		mpnMain.add(mdvEditor);
 		mdvEditor.getElement().getParentElement().setClassName("singleGrid-Editor-Wrapper");
-		mdvEditor.InitEditor(mgrdTable.GetEditorID(), mstrNameSpace, pobjData);
+		mdvEditor.InitEditor(mgrdTable.GetEditorID(), mstrNameSpace, pobjData,
+				mgrdTable.CanEdit(), mgrdTable.CanDelete(), mbIsNewRow);
 
 		mdvEditor.addActionHandler(new ActionEvent.Handler()
 		{

@@ -21,6 +21,9 @@ public class DynaView
 	private String mstrNameSpace;
 	private DataObject mobjDataCache;
 	private boolean mbAlternateColor;
+	private boolean mbCanEdit;
+	private boolean mbCanDelete;
+	private boolean mbIsNewRow;
 
     private Button mbtnEdit;
     private Button mbtnSave;
@@ -72,9 +75,9 @@ public class DynaView
 			public void onClick(ClickEvent event)
 	        {
 				mbtnEdit.setEnabled(false);
-				mbtnSave.setEnabled(true);
+				mbtnSave.setEnabled(mbCanEdit || mbIsNewRow);
 				mbtnCancel.setEnabled(true);
-				mbtnDelete.setEnabled(true);
+				mbtnDelete.setEnabled(mbCanDelete || mbIsNewRow);
 	        }
 	     });
 		mbtnSave.addClickHandler(new ClickHandler()
@@ -91,7 +94,7 @@ public class DynaView
 		{
 			public void onClick(ClickEvent event)
 	        {
-				LoadData(mobjDataCache);
+				LoadData(mobjDataCache, mbIsNewRow);
 	        }
 	     });
 		mbtnDelete.addClickHandler(new ClickHandler()
@@ -119,7 +122,8 @@ public class DynaView
 		return viewSvc;
 	}
 
-	public void InitView(String pstrViewID, String pstrNameSpace, DataObject pobjData, boolean pbAlternate)
+	public void InitView(String pstrViewID, String pstrNameSpace, DataObject pobjData, boolean pbAlternate,
+			boolean pbCanEdit, boolean pbCanDelete, boolean pbIsNewRow)
 	{
 		AsyncCallback<DynaViewResponse> callback = new AsyncCallback<DynaViewResponse>()
         {
@@ -144,6 +148,11 @@ public class DynaView
 			}
         };
 
+        mbCanEdit = pbCanEdit;
+        mbCanDelete = pbCanDelete;
+        mbIsNewRow = pbIsNewRow;
+        ResetButtons();
+
         mstrViewID = pstrViewID;
         mstrNameSpace = pstrNameSpace;
 		mbAlternateColor = pbAlternate;
@@ -152,10 +161,12 @@ public class DynaView
         getService().GetTabs(mstrViewID, callback);
 	}
 
-	public void LoadData(DataObject pobjData)
+	public void LoadData(DataObject pobjData, boolean pbIsNewRow)
 	{
 		int i;
-		
+
+		mbIsNewRow = pbIsNewRow;
+
         mobjDataCache = pobjData;
 		for ( i = 0; i < getWidgetCount(); i++ )
 		{
@@ -189,7 +200,7 @@ public class DynaView
 
 	public void ResetButtons()
 	{
-		mbtnEdit.setEnabled(true);
+		mbtnEdit.setEnabled(mbCanEdit || mbCanDelete || mbIsNewRow);
 		mbtnSave.setEnabled(false);
 		mbtnCancel.setEnabled(false);
 		mbtnDelete.setEnabled(false);

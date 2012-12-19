@@ -177,9 +177,24 @@ public class DynaGridServiceImpl
 			return larrRes;
 		}
 
+		public boolean IsReadOnly()
+		{
+			return mrefQuery.getReadOnly();
+		}
+
 		public boolean CanCreate()
 		{
-			return mrefQuery.getCanCreate();
+			return mrefQuery.getCanCreate() && !mrefQuery.getReadOnly();
+		}
+
+		public boolean CanEdit()
+		{
+			return mrefQuery.getCanEdit() && !mrefQuery.getReadOnly();
+		}
+
+		public boolean CanDelete()
+		{
+			return mrefQuery.getCanDelete() && !mrefQuery.getReadOnly();
 		}
 
         public void LoadQuery(boolean pbForceParam, java.lang.Object pobjParamValue, HashMap<String, java.lang.Object> parrExtParams,
@@ -286,6 +301,11 @@ public class DynaGridServiceImpl
         	prefResp.mlngPageSize = PAGE_SIZE;
         	prefResp.mlngRecCount = marrData.size();
         	prefResp.mlngPageCount = (int)Math.ceil((double)marrData.size() / (double)PAGE_SIZE);
+
+        	prefResp.mbReadOnly = IsReadOnly();
+        	prefResp.mbCanCreate = CanCreate();
+        	prefResp.mbCanEdit = CanEdit();
+        	prefResp.mbCanDelete = CanDelete();
         }
 
         public boolean PageForward()
@@ -366,14 +386,11 @@ public class DynaGridServiceImpl
         	return -1;
         }
         
-        public boolean NewRow()
+        public void NewRow()
         {
             java.lang.Object[] larrRow;
             int llngRow;
             int i;
-
-        	if ( !mrefQuery.getCanCreate() )
-        		return false;
 
             larrRow = new java.lang.Object[mlngColCount - 1];
             for (i = 1; i < mlngColCount; i++)
@@ -382,8 +399,6 @@ public class DynaGridServiceImpl
 			marrData.add(new Row(this, llngRow, null, larrRow));
 
         	mlngCurrentPage = (int)Math.ceil(((double)marrData.size() - 0.1) / (double)PAGE_SIZE) - 1;
-
-        	return true;
         }
         
         public boolean DeleteRow(int plngRow)
@@ -610,7 +625,6 @@ public class DynaGridServiceImpl
 		lobjAux.mstrWorkspaceID = lidAux.toString();
 		lobjAux.marrColumns = lrefWSpace.GetColumns();
 		lobjAux.mstrEditorID = lrefWSpace.GetEditorID().toString();
-		lobjAux.mbCanCreate = lrefWSpace.CanCreate();
 		if ( pstrInitValue != null )
 			lobjAux.mlngCurrRow = lrefWSpace.FindRow(UUID.fromString(pstrInitValue));
 		else
@@ -834,8 +848,10 @@ public class DynaGridServiceImpl
 		if ( lrefWSpace == null )
 			throw new JewelWebException("Unexpected: non-existant query workspace.");
 
-		if ( !lrefWSpace.NewRow() )
-			throw new JewelWebException("Access denied: Cannot create new rows.");
+		if ( lrefWSpace.IsReadOnly() || !lrefWSpace.CanCreate() )
+			throw new JewelWebException("Access denied: Cannot create rows.");
+
+		lrefWSpace.NewRow();
 
 		lobjAux = new DynaGridResponse();
 		lrefWSpace.GetCurrentPage(lobjAux);
@@ -923,6 +939,9 @@ public class DynaGridServiceImpl
 		if ( lrefWSpace == null )
 			throw new JewelWebException("Unexpected: non-existant query workspace.");
 
+		if ( lrefWSpace.IsReadOnly() || !lrefWSpace.CanEdit() )
+			throw new JewelWebException("Access denied: Cannot edit rows.");
+
 		lobjData = lrefWSpace.DataObject(plngRow);
 		lobjLocal = new ObjectMaster();
 		try
@@ -966,6 +985,9 @@ public class DynaGridServiceImpl
 		lrefWSpace = GetQueryWSStorage().get(UUID.fromString(pstrWorkspace));
 		if ( lrefWSpace == null )
 			throw new JewelWebException("Unexpected: non-existant query workspace.");
+
+		if ( lrefWSpace.IsReadOnly() || !lrefWSpace.CanDelete() )
+			throw new JewelWebException("Access denied: Cannot delete rows.");
 
 		if ( !lrefWSpace.DeleteRow(plngRow) )
 			throw new JewelWebException("Unexpected: attempt to delete non-existant row.");

@@ -41,6 +41,9 @@ public class MultiEditor
 	private boolean mbInit;
 	private boolean mbEnabled;
 	private int mlngSelected;
+	private boolean mbCanEdit;
+	private boolean mbCanDelete;
+	private boolean mbIsNewRow;
 
 	HorizontalPanel mpnToolbar;
 	private ListBox mlbxSelector;
@@ -114,7 +117,7 @@ public class MultiEditor
 		{
 			public void onClick(ClickEvent event)
 			{
-				LoadData(mobjDataCache);
+				LoadData(mobjDataCache, mbIsNewRow);
 			}
 		});
 		mbtnDelete.addClickHandler(new ClickHandler()
@@ -141,7 +144,8 @@ public class MultiEditor
 		return editorSvc;
 	}
 
-	public void InitEditor(String pstrViewID, String pstrNameSpace, DataObject pobjData)
+	public void InitEditor(String pstrViewID, String pstrNameSpace, DataObject pobjData,
+			boolean pbCanEdit, boolean pbCanDelete, boolean pbIsNewRow)
 	{
 		AsyncCallback<EditorResponse> callback = new AsyncCallback<EditorResponse>()
         {
@@ -166,16 +170,22 @@ public class MultiEditor
 			}
         };
 
+        mbCanEdit = pbCanEdit;
+        mbCanDelete = pbCanDelete;
+        mbIsNewRow = pbIsNewRow;
+
         mstrViewID = pstrViewID;
         mstrNameSpace = pstrNameSpace;
         mobjDataCache = pobjData;
         getService().GetTabs(mstrViewID, callback);
 	}
 
-	public void LoadData(DataObject pobjData)
+	public void LoadData(DataObject pobjData, boolean pbIsNewRow)
 	{
 		int i;
-		
+
+		mbIsNewRow = pbIsNewRow;
+
         mobjDataCache = pobjData;
 		for ( i = 0; i < mpnContent.getWidgetCount(); i++ )
 		{
@@ -308,9 +318,9 @@ public class MultiEditor
 
 	private void ResetButtons()
 	{
-		mbtnSave.setEnabled(mbEnabled && mbInit);
+		mbtnSave.setEnabled(mbEnabled && mbInit && (mbCanEdit || mbIsNewRow));
 		mbtnCancel.setEnabled(mbEnabled && mbInit);
-		mbtnDelete.setEnabled(mbEnabled && mbInit);
+		mbtnDelete.setEnabled(mbEnabled && mbInit && (mbCanDelete || mbIsNewRow));
 	}
 
 	private void DoChangeView()

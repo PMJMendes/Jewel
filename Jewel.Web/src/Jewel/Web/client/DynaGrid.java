@@ -28,6 +28,10 @@ public class DynaGrid
 	private boolean mbNewRow;
 	private DataObject mobjData;
 	private boolean mbWithParam;
+	private boolean mbReadOnly;
+	private boolean mbCanCreate;
+	private boolean mbCanEdit;
+	private boolean mbCanDelete;
 
 	private VerticalPanel mpnMain;
 	private VerticalPanel mpnInner;
@@ -715,6 +719,11 @@ public class DynaGrid
 		boolean b;
 		Label lrefAux;
 
+		mbReadOnly = pobjResp.mbReadOnly;
+		mbCanCreate = pobjResp.mbCanCreate;
+		mbCanEdit = pobjResp.mbCanEdit;
+		mbCanDelete = pobjResp.mbCanDelete;
+
 		mgrdTable.resizeRows(pobjResp.marrData.length + 1);
 		if ( pobjResp.marrColumns != null )
 		{
@@ -738,7 +747,10 @@ public class DynaGrid
 					mgrdTable.getCellFormatter().setVisible(j, i, true);
 			}
 
-			mbtnNew.setEnabled(pobjResp.mbCanCreate);
+			if ( mbForPopup )
+				mbtnDetails.setVisible(!mbReadOnly);
+			mbtnNew.setVisible(!mbReadOnly);
+			mbtnNew.setEnabled(mbCanCreate);
 		}
 
         marrRows = pobjResp.marrRows;
@@ -822,6 +834,9 @@ public class DynaGrid
 	
 	private void LoadEditor(DataObject pobjData, boolean pbForceBuild)
 	{
+		if ( mbReadOnly )
+			return;
+
 		if ( mbForPopup )
 		{
 			mobjData = pobjData;
@@ -829,7 +844,7 @@ public class DynaGrid
 			mbtnDetails.setEnabled(true);
 			if ( mdvEditor != null )
 			{
-				mdvEditor.LoadData(pobjData);
+				mdvEditor.LoadData(pobjData, mbNewRow);
 				mbtnDetails.setEnabled(false);
 			}
 			else
@@ -844,7 +859,7 @@ public class DynaGrid
 			if ( mdvEditor == null )
 				BuildEditor(pobjData);
 			else
-				mdvEditor.LoadData(pobjData);
+				mdvEditor.LoadData(pobjData, mbNewRow);
 		}
 	}
 
@@ -954,7 +969,7 @@ public class DynaGrid
 		mpnMain.add(mdvEditor);
 		mdvEditor.getElement().getParentElement().addClassName("jewel-DynaGrid-Editor");
 		mdvEditor.getElement().getParentElement().addClassName(mbAlternateColor ? "normalbk" : "alternate");
-		mdvEditor.InitView(mstrEditorID, mstrNameSpace, pobjData, !mbAlternateColor);
+		mdvEditor.InitView(mstrEditorID, mstrNameSpace, pobjData, !mbAlternateColor, mbCanEdit, mbCanDelete, mbNewRow);
 
 		mdvEditor.addActionHandler(new ActionEvent.Handler()
 		{
