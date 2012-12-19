@@ -1,12 +1,18 @@
 package Jewel.Web.client.popups;
 
-import java.sql.*;
+import java.sql.Timestamp;
 
-import Jewel.Web.client.controls.*;
+import Jewel.Web.client.controls.DateCtl;
+import Jewel.Web.client.controls.IntBox;
 
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.datepicker.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 public class DatePopup
 	extends DialogBox
@@ -15,63 +21,60 @@ public class DatePopup
 	private IntBox mtxtHours;
 	private IntBox mtxtMinutes;
 	private IntBox mtxtSeconds;
-	private IntBox mtxtNanos;
 	private Button mbtnEmpty;
 	private Button mbtnOk;
 	private Button mbtnCancel;
 
 	private DateCtl mrefOwner;
+	
+	private int mlngNanos;
 
 	public DatePopup(DateCtl prefOwner)
 	{
 		super(false, true);
-
+		
 		VerticalPanel lvert;
 		HorizontalPanel lhorz;
 		HTML lhtml;
 
 		mrefOwner = prefOwner;
 
-		this.setStylePrimaryName("jewel-DatePopup");
+		this.setStylePrimaryName("jewel-enhanced-DatePopup");
+		this.setAutoHideEnabled(true);
+		this.setPopupPosition(prefOwner.getXPos() + 5, prefOwner.getYPos());
 
 		lvert = new VerticalPanel();
 
 		mdtMain = new DatePicker();
-		mdtMain.setStylePrimaryName("jewel-DatePopup-Datepicker");
+		mdtMain.setStylePrimaryName("jewel-enhanced-DatePicker");
 		lvert.add(mdtMain);
 
 		lhorz = new HorizontalPanel();
 		lhorz.setStylePrimaryName("jewel-DatePopup-Timebar");
 		mtxtHours = new IntBox();
-		mtxtHours.setStylePrimaryName("jewel-Control jewel-DatePopup-Hours");
+		mtxtHours.setStylePrimaryName("jewel-enhanced-Control jewel-enhanced-DatePopup-Hours");
 		lhorz.add(mtxtHours);
 		lhtml = new HTML(":");
-		lhtml.setStylePrimaryName("jewel-DatePopup-Separator");
+		lhtml.setStylePrimaryName("jewel-enhanced-DatePopup-Separator");
 		lhorz.add(lhtml);
 		lhtml.getElement().getParentElement().addClassName("jewel-DatePopup-Separator-Wrapper");
 		mtxtMinutes = new IntBox();
-		mtxtMinutes.setStylePrimaryName("jewel-Control jewel-DatePopup-Minutes");
+		mtxtMinutes.setStylePrimaryName("jewel-enhanced-Control jewel-enhanced-DatePopup-Minutes");
 		lhorz.add(mtxtMinutes);
+		lvert.add(lhorz);
 		lhtml = new HTML(":");
-		lhtml.setStylePrimaryName("jewel-DatePopup-Separator");
+		lhtml.setStylePrimaryName("jewel-enhanced-DatePopup-Separator");
 		lhorz.add(lhtml);
 		lhtml.getElement().getParentElement().addClassName("jewel-DatePopup-Separator-Wrapper");
 		mtxtSeconds = new IntBox();
-		mtxtSeconds.setStylePrimaryName("jewel-Control jewel-DatePopup-Seconds");
+		mtxtSeconds.setStylePrimaryName("jewel-enhanced-Control jewel-enhanced-DatePopup-Seconds");
 		lhorz.add(mtxtSeconds);
-		lhtml = new HTML(".");
-		lhtml.setStylePrimaryName("jewel-DatePopup-Separator");
-		lhorz.add(lhtml);
-		lhtml.getElement().getParentElement().addClassName("jewel-DatePopup-Separator-Wrapper");
-		mtxtNanos = new IntBox();
-		mtxtNanos.setStylePrimaryName("jewel-Control jewel-DatePopup-Nanos");
-		lhorz.add(mtxtNanos);
-		lvert.add(lhorz);
 
 		lhorz = new HorizontalPanel();
 		lhorz.setStylePrimaryName("jewel-DatePopup-Buttonbar");
 		mbtnEmpty = new Button();
-		mbtnEmpty.setText("Select (empty)");
+		mbtnEmpty.setStylePrimaryName("google-button google-button-blue");
+		mbtnEmpty.setText("Limpar");
 		lhorz.add(mbtnEmpty);
 		mbtnEmpty.getElement().getParentElement().addClassName("jewel-DatePopup-Button-Wrapper");
 		lhtml = new HTML("&nbsp;");
@@ -79,11 +82,13 @@ public class DatePopup
 		lhorz.add(lhtml);
 		lhtml.getElement().getParentElement().addClassName("jewel-DatePopup-Buttongap-Wrapper");
 		mbtnOk = new Button();
+		mbtnOk.setStylePrimaryName("google-button google-button-blue");
 		mbtnOk.setText("Ok");
 		lhorz.add(mbtnOk);
 		mbtnOk.getElement().getParentElement().addClassName("jewel-DatePopup-Button-Wrapper");
 		mbtnCancel = new Button();
-		mbtnCancel.setText("Cancel");
+		mbtnCancel.setStylePrimaryName("google-button google-button-blue");
+		mbtnCancel.setText("Cancelar");
 		lhorz.add(mbtnCancel);
 		mbtnCancel.getElement().getParentElement().addClassName("jewel-DatePopup-Button-Wrapper");
 		lvert.add(lhorz);
@@ -111,23 +116,17 @@ public class DatePopup
 
 				lstrAux = mtxtHours.getText();
 				i = (lstrAux.equals("") ? 0 : Integer.parseInt(lstrAux));
-				if ( i != 0 )
-					ltAux.setHours(i);
+				ltAux.setHours(i);
 
 				lstrAux = mtxtMinutes.getText();
 				i = (lstrAux.equals("") ? 0 : Integer.parseInt(lstrAux));
-				if ( i != 0 )
-					ltAux.setMinutes(i);
+				ltAux.setMinutes(i);
 
 				lstrAux = mtxtSeconds.getText();
 				i = (lstrAux.equals("") ? 0 : Integer.parseInt(lstrAux));
-				if ( i != 0 )
-					ltAux.setSeconds(i);
+				ltAux.setSeconds(i);
 
-				lstrAux = mtxtNanos.getText();
-				i = (lstrAux.equals("") ? 0 : Integer.parseInt(lstrAux));
-				if ( i != 0 )
-					ltAux.setNanos(i * 1000000);
+				ltAux.setNanos(mlngNanos);
 
 				if ( ltAux.getTime() == 0 )
 					mrefOwner.setJValue(null);
@@ -156,7 +155,7 @@ public class DatePopup
 			mtxtHours.setText("00");
 			mtxtMinutes.setText("00");
 			mtxtSeconds.setText("00");
-			mtxtNanos.setText("000");
+			mlngNanos = 0;
 		}
 		else
 		{
@@ -164,11 +163,7 @@ public class DatePopup
 			mtxtHours.setText(Integer.toString(ltAux.getHours()));
 			mtxtMinutes.setText(Integer.toString(ltAux.getMinutes()));
 			mtxtSeconds.setText(Integer.toString(ltAux.getSeconds()));
-			mtxtNanos.setText(Integer.toString(ltAux.getNanos() / 1000000));
-			ltAux.setHours(0);
-			ltAux.setMinutes(0);
-			ltAux.setSeconds(0);
-			ltAux.setNanos(0);
+			mlngNanos = ltAux.getNanos() / 1000000;
 			mdtMain.setValue(ltAux, false);
 		}
 	}

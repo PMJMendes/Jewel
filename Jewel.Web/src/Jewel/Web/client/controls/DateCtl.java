@@ -1,21 +1,35 @@
 package Jewel.Web.client.controls;
 
-import Jewel.Web.client.*;
-import Jewel.Web.client.popups.*;
+import java.sql.Timestamp;
+import java.util.Date;
 
-import com.google.gwt.dom.client.Style.*;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.ui.*;
+import Jewel.Web.client.IJewelWebCtl;
+import Jewel.Web.client.popups.DatePopup;
+
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.TextBox;
 
 public class DateCtl
 	extends Composite
-	implements IJewelWebCtl
+	implements IJewelWebCtl, IDateCtl
 {
+	public static String ENHANCED_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private TextBox mtxtDisplay;
 	private DatePopup mdlgPopup;
+	private Timestamp now;
+	private DateTimeFormat formatter;
 
+	@SuppressWarnings("deprecation" )
 	public DateCtl()
 	{
+		formatter = DateTimeFormat.getFormat(ENHANCED_DATE_FORMAT);
+		
 		HorizontalPanel louter;
 		Image limg;
 
@@ -24,11 +38,16 @@ public class DateCtl
 
 		mtxtDisplay = new TextBox();
 		mtxtDisplay.setReadOnly(true);
+		now = new Timestamp(new java.util.Date().getTime());
+		now.setHours(0);
+		now.setMinutes(0);
+		now.setSeconds(0);
+		mtxtDisplay.setText(formatter.format(now));
 		mtxtDisplay.setStylePrimaryName("jewel-Datebox-Display");
 		louter.add(mtxtDisplay);
 
 		limg = new Image();
-		limg.setUrl("images/iconlookup.bmp");
+		limg.setUrl("images/calendar.png");
 		limg.setStylePrimaryName("jewel-Datebox-Button");
 		louter.add(limg);
 
@@ -50,12 +69,27 @@ public class DateCtl
 		if (mtxtDisplay.getText().equals(""))
 			return null;
 
-		return mtxtDisplay.getText();
+		Date tmpDate;
+		Timestamp tmp;
+		
+		try{
+			tmpDate = formatter.parse(mtxtDisplay.getText());
+			tmp = new Timestamp(tmpDate.getTime());
+			return tmp.toString();
+		}catch(IllegalArgumentException e){
+			return mtxtDisplay.getText();
+		}
 	}
 
 	public void setJValue(String pstrValue)
 	{
-		mtxtDisplay.setText(pstrValue);
+		if (null == pstrValue){
+			mtxtDisplay.setText("");
+		}
+		else{
+			String tmp = formatter.format(Timestamp.valueOf(pstrValue));
+			mtxtDisplay.setText(tmp);
+		}
 	}
 
 	public void setWidth(int plngWidth)
@@ -69,11 +103,19 @@ public class DateCtl
 		if ( mdlgPopup == null )
 		{
 			mdlgPopup = new DatePopup(this);
-			mdlgPopup.setText("Calendar");
-			mdlgPopup.center();
 		}
 
 		mdlgPopup.InitPopup(getJValue());
 		mdlgPopup.show();
+	}
+
+	@Override
+	public int getXPos() {
+		return this.getAbsoluteLeft();
+	}
+
+	@Override
+	public int getYPos() {
+		return this.getAbsoluteTop() + this.getOffsetHeight();
 	}
 }
