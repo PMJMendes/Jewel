@@ -483,8 +483,11 @@ public class FormDataBridge
 
 	    if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
 	    	return Timestamp.valueOf(pstrValue);
+	    
+	    if ( FieldTypeGUIDs.FT_Integer.equals(prefField.getType()))
+	    	return new Integer(pstrValue);
 
-	    if (FieldTypeGUIDs.FT_Numeric.equals(prefField.getType()))
+	    if (FieldTypeGUIDs.FT_Decimal.equals(prefField.getType()))
 	    	return new BigDecimal(pstrValue);
 
 	    if (FieldTypeGUIDs.FT_Bool.equals(prefField.getType()))
@@ -530,7 +533,10 @@ public class FormDataBridge
 	    if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
 	    	return ((Timestamp)pobjValue).toString();
 
-	    if (FieldTypeGUIDs.FT_Numeric.equals(prefField.getType()))
+	    if (FieldTypeGUIDs.FT_Integer.equals(prefField.getType()))
+	    	return ((Integer)pobjValue).toString();
+
+	    if (FieldTypeGUIDs.FT_Decimal.equals(prefField.getType()))
 	    	return ((BigDecimal)pobjValue).toPlainString();
 
 	    if (FieldTypeGUIDs.FT_Bool.equals(prefField.getType()))
