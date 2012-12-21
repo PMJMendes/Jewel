@@ -87,7 +87,14 @@ public class DynaFormServiceImpl
         	return lobjAux;
         }
 
-        if (FieldTypeGUIDs.FT_Numeric.equals(prefField.getType()))
+        if (FieldTypeGUIDs.FT_Integer.equals(prefField.getType()))
+        {
+        	lobjAux = new FormCtlObj();
+        	lobjAux.mlngType = FormCtlObj.INTBOX;
+        	return lobjAux;
+        }
+
+        if (FieldTypeGUIDs.FT_Decimal.equals(prefField.getType()))
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.DECBOX;
