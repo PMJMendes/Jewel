@@ -81,10 +81,15 @@ public class DateCtl
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setJValue(String pstrValue)
 	{
 		if (null == pstrValue){
-			mtxtDisplay.setText("");
+			now = new Timestamp(new java.util.Date().getTime());
+			now.setHours(0);
+			now.setMinutes(0);
+			now.setSeconds(0);
+			mtxtDisplay.setText(formatter.format(now));
 		}
 		else{
 			String tmp = formatter.format(Timestamp.valueOf(pstrValue));
