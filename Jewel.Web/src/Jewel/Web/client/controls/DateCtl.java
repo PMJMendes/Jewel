@@ -90,6 +90,8 @@ public class DateCtl
 			now.setMinutes(0);
 			now.setSeconds(0);
 			mtxtDisplay.setText(formatter.format(now));
+		}else if( pstrValue.equals("blank")){
+			mtxtDisplay.setText("");
 		}
 		else{
 			String tmp = formatter.format(Timestamp.valueOf(pstrValue));

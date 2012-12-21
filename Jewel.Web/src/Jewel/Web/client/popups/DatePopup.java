@@ -99,7 +99,7 @@ public class DatePopup
 		{
 			public void onClick(ClickEvent event)
 	        {
-				mrefOwner.setJValue(null);
+				mrefOwner.setJValue("blank");
 				hide();
 	        }
 	     });
