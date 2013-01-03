@@ -1155,7 +1155,7 @@ button
 }
 
 .google-button-blue:hover {
-	border: 1px solid #2F5BB7  ;
+	border: 1px solid #2F5BB7;
 	color: white  ;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.3)  ;
 	background-color: #357AE8  ;
@@ -1196,4 +1196,13 @@ button
 	font-weight: bold;
 	margin: 2px;
 	text-align:center;
+}
+
+/*****************************************************************************************************/
+/* TriStateCheckbox                                                                                 */
+/*****************************************************************************************************/
+
+input.jewel-tristate-checkbox{
+	width:16px !important;
+	height:16px;
 }

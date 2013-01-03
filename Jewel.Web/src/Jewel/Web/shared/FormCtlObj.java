@@ -1,6 +1,6 @@
 package Jewel.Web.shared;
 
-import java.io.*;
+import java.io.Serializable;
 
 public class FormCtlObj
 	implements Serializable
@@ -16,6 +16,7 @@ public class FormCtlObj
 	public static final int VALUELOOKUP = 6;
 	public static final int CALENDAR = 7;
 	public static final int FILEXFER = 8;
+	public static final int TRICHECKBOX = 9;
 
 	public int mlngType;
 	public boolean mbCanBeNull;

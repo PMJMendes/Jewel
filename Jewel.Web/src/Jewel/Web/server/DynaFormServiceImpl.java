@@ -1,13 +1,19 @@
 package Jewel.Web.server;
 
-import java.util.*;
+import java.util.UUID;
 
 import Jewel.Engine.Engine;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Web.interfaces.*;
-import Jewel.Web.shared.*;
+import Jewel.Engine.Constants.FieldTypeGUIDs;
+import Jewel.Engine.Constants.TypeDefGUIDs;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.Form;
+import Jewel.Engine.Interfaces.IForm;
+import Jewel.Engine.Interfaces.IFormField;
+import Jewel.Engine.Interfaces.IObjMember;
+import Jewel.Engine.Interfaces.ITypeDef;
+import Jewel.Web.interfaces.DynaFormService;
+import Jewel.Web.shared.FormCtlObj;
+import Jewel.Web.shared.JewelWebException;
 
 public class DynaFormServiceImpl
 	extends EngineImplementor
@@ -105,6 +111,13 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.BOOLDROPDOWN;
+        	return lobjAux;
+        }
+        
+        if (FieldTypeGUIDs.FT_TriStateCheckbox.equals(prefField.getType()))
+        {
+    		lobjAux = new FormCtlObj();
+        	lobjAux.mlngType = FormCtlObj.TRICHECKBOX;
         	return lobjAux;
         }
 

@@ -1,16 +1,23 @@
 package Jewel.Web.server;
 
-import java.math.*;
-import java.sql.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import Jewel.Engine.Engine;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.Security.*;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Web.shared.*;
+import Jewel.Engine.Constants.FieldTypeGUIDs;
+import Jewel.Engine.Implementation.Form;
+import Jewel.Engine.Interfaces.IForm;
+import Jewel.Engine.Interfaces.IFormField;
+import Jewel.Engine.Interfaces.IObject;
+import Jewel.Engine.Security.Password;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Engine.SysObjects.JewelEngineException;
+import Jewel.Engine.SysObjects.ObjectBase;
+import Jewel.Web.shared.JewelWebException;
+import Jewel.Web.shared.ParamInfo;
 
 public class FormDataBridge
 {
@@ -490,6 +497,14 @@ public class FormDataBridge
         	else
         		return Boolean.FALSE;
         }
+        
+        if (FieldTypeGUIDs.FT_TriStateCheckbox.equals(prefField.getType()))
+        {
+        	if ( pstrValue.equalsIgnoreCase("true") || (pstrValue.equals("1")) )
+        		return Boolean.TRUE;
+        	else
+        		return Boolean.FALSE;
+        }
 
         if (FieldTypeGUIDs.FT_Lookup.equals(prefField.getType()))
         	return UUID.fromString(pstrValue.split("!", 2)[0]);
@@ -538,6 +553,13 @@ public class FormDataBridge
         if (FieldTypeGUIDs.FT_Bool.equals(prefField.getType()))
         {
         	if ( (Boolean)pobjValue )
+        		return "1";
+        	else
+        		return "0";
+        }
+        
+        if(FieldTypeGUIDs.FT_TriStateCheckbox.equals(prefField.getType())){
+        	if((Boolean)pobjValue)
         		return "1";
         	else
         		return "0";

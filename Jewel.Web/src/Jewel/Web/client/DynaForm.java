@@ -1,15 +1,32 @@
 package Jewel.Web.client;
 
-import Jewel.Web.client.controls.*;
-import Jewel.Web.client.events.*;
-import Jewel.Web.interfaces.*;
-import Jewel.Web.shared.*;
+import Jewel.Web.client.controls.BoolDropdown;
+import Jewel.Web.client.controls.DateCtl;
+import Jewel.Web.client.controls.DecBox;
+import Jewel.Web.client.controls.FileCtl;
+import Jewel.Web.client.controls.IntBox;
+import Jewel.Web.client.controls.Lookup;
+import Jewel.Web.client.controls.PasswordBox;
+import Jewel.Web.client.controls.StringBox;
+import Jewel.Web.client.controls.TriStateCheckboxCtl;
+import Jewel.Web.client.controls.ValueLookup;
+import Jewel.Web.client.events.InitEvent;
+import Jewel.Web.client.events.JErrorEvent;
+import Jewel.Web.interfaces.DynaFormService;
+import Jewel.Web.interfaces.DynaFormServiceAsync;
+import Jewel.Web.shared.FormCtlObj;
+import Jewel.Web.shared.ParamInfo;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.Style.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DynaForm
 	extends Composite
@@ -239,6 +256,10 @@ public class DynaForm
 
 		case FormCtlObj.BOOLDROPDOWN:
 			lctlAux = new BoolDropdown();
+			break;
+			
+		case FormCtlObj.TRICHECKBOX:
+			lctlAux = new TriStateCheckboxCtl();
 			break;
 
 		case FormCtlObj.LOOKUP:
