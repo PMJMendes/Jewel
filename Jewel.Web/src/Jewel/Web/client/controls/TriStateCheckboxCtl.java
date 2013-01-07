@@ -3,13 +3,12 @@ package Jewel.Web.client.controls;
 import Jewel.Web.client.IJewelWebCtl;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.Widget;
 
-@SuppressWarnings("deprecation")
 public class TriStateCheckboxCtl extends FocusWidget implements IJewelWebCtl{
 
 	private static final String UNCHECKED = "images/unchecked.png";
@@ -26,10 +25,10 @@ public class TriStateCheckboxCtl extends FocusWidget implements IJewelWebCtl{
 		
 		DOM.setElementAttribute(btnElement, "src", UNDEFINED);		
 		
-		addClickListener(new ClickListener() {
-			
+		addClickHandler(new ClickHandler() {
+
 			@Override
-			public	void onClick(Widget sender) {
+			public void onClick(ClickEvent event) {
 				final String img = DOM.getElementAttribute(btnElement, "src");
 				String newImg;
 				if(img.endsWith(UNDEFINED)){

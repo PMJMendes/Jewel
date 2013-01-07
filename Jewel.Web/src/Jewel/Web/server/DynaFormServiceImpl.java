@@ -85,6 +85,13 @@ public class DynaFormServiceImpl
         	lobjAux.mlngType = FormCtlObj.TEXTBOX;
         	return lobjAux;
         }
+        
+        if (FieldTypeGUIDs.FT_LabelBox.equals(prefField.getType()))
+        {
+    		lobjAux = new FormCtlObj();
+        	lobjAux.mlngType = FormCtlObj.LABELBOX;
+        	return lobjAux;
+        }
 
         if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
         {
@@ -108,13 +115,6 @@ public class DynaFormServiceImpl
         }
 
         if (FieldTypeGUIDs.FT_Bool.equals(prefField.getType()))
-        {
-    		lobjAux = new FormCtlObj();
-        	lobjAux.mlngType = FormCtlObj.BOOLDROPDOWN;
-        	return lobjAux;
-        }
-        
-        if (FieldTypeGUIDs.FT_TriStateCheckbox.equals(prefField.getType()))
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.TRICHECKBOX;
@@ -217,7 +217,7 @@ public class DynaFormServiceImpl
         if (TypeDefGUIDs.T_Boolean.equals(prefType.getKey()))
         {
     		lobjAux = new FormCtlObj();
-        	lobjAux.mlngType = FormCtlObj.BOOLDROPDOWN;
+        	lobjAux.mlngType = FormCtlObj.TRICHECKBOX;
         	return lobjAux;
         }
 

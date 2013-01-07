@@ -480,6 +480,9 @@ public class FormDataBridge
 
         if (FieldTypeGUIDs.FT_TextBox.equals(prefField.getType()))
         	return pstrValue;
+        
+        if (FieldTypeGUIDs.FT_LabelBox.equals(prefField.getType()))
+        	return pstrValue;
 
         if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
         	return Timestamp.valueOf(pstrValue);
@@ -491,14 +494,6 @@ public class FormDataBridge
         	return new BigDecimal(pstrValue);
 
         if (FieldTypeGUIDs.FT_Bool.equals(prefField.getType()))
-        {
-        	if ( (pstrValue.equals("TRUE")) || (pstrValue.equals("True")) || (pstrValue.equals("1")) )
-        		return Boolean.TRUE;
-        	else
-        		return Boolean.FALSE;
-        }
-        
-        if (FieldTypeGUIDs.FT_TriStateCheckbox.equals(prefField.getType()))
         {
         	if ( pstrValue.equalsIgnoreCase("true") || (pstrValue.equals("1")) )
         		return Boolean.TRUE;
@@ -540,6 +535,9 @@ public class FormDataBridge
 
         if (FieldTypeGUIDs.FT_TextBox.equals(prefField.getType()))
         	return (String)pobjValue;
+        
+        if (FieldTypeGUIDs.FT_LabelBox.equals(prefField.getType()))
+        	return (String)pobjValue;
 
         if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
         	return ((Timestamp)pobjValue).toString();
@@ -553,13 +551,6 @@ public class FormDataBridge
         if (FieldTypeGUIDs.FT_Bool.equals(prefField.getType()))
         {
         	if ( (Boolean)pobjValue )
-        		return "1";
-        	else
-        		return "0";
-        }
-        
-        if(FieldTypeGUIDs.FT_TriStateCheckbox.equals(prefField.getType())){
-        	if((Boolean)pobjValue)
         		return "1";
         	else
         		return "0";

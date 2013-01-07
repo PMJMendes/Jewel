@@ -1,15 +1,17 @@
 package Jewel.Web.server;
 
-import java.math.*;
-import java.sql.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.UUID;
 
-import Jewel.Engine.*;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.Security.*;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Web.shared.*;
+import Jewel.Engine.Engine;
+import Jewel.Engine.Constants.TypeDefGUIDs;
+import Jewel.Engine.Interfaces.IObjMember;
+import Jewel.Engine.Interfaces.ITypeDef;
+import Jewel.Engine.Security.Password;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Engine.SysObjects.JewelEngineException;
+import Jewel.Web.shared.JewelWebException;
 
 public class TypeDataBridge
 {
@@ -30,7 +32,7 @@ public class TypeDataBridge
 
         if (TypeDefGUIDs.T_Boolean.equals(prefType.getKey()))
         {
-        	if ( (pstrValue.equals("TRUE")) || (pstrValue.equals("True")) || (pstrValue.equals("1")) )
+        	if ( (pstrValue.equalsIgnoreCase("true")) || (pstrValue.equals("1")) )
         		return Boolean.TRUE;
         	else
         		return Boolean.FALSE;

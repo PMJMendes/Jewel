@@ -1,10 +1,10 @@
 package Jewel.Web.client;
 
-import Jewel.Web.client.controls.BoolDropdown;
 import Jewel.Web.client.controls.DateCtl;
 import Jewel.Web.client.controls.DecBox;
 import Jewel.Web.client.controls.FileCtl;
 import Jewel.Web.client.controls.IntBox;
+import Jewel.Web.client.controls.LabelBox;
 import Jewel.Web.client.controls.Lookup;
 import Jewel.Web.client.controls.PasswordBox;
 import Jewel.Web.client.controls.StringBox;
@@ -253,9 +253,9 @@ public class DynaForm
 		case FormCtlObj.PWDBOX:
 			lctlAux = new PasswordBox();
 			break;
-
-		case FormCtlObj.BOOLDROPDOWN:
-			lctlAux = new BoolDropdown();
+	
+		case FormCtlObj.LABELBOX:
+			lctlAux = new LabelBox();
 			break;
 			
 		case FormCtlObj.TRICHECKBOX:

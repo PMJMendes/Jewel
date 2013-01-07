@@ -11,7 +11,7 @@ public class FormCtlObj
 	public static final int INTBOX = 1;
 	public static final int DECBOX = 2;
 	public static final int PWDBOX = 3;
-	public static final int BOOLDROPDOWN = 4;
+	public static final int LABELBOX = 4;
 	public static final int LOOKUP = 5;
 	public static final int VALUELOOKUP = 6;
 	public static final int CALENDAR = 7;
