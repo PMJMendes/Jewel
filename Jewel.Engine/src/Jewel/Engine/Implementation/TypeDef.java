@@ -71,7 +71,7 @@ public class TypeDef extends ObjectBase implements ITypeDef {
 					return "0";
 			}
 
-			if ((((String) pobjValue).equals("True"))
+			if ((((String) pobjValue).equalsIgnoreCase("True"))
 					|| (((String) pobjValue).equals("1")))
 				return "1";
 			else

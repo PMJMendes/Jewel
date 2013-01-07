@@ -16,6 +16,6 @@ public final class FieldTypeGUIDs
     public static final UUID FT_File    = UUID.fromString("376A167F-8EDC-4B2D-AF33-FCECA9E1AA7A");
     public static final UUID FT_Passwd  = UUID.fromString("1C7ED4A2-13AA-4C0E-A3DE-0F407B9EFCB0");
     public static final UUID FT_Value   = UUID.fromString("80691651-A4B8-4DC7-82DC-9EB500EEB739");
+    public static final UUID FT_LabelBox   = UUID.fromString("57405F48-D558-456B-8B4F-A13F00DE10F9");
     
-    public static final UUID FT_TriStateCheckbox = UUID.fromString("0B98E2E1-4131-4E04-A3F6-A13A00A9F38C");
 }
