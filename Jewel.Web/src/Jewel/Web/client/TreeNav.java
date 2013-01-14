@@ -1,16 +1,20 @@
 package Jewel.Web.client;
 
-import Jewel.Web.client.events.*;
-import Jewel.Web.interfaces.*;
-import Jewel.Web.shared.*;
+import Jewel.Web.client.events.JErrorEvent;
+import Jewel.Web.interfaces.TreeService;
+import Jewel.Web.interfaces.TreeServiceAsync;
+import Jewel.Web.shared.TreeNodeObj;
+import Jewel.Web.shared.TreeResponse;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.event.logical.shared.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
 
 public class TreeNav
 	extends Tree
@@ -194,12 +198,31 @@ public class TreeNav
 
 		litem = new TreeItem();
 		litem.setText(pobjNode.mstrText);
-
+		litem.setStylePrimaryName("jewel-treenav-parent");
+		
 		for ( i = 0; i < pobjNode.marrChildren.length; i++ )
-			litem.addItem(BuildItem(pobjNode.marrChildren[i]));
+			litem.addItem(BuildChildItem(pobjNode.marrChildren[i]));
 		pobjNode.marrChildren = null;
 
 		litem.setState(pobjNode.mbExpanded);
+		litem.setUserObject(pobjNode);
+
+		return litem;
+	}
+	
+	private TreeItem BuildChildItem(TreeNodeObj pobjNode)
+	{
+		TreeItem litem;
+		int i;
+
+		litem = new TreeItem();
+		litem.setText(pobjNode.mstrText);
+		litem.setStylePrimaryName("jewel-treenav-child");
+		
+		for ( i = 0; i < pobjNode.marrChildren.length; i++ )
+			litem.addItem(BuildChildItem(pobjNode.marrChildren[i]));
+		pobjNode.marrChildren = null;
+
 		litem.setUserObject(pobjNode);
 
 		return litem;

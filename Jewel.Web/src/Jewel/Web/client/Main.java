@@ -1,12 +1,20 @@
 package Jewel.Web.client;
 
-import Jewel.Web.client.events.*;
-import Jewel.Web.shared.*;
+import Jewel.Web.client.events.JErrorEvent;
+import Jewel.Web.shared.TreeResponse;
 
-import com.google.gwt.event.logical.shared.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class Main
 	extends Composite
@@ -36,9 +44,7 @@ public class Main
 		llbl = new Label("AGIR - Aplicação de Gestão de Intervenções e Reparações");
 		mpanelHeader.add(llbl);
 		llbl.getElement().getParentElement().setClassName("headerText");
-		limg = new Image("images/logo.png");
-		mpanelHeader.add(limg);
-		limg.getElement().getParentElement().setClassName("headerLogo");
+
 		louter.add(mpanelHeader);
 
 		mlblError = new Label(" ");
