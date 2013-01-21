@@ -204,7 +204,7 @@ public class TreeNav
 			litem.addItem(BuildChildItem(pobjNode.marrChildren[i]));
 		pobjNode.marrChildren = null;
 
-		litem.setState(pobjNode.mbExpanded);
+		//litem.setState(pobjNode.mbExpanded);
 		litem.setUserObject(pobjNode);
 
 		return litem;

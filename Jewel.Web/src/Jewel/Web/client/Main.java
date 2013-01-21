@@ -155,10 +155,14 @@ public class Main
 	
 	private void SetError(String pstrError)
 	{
-		if ( (pstrError == null) || (pstrError.equals("")) )
+		if ( (pstrError == null) || (pstrError.equals("")) ){
+			mlblError.setStylePrimaryName("messageLine");
 			mlblError.setText(" ");
-		else
+		}
+		else{
+			mlblError.setStylePrimaryName("messageLine-active");
 			mlblError.setText(pstrError);
+		}
 	}
 
 	private void InnerResize()

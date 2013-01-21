@@ -2,6 +2,7 @@
 /* Generic                                                                                           */
 /*****************************************************************************************************/
 
+
 html
 {
 	overflow: hidden;
@@ -9,10 +10,10 @@ html
 	width: 100%;
 }
 
-body
-{
+body {
 	overflow: hidden;
-	font: 8pt Verdana;
+	font-family: Arial, sans-serif;
+	font-size: .74em;
 	height: 100%;
 	width: 100%;
 	margin: 0;
@@ -24,11 +25,32 @@ img
 	display: block;
 }
 
-button
-{
-	font: 8pt Verdana;
+button {
+	padding: 4px 12px;
+	line-height: 14px;
+	font-weight: bold;
+	border: 1px solid #337fb2;
+	/*color: #0c161d;*/
+	color: white;
 	white-space: nowrap;
 	margin: 0;
+
+	background: #44b1f4; /* Old browsers */
+	background: -moz-linear-gradient(top,  #44b1f4 0%, #358fcc 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#44b1f4), color-stop(100%,#358fcc)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #44b1f4 0%,#358fcc 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #44b1f4 0%,#358fcc 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #44b1f4 0%,#358fcc 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #44b1f4 0%,#358fcc 100%); /* W3C */
+
+	-webkit-border-radius: 2px;
+    border-radius: 2px;
+}
+
+button:hover,
+button:focus {
+	background: #358fcc;
+	cursor: pointer;
 }
 
 /*****************************************************************************************************/
@@ -40,167 +62,232 @@ button
 	width: 100%;
 }
 
-.loginWrapper
-{
+.loginWrapper {
 	vertical-align: middle !important;
+	background: #e7f3fa;
 }
 
-.loginInner
-{
+.loginInner {
+	background: #fff;
 	margin: auto;
-	border: 1px solid black;
+	border: 1px solid #c7e3f3;
 	height: 0;
 	width: 0;
+
+	webkit-border-radius: 2px;
+	border-radius: 2px;
 }
 
 .loginError
 {
 	width: 214px;
 	text-align: center;
-	color: Red;
+	color: red;
 	padding: 10px 0 5px 0;
 	margin: auto;
 }
 
-.loginForm
-{
-	margin: 5px;
+.loginForm {
+	margin: 30px 50px 5px 50px;
 }
 
-.loginLabel
-{
-	width: 100px;
+.loginLabel {
+	padding-right: 15px;
+	text-align: right;
+	font-size: 12px;
+	font-weight: bold;
+	color: #247aa9;
 }
 
-.loginInput
-{
-	width: 100px;
-	font: 8pt Verdana;
+.loginInput {
+	width: 150px;
+	padding: 3px 0;
+	margin-bottom: 5px;
 }
 
 .loginDomains
 {
 	width: 100%;
-	font: 8pt Verdana;
+	
 }
 
-.loginButton
-{
+.loginButton {
 	height: 0;
 	text-align: center;
 	padding: 5px 0 10px 0;
+}
+
+.loginButton button.gwt-Button {
+	padding: 5px 100px 5px 100px;
+	margin-bottom: 35px;
+	font-size: 12px;
 }
 
 /*****************************************************************************************************/
 /* Main screen                                                                                       */
 /*****************************************************************************************************/
 
-.mainWrapper
-{
-}
-
-.mainHeader
-{
+.mainWrapper {
 	width: 100%;
 }
 
-.headerLogo
-{
+.mainHeader {
+	width: 100%;
+	background: #c5e3f7;
+	background: url('images/bg-header.png') top repeat;
+}
+
+.headerLogo {
 	width: 0;
 }
 
-.headerText
-{
+.gwt-Image {
+	padding: 10px 5px 10px 30px;
+}
+
+.headerText {
 	width: 100%;
 }
 
-.headerText div
-{
-	text-align: center;
+.headerText div {
+	text-align: left;
+	padding: 35px 30px 30px 50px;
+	color: #0d2e43;
 	font-weight: bold;
-	font-size: 20pt;
+	font-size: 1.9em;
+	margin-left: 35px;
+	text-shadow: 0 1px 0 #fff;
 }
 
-.messageLine
-{
+.messageLine,
+.messageLine-active {
 	width: 100%;
-	padding: 5px;
-	color: red;
+	padding: 7px 20px;
+	background: #bedffa;
+	color: #114666;
+	border-top: 1px solid #9dceed;
 }
 
-.mainContainer
-{
-	border-width: 1px 0 0 0;
-	border-style: solid;
-	border-color: black;
+.messageLine {
+	display: none;
+}
+
+.messageLine-active {
+	display: inline-block;
+}
+
+.mainContainer {
+	border-top: 1px solid #9dceed;
 	width: 100%;
 }
 
-.leftContainerWrapper
-{
+.leftContainerWrapper {
+	background: #dfeff9;
 }
 
-.leftContainer
-{
+.leftContainer {
 	overflow: auto;
+	background: #dfeff9;
+	width: 22em !important;
+	border: none;
+	margin-top: 20px;
 }
 
 .rightContainerWrapper
 {
 }
 
-.rightContainer
-{
-	border-width: 0 0 0 1px;
-	border-style: solid;
-	border-color: black;
-	padding: 2px;
+.rightContainer {
+	/*background: #F6F6F6;*/
+	background: #fff;
+	border-left: 1px solid #bedff3;
 	overflow: auto;
+	padding: 15px 0 0 20px;
 }
 
-.normalbk
-{
-	background-color: #87cefa;
+.normalbk {
+	background: #e7f3f3;
+	background: #dfeff9;
 }
 
-.alternate
-{
-	background-color: #d3eefd;
+.alternate {
+	background: #fff;
 }
 
 /*****************************************************************************************************/
 /* Tree Nav                                                                                          */
 /*****************************************************************************************************/
 
-.jewel-Tree
-{
+.jewel-Tree {
 	position: static !important;
+	/*background: #e8e8e8;*/
+	background: #e7f3f3;
+	background: #dfeff9;
 }
 
-.jewel-Tree table
-{
-	padding: 3px 3px 3px 7px;
+.jewel-Tree table {
+	padding: 10px 5px 2px 10px;
 }
 
-.jewel-Tree .gwt-TreeItem
-{
+.jewel-Tree div div div.gwt-TreeItem,
+.jewel-Tree .gwt-TreeItem {
+	color: #0c2f44;
+	font-weight: normal;
 	cursor: pointer;
 	display: block !important;
-	padding: 2px 0 1px 0;
+	padding: 5px 0;
 	white-space: nowrap;
 }
+
+.jewel-Tree .gwt-TreeItem:hover,
+.jewel-Tree .gwt-TreeItem:active,
+.jewel-Tree div div div.gwt-TreeItem:hover,
+.jewel-Tree div div div.gwt-TreeItem:active {
+	text-decoration: underline;
+}
+
+.jewel-treenav-parent table tr td .gwt-TreeItem,
+.jewel-Tree table tr td .gwt-TreeItem {
+	font-weight: bold;
+	color: #061823;
+	text-decoration: none !important;
+}
+
+/**/
+.jewel-treenav-parent table tr td .gwt-TreeItem:hover,
+.jewel-Tree table tr td .gwt-TreeItem:hover  {
+	color: #1d638d;
+}
+
+.jewel-treenav-child,
+.jewel-treenav-parent .gwt-TreeItem {
+	color: #0c2f44;
+	font-weight: normal;
+}
+
+.jewel-treenav-child:hover,
+.jewel-treenav-parent .gwt-TreeItem:hover {
+	color: #1f4963;
+}
+
+
+/*
+.jewel-treenav-child table tr td .gwt-TreeItem {
+	background: aqua;
+}*/
+
 
 /*****************************************************************************************************/
 /* Main View                                                                                         */
 /*****************************************************************************************************/
 
-.jewel-ClosableTabPanel
-{
+.jewel-ClosableTabPanel {
+	margin-top: 5px;
 }
 
-.jewel-ClosableTabBar
-{
+.jewel-ClosableTabBar {
 	width: 100%;
+	background: #dfeff9;
 }
 
 .jewel-ClosableTabBar-TabBar-wrapper
@@ -222,22 +309,14 @@ button
 {
 }
 
-.jewel-ClosableTabPanel .gwt-TabBarItem-wrapper
-{
-	background-color: white;
-	cursor: pointer;
-	border-width: 1px 0px 1px 1px;
-	border-style: solid;
-	border-color: black;
-}
 
 .jewel-ClosableTabPanel .gwt-TabBarItem
 {
 }
 
-.jewel-ClosableTabBar-LabelWrapper
-{
+.jewel-ClosableTabBar-LabelWrapper {
 	vertical-align: middle !important;
+	padding: 6px 4px 6px 6px;
 }
 
 .jewel-ClosableTabBar-Label
@@ -249,72 +328,60 @@ button
 {
 }
 
-.jewel-ClosableTabBar-CloseButton
-{
+.jewel-ClosableTabBar-CloseButton {
 	cursor: pointer;
-	margin: 2px;
+	margin: 7px 7px 0 3px; 
 }
 
-.jewel-ClosableTabPanel .gwt-TabBarItem-wrapper-selected
-{
-	cursor: default;
-	background-color: transparent;
-	border-color: black black transparent black;
+.jewel-ClosableTabPanel .gwt-TabBarItem-selected:focus {
+	outline: none;
 }
 
-.jewel-ClosableTabPanel .gwt-TabBarItem-selected
-{
+.jewel-ClosableTabPanel .gwt-TabBarRest-wrapper {
+	background-color: #fff;
+	border-bottom: 1px solid #bedff3;
+	border-left: 1px solid #bedff3;
 }
 
-.jewel-ClosableTabPanel .gwt-TabBarRest-wrapper
-{
-	background-color: white;
-	border-width: 0px 0px 1px 1px;
-	border-style: solid;
-	border-color: white black black black;
-}
-
-.jewel-ClosableTabBar-CloseAll-wrapper
-{
-	background-color: white;
-	border-width: 1px 0px 1px 0px;
-	border-style: solid;
-	border-color: white black black black;
+.jewel-ClosableTabBar-CloseAll-wrapper {
+	background-color: #fff;
+	border-bottom: 1px solid #E0E0E0;
 	width: 0px;
 	vertical-align: middle !important;
 }
 
 .jewel-ClosableTabBar-CloseAll
 {
-	font: 8pt Verdana;
+	
 	white-space: nowrap;
 }
 
-.jewel-ClosableTabPanel .gwt-TabPanelBottom
-{
-	border-width: 0 1px 1px 1px;
-	border-style: solid;
-	border-color: black;
+.jewel-ClosableTabPanel .gwt-TabPanelBottom {
+	/*border: 1px solid #cde6e6;*/
+	border: 1px solid #bedff3;
+	border-top: transparent;
 }
 
 /*****************************************************************************************************/
 /* DynaSearch                                                                                        */
 /*****************************************************************************************************/
 
-.jewel-DynaSearch
-{
+.jewel-DynaSearch {
+	background: #e9f4fa;
 }
 
-.jewel-DynaSearch-Search
-{
-	margin: 5px;
+.jewel-DynaSearch tr {
+	
 }
 
-.jewel-DynaSearch-Results
-{
-	border-width: 1px 0 0 0;
-	border-style: solid;
-	border-color: black;
+/* Button */
+.jewel-DynaSearch-Search {
+	margin: 5px 0 10px 25px;
+}
+
+.jewel-DynaSearch-Results {
+	border-top: 1px solid #bedff3;
+	height: 100% !important;	
 }
 
 /*****************************************************************************************************/
@@ -326,8 +393,7 @@ button
 	width: 100%;
 }
 
-.jewel-DynaViewTabBar
-{
+.jewel-DynaViewTabBar {
 	width: 100%;
 }
 
@@ -350,53 +416,68 @@ button
 {
 }
 
-.jewel-DynaView .gwt-TabBarItem-wrapper
-{
-	background-color: white;
+.jewel-ClosableTabPanel .gwt-TabBarItem-wrapper-selected {
+	cursor: default;
+	background-color: #e9f4fa;
+	border-bottom: 0px !important;
+	border-right: 0px;
+	padding: 6px 4px;
+	font-weight: bold;
+	color: #0c2f44;
+}
+
+.jewel-ClosableTabPanel .gwt-TabBarItem-wrapper {
 	cursor: pointer;
-	border-width: 1px 1px 1px 0;
-	border-style: solid;
-	border-color: black;
+	border: 1px solid #bedff3;
+	border-bottom: 1px solid #bedff3 !important;
+	padding: 6px 4px;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+.jewel-ClosableTabPanel .gwt-TabBarItem-selected:focus {
+	outline: none;
+}
+
+.jewel-DynaView .gwt-TabBarItem-wrapper {
+	background-color: #f9f9f9;
+	cursor: pointer;
+	border: 1px solid #bedff3;
+	border-left: 0;
+	padding: 6px 4px 6px 6px;
+	color: #222;
 	vertical-align: middle !important;
 	text-align: center;
 }
 
-.jewel-DynaView .gwt-TabBarItem
-{
+.jewel-DynaView .gwt-TabBarItem {
 	margin: 4px;
 }
 
-.jewel-DynaView .gwt-TabBarItem-wrapper-selected
-{
-	background-color: transparent;
+.jewel-DynaView .gwt-TabBarItem-wrapper-selected {
+	background: #e9f4fa;
+	border: 1px solid #bedff3;
+	border-bottom: none;
 	cursor: default;
-	border-color: black black transparent black;
 }
 
-.jewel-DynaView .gwt-TabBarItem-selected
-{
+.jewel-DynaView .gwt-TabBarItem-selected {
 }
 
-.jewel-DynaView .gwt-TabBarRest-wrapper
-{
+.jewel-DynaView .gwt-TabBarRest-wrapper {
 	background-color: transparent;
-	border-width: 1px 0 1px 0;
-	border-style: solid;
-	border-color: transparent black black black;
+	border-bottom: 1px solid #bedff3;
 }
 
-.jewel-DynaViewToolbar-Wrapper
-{
+.jewel-DynaViewToolbar-Wrapper {
 	width: 0;
-	border-width: 1px 0 1px 0;
-	border-style: solid;
-	border-color: transparent black black black;
+	border-bottom: 1px solid #bedff3;
 }
 
-.jewel-DynaViewToolbar
-{
+.jewel-DynaViewToolbar {
 	background-color: transparent;
-	margin: 0 5px 1px 0;
+	margin: 0 30px 1px 0;
+	border-top: 0;
 }
 
 .jewel-DynaView .gwt-TabPanelBottom
@@ -409,19 +490,33 @@ button
 /* DynaForm                                                                                          */
 /*****************************************************************************************************/
 
-.jewel-DynaForm
-{
+.jewel-DynaForm {
+	background: #e7f3f3;
+	background: #e9f4fa;
 }
 
-.jewel-DynaForm-Form
-{
+.jewel-DynaForm-Form {
 	table-layout: fixed;
+	padding: 20px;
 }
 
-.jewel-Control
-{
-	font: 8pt Verdana;
+table.jewel-DynaForm-Form .gwt-Label {
+	text-align: right;
+	padding-right: 5px;
+	color: #202C2C;
 }
+
+table.jewel-DynaForm-Form tr {
+	height: 30px;
+}
+
+table.jewel-DynaForm-Form td,
+.jewel-Control {
+	padding: 0;
+	line-height: 20px;
+}
+
+
 
 /*****************************************************************************************************/
 /* DynaFormActive                                                                                    */
@@ -441,112 +536,105 @@ button
 	width: 100%;
 }
 
-.jewel-DynaGrid-Main
-{
-	margin: 20px 5px 5px 5px;
+.jewel-DynaGrid-Main {
+	margin: 20px 5px 5px 25px;
 }
 
-.jewel-DynaGrid-Toolbar
-{
+.jewel-DynaGrid-Toolbar {
 	width: 100%;
+	padding-bottom: 10px;
 }
 
-.jewel-DynaGrid-Unsort-Wrapper
-{
-	width: 0px;
+
+
+.jewel-DynaGrid-Unsort-Wrapper {
+    width: 9% !important;
+    padding-bottom: 0 !important;
 }
 
-.jewel-DynaGrid-Refresh-Wrapper
-{
-	width: 0px;
+.jewel-DynaGrid-Refresh-Wrapper {
+	padding-bottom: 0 !important;
 }
 
-.jewel-DynaGrid-New-Wrapper
-{
-	text-align: right;
-	width: 100%;
+.jewel-DynaGrid-Refresh-Wrapper {
+    width: 100%;
 }
 
-.jewel-DynaGrid-Grid
-{
-	border-width: 1px;
-	border-style: solid;
-	border-color: black;
+.jewel-DynaGrid-Unsort-Wrapper button.gwt-Button,
+.jewel-DynaGrid-Refresh-Wrapper button.gwt-Button {
+	background: none;
+	border: none;
+	color: #0b76b7;
+	text-decoration: underline;
+	padding-bottom: 0;
+}
+
+.jewel-DynaGrid-Grid {
+	border: 1px solid #888;
 	border-collapse: collapse;
 	cursor: pointer;
 	empty-cells: show;
 }
 
-.jewel-DynaGrid-Grid-HeaderCell
-{
-	background-color: LightGrey;
+.jewel-DynaGrid-Grid-Row {
+	border: 1px solid #ccc;
+}
+
+.jewel-DynaGrid-Grid-Row:hover td {
+	background: #c7e3f3;
+	border: 1px solid #5caee1;
+}
+
+.jewel-DynaGrid-Grid-OddRow {
+	background: #fff;
+}
+
+.jewel-DynaGrid-Grid-EvenRow {
+	background: #e0f0f9;
+}
+
+.jewel-DynaGrid-Grid-HeaderCell {
+	background: #9dcfed;
 	text-align: center;
+	color: #0c2f44 !important;
+	font-weight: bold;
 }
 
-.jewel-DynaGrid-Grid-Row
-{
-	border-color: Black;
+.jewel-DynaGrid-Grid-HeaderCell:hover {
+	background: #bfdff3;
 }
 
-.jewel-DynaGrid-Grid-Row:hover td
-{
-	background-color: LightBlue;
-	border-color: Black;
-}
-
-.jewel-DynaGrid-Grid-OddRow
-{
-	background-color: White;
-}
-
-.jewel-DynaGrid-Grid-EvenRow
-{
-	background-color: LightCyan;
-}
-
-.jewel-DynaGrid-Grid-HeaderCell:hover
-{
-	background-color: LightBlue;
-}
-
-.jewel-DynaGrid-Grid-Selected
-{
-	background-color: #316ac5;
-	color: White;
-	border-color: Black;
+.jewel-DynaGrid-Grid-Selected,
+.jewel-DynaGrid-Grid-Selected:hover td {
+	background-color: #f9f6df;
+	color: #509f9f;
 	cursor: default;
 }
 
-.jewel-DynaGrid-Grid-Selected:hover td
-{
-	background-color: #316ac5;
-	color: White;
-	border-color: Black;
-	cursor: default;
-}
-
-.jewel-DynaGrid-Grid-CellDiv
-{
+.jewel-DynaGrid-Grid-CellDiv {
 	white-space: nowrap;
 	overflow: hidden;
-	height: 13px;
+	padding: 8px;
+	color: #111;
 }
 
-.jewel-DynaGrid-Grid td
-{
-	border-width: 1px;
-	border-color: Black;
-	border-style: solid;
+.jewel-DynaGrid-Grid td {
+	padding: 2px 0;
+	border: 1px solid #5caee1;
 }
 
-.jewel-DynaGrid-Pagebar
-{
+.jewel-DynaGrid-Pagebar {
 	width: 100%;
+	margin-top: 8px;
+	padding-bottom: 20px;
 }
 
-.jewel-DynaGrid-First-Wrapper
-{
+.jewel-DynaGrid-First-Wrapper {
 	width: 0px;
+}
+
+.jewel-DynaGrid-First-Wrapper button.gwt-Button {
+	margin-right: 5px;
 }
 
 .jewel-DynaGrid-Prev-Wrapper
@@ -554,14 +642,14 @@ button
 	width: 0px;
 }
 
-.jewel-DynaGrid-PageText-Wrapper
-{
+.jewel-DynaGrid-PageText-Wrapper {
 	width: 100%;
+	padding-top: 5px;
 }
 
-.jewel-DynaGrid-PageText
-{
+.jewel-DynaGrid-PageText {
 	text-align: center;
+	color: #555;
 }
 
 .jewel-DynaGrid-Next-Wrapper
@@ -574,27 +662,53 @@ button
 	width: 0px;
 }
 
-.jewel-DynaGrid-Editor
-{
-	border-width: 1px 0 0 0;
-	border-style: solid;
-	border-color: black;
-	padding: 20px 0 0 0;
+.jewel-DynaGrid-Last-Wrapper button.gwt-Button {
+	margin-left: 5px;
+}
+
+.jewel-DynaGrid-Editor {
+	border-top: 1px solid #bedff3;
+	padding: 30px 0 0 0;
 }
 
 /*****************************************************************************************************/
 /* Lookup                                                                                            */
 /*****************************************************************************************************/
 
-.jewel-Lookup-Display
-{
-	font: 8pt Verdana;
+.jewel-Lookup-Display,
+input.jewel-Control.jewel-StringBox {
+	/*line-height: 20px;*/
+	padding: 4px 0 5px 0;
+	margin-top: 2px;
+	font: 1em Arial, sans-serif;
+	border: 1px solid #c0c0c0;
+	
+	/* -webkit-border-radius: 2px;
+    border-radius: 2px; */
 }
 
-.jewel-Lookup-Button
-{
+.jewel-Lookup-Button {
 	cursor: pointer;
-	border: 2px outset white;
+	background: #ddd;
+	border: 1px solid #bbb;
+	border-left: 0px;
+	padding: 5px 6px 6px 6px;
+	margin-top: 2px !important;
+
+	-webkit-border-radius: 0 2px 2px 0;
+    border-radius: 0 2px 2px 0;
+}
+
+.jewel-Datebox-Button {
+	cursor: pointer;
+	background: #ddd;
+	border: 1px solid #bbb;
+	border-left: 0px;
+	padding: 5px 6px 6px 6px;
+	margin-top: 2px !important;
+
+	-webkit-border-radius: 0 2px 2px 0;
+    border-radius: 0 2px 2px 0;
 }
 
 /*****************************************************************************************************/
@@ -614,24 +728,24 @@ button
 {
 }
 
-.jewel-LookupPopup .dialogTopCenterInner
-{
-	background-color: blue;
-	color: white;
-	font: bold 10pt "Trebuchet MS";
-	border: 1px solid gray;
-	padding: 2px 2px 2px 5px;
+.jewel-LookupPopup .dialogTopCenterInner {
+	color: #fff;
+	font-weight: bold;
+	font-family: inherit;
+	background: #5baee1;
+	border: 1px solid #3a9edb;
+	padding: 5px;
 }
 
-.jewel-LookupPopup .Caption
-{
+.jewel-LookupPopup .Caption {
 	cursor: default;
+	margin-left: 20px;
 }
 
-.jewel-LookupPopup .dialogMiddleCenter
-{
+.jewel-LookupPopup .dialogMiddleCenter {
 	vertical-align: top;
-	background-color: #87cefa;
+	background-color: #F6F6F6;
+	background-color: #e7f3f3;
 }
 
 .jewel-LookupPopup .dialogContent
@@ -669,15 +783,17 @@ button
 /* Datebox                                                                                           */
 /*****************************************************************************************************/
 
-.jewel-Datebox-Display
-{
-	font: 8pt Verdana;
+.jewel-Datebox-Display {
+	padding: 4px 0 5px 0;
+	outline: none;
+	background: #f0f0f0;
+	border: 1px solid #c0c0c0;
 }
 
-.jewel-Datebox-Button
-{
-	cursor: pointer;
-	border: 2px outset white;
+input.Jewel-Control.Jewel-IntBox {
+	padding: 4px 0 5px 0;
+	outline: none;
+	background: #888;
 }
 
 /*****************************************************************************************************/
@@ -850,18 +966,18 @@ button
 /* MFileXfer                                                                                         */
 /*****************************************************************************************************/
 
-.Jewel-MFileXfer-Attach
-{
+.Jewel-MFileXfer-Attach {
 	width: 58px;
+	margin-left: 10px;
 }
 
-.Jewel-MFileXfer-View
-{
+.Jewel-MFileXfer-View {
 	width: 49px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
-.Jewel-MFileXfer-Clear
-{
+.Jewel-MFileXfer-Clear {
 	width: 53px;
 }
 
@@ -1169,7 +1285,7 @@ button
 
 .jewel-enhanced-Control
 {
-	font: 8pt Verdana;
+	
 }
 
 .jewel-enhanced-DatePopup-Hours

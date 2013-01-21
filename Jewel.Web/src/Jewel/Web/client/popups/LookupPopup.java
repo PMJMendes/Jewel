@@ -1,14 +1,23 @@
 package Jewel.Web.client.popups;
 
-import Jewel.Web.client.*;
-import Jewel.Web.client.controls.*;
-import Jewel.Web.client.events.*;
-import Jewel.Web.interfaces.*;
-import Jewel.Web.shared.*;
+import Jewel.Web.client.DynaSearch;
+import Jewel.Web.client.Jewel_Web;
+import Jewel.Web.client.controls.Lookup;
+import Jewel.Web.client.events.CancelEvent;
+import Jewel.Web.client.events.InitEvent;
+import Jewel.Web.client.events.JErrorEvent;
+import Jewel.Web.client.events.SelectEvent;
+import Jewel.Web.interfaces.LookupService;
+import Jewel.Web.interfaces.LookupServiceAsync;
+import Jewel.Web.shared.LookupResponse;
+import Jewel.Web.shared.ParamInfo;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class LookupPopup
 	extends DialogBox
@@ -31,8 +40,9 @@ public class LookupPopup
 	{
 		super(false, true);
 
-		VerticalPanel lvert;
+		ScrollPanel sPanel = new ScrollPanel();
 
+		VerticalPanel lvert;
 		mrefOwner = prefOwner;
 
 		mstrFormID = null;
@@ -54,7 +64,10 @@ public class LookupPopup
 		msrcMain.SetForPopup();
 		lvert.add(msrcMain);
 
-		setWidget(lvert);
+		sPanel.add(lvert);
+		sPanel.setHeight("800px");
+
+		setWidget(sPanel);	
 		
 		msrcMain.addInitHandler(new InitEvent.Handler()
 		{
