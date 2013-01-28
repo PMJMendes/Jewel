@@ -256,6 +256,22 @@ public class Entity
 		return lstrAux;
 	}
 
+	public String SQLForSelectNew(Timestamp pdtMark)
+	{
+		if ( pdtMark == null )
+			return SQLForSelectAll();
+
+		return SQLForSelect("[t1]") + " WHERE [t1].[_TSCreate] > '" + pdtMark.toString() + "'";
+	}
+
+	public String SQLForSelectChanged(Timestamp pdtMark)
+	{
+		if ( pdtMark == null )
+			return SQLForSelectAll();
+
+		return SQLForSelect("[t1]") + " WHERE [t1].[_TSUpdate] > '" + pdtMark.toString() + "'";
+	}
+
 	public UUID Insert(SQLServer pdb, java.lang.Object[] parrData)
 		throws SQLException, JewelEngineException
 	{
@@ -325,6 +341,18 @@ public class Entity
     {
         return pdb.OpenRecordset(SQLForSelectForReports(parrColAliases, parrCriteria, parrSorts));
     }
+
+	public ResultSet SelectNew(SQLServer pdb, Timestamp pdtMark)
+		throws SQLException
+	{
+		return pdb.OpenRecordset(SQLForSelectNew(pdtMark));
+	}
+
+	public ResultSet SelectChanged(SQLServer pdb, Timestamp pdtMark)
+		throws SQLException
+	{
+		return pdb.OpenRecordset(SQLForSelectChanged(pdtMark));
+	}
 
 	public void CreateTable(SQLServer pdb)
 		throws SQLException, JewelEngineException
