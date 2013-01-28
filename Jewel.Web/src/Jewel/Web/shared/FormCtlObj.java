@@ -17,6 +17,7 @@ public class FormCtlObj
 	public static final int CALENDAR = 7;
 	public static final int FILEXFER = 8;
 	public static final int TRICHECKBOX = 9;
+	public static final int DROPDOWN = 10;
 
 	public int mlngType;
 	public boolean mbCanBeNull;
@@ -27,4 +28,5 @@ public class FormCtlObj
 	public int mlngColSpan;
 	public String mstrParamTag;
 	public String mstrFormID;
+	public String mstrObjID;
 }

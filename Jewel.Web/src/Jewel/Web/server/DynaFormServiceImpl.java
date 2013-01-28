@@ -129,6 +129,14 @@ public class DynaFormServiceImpl
         	return lobjAux;
         }
 
+        if (FieldTypeGUIDs.FT_DropdownList.equals(prefField.getType()))
+        {
+    		lobjAux = new FormCtlObj();
+        	lobjAux.mlngType = FormCtlObj.DROPDOWN;
+			lobjAux.mstrObjID = prefField.getObjMemberRef().getRefersToObj().toString();
+        	return lobjAux;
+        }
+
         if (FieldTypeGUIDs.FT_File.equals(prefField.getType()))
         {
     		lobjAux = new FormCtlObj();

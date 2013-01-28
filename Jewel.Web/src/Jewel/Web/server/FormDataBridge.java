@@ -504,6 +504,9 @@ public class FormDataBridge
         if (FieldTypeGUIDs.FT_Lookup.equals(prefField.getType()))
         	return UUID.fromString(pstrValue.split("!", 2)[0]);
 
+        if (FieldTypeGUIDs.FT_DropdownList.equals(prefField.getType()))
+        	return UUID.fromString(pstrValue.split("!", 2)[0]);
+
         if (FieldTypeGUIDs.FT_File.equals(prefField.getType()))
         	return FileServiceImpl.GetFileXferStorage().get(UUID.fromString(pstrValue.split("!", 2)[0]));
 
@@ -563,6 +566,20 @@ public class FormDataBridge
 					return ((UUID)pobjValue).toString() + "!" +
 							Engine.GetWorkInstance(Engine.FindEntity(pidNSpace,
 							Form.GetInstance(prefField.getSearchForm()).getEditedObject().getKey()),
+							(UUID)pobjValue).getLabel();
+			}
+        	catch (Throwable e)
+        	{
+        		throw new JewelWebException(e.getMessage(), e);
+			}
+        }
+
+        if (FieldTypeGUIDs.FT_DropdownList.equals(prefField.getType()))
+        {
+			try
+        	{
+					return ((UUID)pobjValue).toString() + "!" +
+							Engine.GetWorkInstance(Engine.FindEntity(pidNSpace, prefField.getObjMemberRef().getRefersToObj()),
 							(UUID)pobjValue).getLabel();
 			}
         	catch (Throwable e)

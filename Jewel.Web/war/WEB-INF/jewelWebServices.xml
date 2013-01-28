@@ -46,6 +46,10 @@
 		<servlet-name>ReportServiceImpls</servlet-name>
 		<servlet-class>Jewel.Web.server.ReportServiceImpl</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>TypifiedListServiceImpls</servlet-name>
+		<servlet-class>Jewel.Web.server.TypifiedListServiceImpl</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>LoginServiceImpls</servlet-name>
@@ -94,4 +98,8 @@
 	<servlet-mapping>
 		<servlet-name>ReportServiceImpls</servlet-name>
 		<url-pattern>/jewel_web/report</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TypifiedListServiceImpls</servlet-name>
+		<url-pattern>/jewel_web/list</url-pattern>
 	</servlet-mapping>

@@ -5,6 +5,7 @@ import Jewel.Web.client.controls.DecBox;
 import Jewel.Web.client.controls.FileCtl;
 import Jewel.Web.client.controls.IntBox;
 import Jewel.Web.client.controls.LabelBox;
+import Jewel.Web.client.controls.DropdownList;
 import Jewel.Web.client.controls.Lookup;
 import Jewel.Web.client.controls.PasswordBox;
 import Jewel.Web.client.controls.StringBox;
@@ -264,6 +265,10 @@ public class DynaForm
 
 		case FormCtlObj.LOOKUP:
 			lctlAux = new Lookup(prefControl.mstrFormID, mstrNameSpace, mstrFormID);
+			break;
+
+		case FormCtlObj.DROPDOWN:
+			lctlAux = new DropdownList(mstrNameSpace, prefControl.mstrObjID);
 			break;
 
 		case FormCtlObj.CALENDAR:
