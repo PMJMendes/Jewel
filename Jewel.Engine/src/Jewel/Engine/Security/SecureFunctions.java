@@ -114,7 +114,7 @@ public final class SecureFunctions
 	        sw.close();
 	        encStream.close();
 	        buffer = ms.toByteArray();
-	        buffer2 = new byte[16];
+	        buffer2 = new byte[16]; //JMMM: Esta truncagem apareceu por causa da migração de C# para Java. Não tirar!
 	        System.arraycopy(buffer, 0, buffer2, 0, 16);
 	        ms.close();
 		}
