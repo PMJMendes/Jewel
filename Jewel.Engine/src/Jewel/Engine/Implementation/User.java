@@ -79,13 +79,14 @@ public class User
 	}
 
     public boolean CheckPassword(Password pobjPwd)
+    	throws JewelEngineException
     {
         if (getAt(2) != null)
         {
         	if ( getAt(2) instanceof Password )
-        		return ((Password)getAt(2)).equals(pobjPwd);
+				return ((Password)getAt(2)).equals(pobjPwd) || ((Password)getAt(2)).equalsShort(pobjPwd);
 
-            return ((String)getAt(2)).equals(pobjPwd.GetEncrypted());
+            return ((String)getAt(2)).equals(pobjPwd.GetEncrypted()) || ((String)getAt(2)).equals(pobjPwd.getShort());
         }
 
         return pobjPwd.GetEncrypted().equals("");

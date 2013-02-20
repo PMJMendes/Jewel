@@ -1,16 +1,25 @@
 package Jewel.Mobile.server;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.UUID;
 
-import Jewel.Engine.*;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.DataAccess.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.Security.*;
-import Jewel.Mobile.interfaces.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Engine.Engine;
+import Jewel.Engine.Constants.EntityGUIDs;
+import Jewel.Engine.Constants.Miscellaneous;
+import Jewel.Engine.Constants.NameSpaceGUIDs;
+import Jewel.Engine.Constants.ObjectGUIDs;
+import Jewel.Engine.DataAccess.MasterDB;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.NameSpace;
+import Jewel.Engine.Implementation.User;
+import Jewel.Engine.Interfaces.IEntity;
+import Jewel.Engine.Interfaces.INameSpace;
+import Jewel.Engine.Security.Password;
+import Jewel.Mobile.interfaces.LoginService;
+import Jewel.Mobile.shared.JewelMobileException;
+import Jewel.Mobile.shared.LoginDomain;
+import Jewel.Mobile.shared.LoginResponse;
 
 public class LoginServiceImpl
 	extends EngineImplementor
@@ -88,6 +97,8 @@ public class LoginServiceImpl
         java.lang.Object[] larrParams;
         UUID lidUser;
         UUID lidNSpace;
+        User lobjUser;
+        boolean lbSave;
 
         lidUser = null;
         lidNSpace = UUID.fromString(pobjResp.mstrDomain);
@@ -107,20 +118,45 @@ public class LoginServiceImpl
 	
 	        lrefUser = Entity.GetInstance(Engine.FindEntity(lidNSpace, ObjectGUIDs.O_User));
 	
-	        ldb = new MasterDB();
-	        lrs = lrefUser.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+	        lidUser = null;
+	        lobjUser = null;
+	        lbSave = false;
 	
+	        ldb = new MasterDB();
+
+	        lrs = lrefUser.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
 	        if (lrs.next())
 	        {
 	            lidUser = UUID.fromString(lrs.getString(1));
 	            if (lrs.next())
 	                throw new JewelMobileException("Unexpected: Username is not unique!");
 	        }
-	        else
-	            throw new JewelMobileException("Invalid Username or Password!");
-	
 	        lrs.close();
+
+	        if ( (lidUser == null) && (larrParams[1] != null) )
+	        {
+				((Password)larrParams[1]).setShort(pobjResp.mstrPasswd);
+				lrs = lrefUser.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
+				if (lrs.next())
+				{
+					lobjUser = (User)Engine.GetWorkInstance(Engine.FindEntity(lidNSpace, ObjectGUIDs.O_User), lrs);
+					lidUser = lobjUser.getKey();
+					if (lrs.next())
+						throw new JewelMobileException("Unexpected: Username is not unique!");
+					lbSave = true;
+				}
+				lrs.close();
+				if ( lbSave )
+				{
+					lobjUser.setAt(Jewel.Engine.Constants.Miscellaneous.Password_In_User, new Password(pobjResp.mstrPasswd, false));
+					lobjUser.SaveToDb(ldb);
+				}
+	        }
+
 	        ldb.Disconnect();
+
+	        if ( lidUser == null )
+	            throw new JewelMobileException("Invalid Username or Password!");
 	
 	        getSession().setAttribute("UserID", lidUser);
 	        getSession().setAttribute("UserNSpace", lidNSpace);

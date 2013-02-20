@@ -93,7 +93,7 @@ public final class SecureFunctions
 	    return BitConverter(lbuffer);
 	}
 
-    public static String Encrypt(String pstrInput)
+    public static String EncryptShort(String pstrInput)
     	throws JewelEngineException
     {
     	ByteArrayOutputStream ms;
@@ -124,6 +124,37 @@ public final class SecureFunctions
 		}
 
         return BitConverter(buffer2);
+    }
+
+    public static String Encrypt(String pstrInput)
+    	throws JewelEngineException
+    {
+    	ByteArrayOutputStream ms;
+    	CipherOutputStream encStream;
+    	OutputStreamWriter sw;
+    	byte[] buffer;
+
+        InitKey();
+
+        ms = new ByteArrayOutputStream();
+        encStream = new CipherOutputStream(ms, grefKeyEnc);
+        sw = new OutputStreamWriter(encStream);
+
+        try
+        {
+			sw.write(pstrInput);
+			sw.write("\r\n");
+	        sw.close();
+	        encStream.close();
+	        buffer = ms.toByteArray();
+	        ms.close();
+		}
+        catch (IOException e)
+        {
+        	throw new JewelEngineException("Unexpected IO errors in Security Encrypt", e);
+		}
+
+        return BitConverter(buffer);
     }
 
     public static String Decrypt(String pstrInput)
