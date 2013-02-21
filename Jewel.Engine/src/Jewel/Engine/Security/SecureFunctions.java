@@ -10,17 +10,14 @@ import Jewel.Engine.SysObjects.JewelEngineException;
 public final class SecureFunctions
 {
 	private static final char[] garrHex = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-    private static Cipher grefKeyEnc, grefKeyDec;
 
-	private static void InitKey()
-		throws JewelEngineException
+    private static Cipher getCipher(int opMode)
+    	throws JewelEngineException
     {
 		DESKeySpec lspec;
 		IvParameterSpec liv;
 		Key lkey;
-
-        if (grefKeyEnc != null)
-            return;
+		Cipher lres;
 
         try
         {
@@ -28,16 +25,27 @@ public final class SecureFunctions
         	liv = new IvParameterSpec(new byte[] {6, 78, 98, 34, 1, 5, 7, 96});
         	lkey = SecretKeyFactory.getInstance("DES").generateSecret(lspec);
 
-	        grefKeyEnc = Cipher.getInstance("DES/CBC/PKCS5Padding");
-	        grefKeyEnc.init(Cipher.ENCRYPT_MODE, lkey, liv);
-	
-	        grefKeyDec = Cipher.getInstance("DES/CBC/PKCS5Padding");
-	        grefKeyDec.init(Cipher.DECRYPT_MODE, lkey, liv);
+	        lres = Cipher.getInstance("DES/CBC/PKCS5Padding");
+	        lres.init(opMode, lkey, liv);
         }
         catch (Throwable e)
         {
-        	throw new JewelEngineException("Unexpected errors in inner Security InitKey", e);
+        	throw new JewelEngineException("Unexpected errors in inner Security getCipher", e);
         }
+
+        return lres;
+    }
+
+    private static Cipher getEncCipher()
+    	throws JewelEngineException
+    {
+    	return getCipher(Cipher.ENCRYPT_MODE);
+    }
+
+    private static Cipher getDecCipher()
+    	throws JewelEngineException
+    {
+    	return getCipher(Cipher.DECRYPT_MODE);
     }
 
 	private static String BitConverter(byte[] larrIn)
@@ -101,10 +109,8 @@ public final class SecureFunctions
     	OutputStreamWriter sw;
     	byte[] buffer, buffer2;
 
-        InitKey();
-
         ms = new ByteArrayOutputStream();
-        encStream = new CipherOutputStream(ms, grefKeyEnc);
+        encStream = new CipherOutputStream(ms, getEncCipher());
         sw = new OutputStreamWriter(encStream);
 
         try
@@ -134,10 +140,8 @@ public final class SecureFunctions
     	OutputStreamWriter sw;
     	byte[] buffer;
 
-        InitKey();
-
         ms = new ByteArrayOutputStream();
-        encStream = new CipherOutputStream(ms, grefKeyEnc);
+        encStream = new CipherOutputStream(ms, getEncCipher());
         sw = new OutputStreamWriter(encStream);
 
         try
@@ -163,12 +167,10 @@ public final class SecureFunctions
         int i, llngLen, j;
     	byte[] buffer;
     	ByteArrayInputStream ms;
-    	CipherInputStream encStream;
+    	CipherInputStream decStream;
     	InputStreamReader sr;
     	BufferedReader in;
     	String val;
-
-        InitKey();
 
         llngLen = (pstrInput.length() + 1) / 3;
 
@@ -183,16 +185,16 @@ public final class SecureFunctions
         try
         {
 	        ms = new ByteArrayInputStream(buffer);
-	        encStream = new CipherInputStream(ms, grefKeyDec);
-	        sr = new InputStreamReader(encStream);
+	        decStream = new CipherInputStream(ms, getDecCipher());
+	        sr = new InputStreamReader(decStream);
 	        in = new BufferedReader(sr);
 	        val = in.readLine();
 	        in.close();
 	        sr.close();
-	        encStream.close();
+	        decStream.close();
 	        ms.close();
 		}
-        catch (IOException e)
+        catch (Throwable e)
         {
         	throw new JewelEngineException("Unexpected IO errors in Security Decrypt", e);
 		}
