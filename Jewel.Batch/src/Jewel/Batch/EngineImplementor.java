@@ -174,8 +174,10 @@ public class EngineImplementor
         mrefCurrentNSpace = mrefPushedNSpace;
         mrefPushedUser = null;
         mrefPushedNSpace = null;
+        mbPushed = false;
 
-        mrefCurrentNSpace.DoLogin(mrefCurrentUser.getKey(), true);
+		if ( mrefCurrentUser != null )
+			mrefCurrentNSpace.DoLogin(mrefCurrentUser.getKey(), true);
 	}
 
 	public String getCurrentPath()
