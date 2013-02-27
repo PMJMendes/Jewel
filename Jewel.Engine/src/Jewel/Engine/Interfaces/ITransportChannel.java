@@ -14,5 +14,5 @@ public interface ITransportChannel
     String getPassword() throws JewelEngineException;
     String[] ListFiles(String pstrLocation, String pstrFilter) throws JewelEngineException;
     FileXfer GetFile(String pstrLocation, String pstrFileName) throws JewelEngineException;
-    void PutFile(String pstrLocation, FileXfer pobjFile) throws JewelEngineException;
+    UUID PutFile(String pstrLocation, FileXfer pobjFile) throws JewelEngineException;
 }

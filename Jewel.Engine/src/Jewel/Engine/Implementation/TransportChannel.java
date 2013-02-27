@@ -119,7 +119,7 @@ public class TransportChannel
         return lxferAux;
     }
 
-    public void PutFile(String pstrLocation, FileXfer pobjFile)
+    public UUID PutFile(String pstrLocation, FileXfer pobjFile)
     	throws JewelEngineException
     {
         UUID lidEntity;
@@ -158,6 +158,8 @@ public class TransportChannel
         {
         	throw new JewelEngineException(e.getMessage(), e);
 		}
+
+        return lobjAux.getKey();
     }
 
     public void DeleteFile(String pstrLocation, String pstrFileName)
@@ -471,21 +473,24 @@ public class TransportChannel
 //    }
 
     private void PutFileFileSys(String pstrLocation, FileXfer pobjFile)
+    	throws JewelEngineException
     {
-//        FileStream lstream;
-//        BinaryWriter lwriter;
-//        SharedFolders lsh;
-//
-//        lsh = new SharedFolders(Address, Login, Password);
-//
-//        pstrLocation = ((string)(Address + "\\" + pstrLocation.replace("\\\\", "\\") + "\\" + pobjFile.FileName)).Replace("//", "/").Replace("//", "/");
-//
-//        lstream = new FileStream(pstrLocation, FileMode.Create, FileAccess.Write);
-//        lwriter = new BinaryWriter(lstream);
-//        lwriter.Write(pobjFile.Data, 0, pobjFile.Length);
-//        lwriter.Flush();
-//        lwriter.Close();
-//
-//        lsh.Close();
+        FileOutputStream lstream;
+        BufferedOutputStream lwriter;
+
+        pstrLocation = ((String)(getAddress() + "\\" + pstrLocation.replace("\\\\", "\\") + "\\" + pobjFile.getFileName())).replace("//", "/").replace("//", "/");
+
+        try
+        {
+			lstream = new FileOutputStream(pstrLocation/*, FileMode.Create, FileAccess.Write*/);
+	        lwriter = new BufferedOutputStream(lstream);
+	        lwriter.write(pobjFile.getData());
+	        lwriter.flush();
+	        lwriter.close();
+		}
+        catch (Throwable e)
+        {
+        	throw new JewelEngineException(e.getMessage(), e);
+		}
     }
 }

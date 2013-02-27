@@ -123,18 +123,18 @@ public class FileSpec
     	throws JewelEngineException
     {
     	ByteArrayOutputStream lstream;
-        OutputStreamWriter lwriter;
+        BufferedWriter lbuf;
         Workbook lobjWBook;
 
         if (getFormat().equals(FileFormatTypeGUIDs.FFT_Flat))
         {
             lstream = new ByteArrayOutputStream();
-            lwriter = new OutputStreamWriter(lstream, Charset.forName("Windows-1252"));
-            BuildFlat(new BufferedWriter(lwriter), pobjFile);
+            lbuf = new BufferedWriter(new OutputStreamWriter(lstream, Charset.forName("Windows-1252")));
+            BuildFlat(lbuf, pobjFile);
             try
             {
-				lwriter.flush();
-	            return new FileXfer((int)lstream.size(), "text/plain", pstrFName, new ByteArrayInputStream(lstream.toByteArray()));
+				lbuf.flush();
+	            return new FileXfer(lstream.size(), "text/plain", pstrFName, new ByteArrayInputStream(lstream.toByteArray()));
 			}
             catch (Exception e)
             {
