@@ -23,7 +23,7 @@ public class BatchTask
 	public void Initialize()
 		throws JewelEngineException
 	{
-		mrefApp = Application.GetInstance((UUID)getAt(5));
+		mrefApp = Application.GetInstance((UUID)getAt(4));
 	}
 
 	public void DoRun(UUID pidNSpace)

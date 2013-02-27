@@ -10,5 +10,6 @@ public interface IUser
     String getFullName();
     String getDisplayName();
     String getUserName();
+    Password getPassword() throws JewelEngineException;
     boolean CheckPassword(Password pobjPwd) throws JewelEngineException;
 }

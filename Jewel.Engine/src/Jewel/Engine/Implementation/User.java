@@ -78,6 +78,25 @@ public class User
         return (String)getAt(1);
 	}
 
+	public Password getPassword()
+		throws JewelEngineException
+	{
+		java.lang.Object lobjPwd;
+
+		lobjPwd = getAt(Miscellaneous.Password_In_User);
+
+		if ( lobjPwd == null )
+			return null;
+
+		if ( lobjPwd instanceof Password )
+			return (Password)lobjPwd;
+
+		if ( lobjPwd instanceof String )
+			return new Password((String)lobjPwd, true);
+
+		throw new JewelEngineException("Unexpected incompatible type in getPassword");
+	}
+
     public boolean CheckPassword(Password pobjPwd)
     	throws JewelEngineException
     {
