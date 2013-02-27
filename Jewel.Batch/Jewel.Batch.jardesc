@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="Jewel.Batch/Jewel.Batch.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Jewel.Batch/Jewel.Batch.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" mainClassHandleIdentifier="=Jewel.Batch/src&lt;Jewel.Batch{JewelBatchRunner.java[JewelBatchRunner" manifestLocation="/Jewel.Batch/Jewel.Batch.Manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=Jewel.Batch/src"/>
+    </selectedElements>
+</jardesc>
