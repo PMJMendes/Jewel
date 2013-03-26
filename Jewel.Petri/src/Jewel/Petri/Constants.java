@@ -36,6 +36,7 @@ public class Constants
     public static final int FKScript_In_Process = 0;
     public static final int FKData_In_Process = 1;
     public static final int FKParent_In_Process = 3;
+    public static final int IsRunning_In_Process = 4;
     public static final int FKClass_In_Script = 2;
     public static final int TopLevel_In_Script = 3;
     public static final int FKProcess_In_Log = 0;
