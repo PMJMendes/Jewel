@@ -368,6 +368,7 @@ button:focus {
 
 .jewel-DynaSearch {
 	background: #e9f4fa;
+	padding-bottom: 35px !important;
 }
 
 .jewel-DynaSearch tr {
@@ -606,7 +607,7 @@ table.jewel-DynaForm-Form td,
 
 .jewel-DynaGrid-Grid-Selected,
 .jewel-DynaGrid-Grid-Selected:hover td {
-	background-color: #f9f6df;
+	background-color: #faf26d;
 	color: #509f9f;
 	cursor: default;
 }
@@ -616,6 +617,7 @@ table.jewel-DynaForm-Form td,
 	overflow: hidden;
 	padding: 8px;
 	color: #111;
+	width: 100px !important;
 }
 
 .jewel-DynaGrid-Grid td {
