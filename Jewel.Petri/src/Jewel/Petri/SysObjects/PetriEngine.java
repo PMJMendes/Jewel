@@ -138,4 +138,130 @@ public class PetriEngine
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 	}
+
+	public static void StartupByScript(UUID pidNameSpace, UUID pidScript)
+		throws JewelPetriException
+	{
+		IEntity lrefProcesses;
+		MasterDB ldbRead;
+		MasterDB ldbWrite;
+		ResultSet lrsProcesses;
+		PNProcess lobjProc;
+		boolean b;
+
+		try
+		{
+			lrefProcesses = Entity.GetInstance(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNProcess));
+			Engine.pushNameSpace(pidNameSpace);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldbWrite = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			try { Engine.popNameSpace(); } catch (JewelEngineException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldbRead = new MasterDB();
+		}
+		catch (Throwable e)
+		{
+			try { ldbWrite.Disconnect(); } catch (Throwable e1) {}
+			try { Engine.popNameSpace(); } catch (JewelEngineException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			lrsProcesses = lrefProcesses.SelectByMembers(ldbRead, new int[] {0, 4}, new java.lang.Object[] {pidScript, false}, null);
+		}
+		catch (Throwable e)
+		{
+			try { ldbRead.Disconnect(); } catch (Throwable e1) {}
+			try { ldbWrite.Disconnect(); } catch (Throwable e1) {}
+			try { Engine.popNameSpace(); } catch (JewelEngineException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			while ( lrsProcesses.next() )
+			{
+				lobjProc = PNProcess.GetInstance(pidNameSpace, lrsProcesses);
+
+				b = true;
+				ldbWrite.BeginTrans();
+				try
+				{
+					lobjProc.Setup(ldbWrite, null, true);
+				}
+				catch (Throwable e)
+				{
+					ldbWrite.Rollback();
+					b = false;
+				}
+				if ( b )
+					ldbWrite.Commit();
+			}
+		}
+		catch (Throwable e)
+		{
+			try { lrsProcesses.close(); } catch (Throwable e1) {}
+			try { ldbRead.Disconnect(); } catch (Throwable e1) {}
+			try { ldbWrite.Disconnect(); } catch (Throwable e1) {}
+			try { Engine.popNameSpace(); } catch (JewelEngineException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			lrsProcesses.close();
+		}
+		catch (Throwable e)
+		{
+			try { ldbRead.Disconnect(); } catch (Throwable e1) {}
+			try { ldbWrite.Disconnect(); } catch (Throwable e1) {}
+			try { Engine.popNameSpace(); } catch (JewelEngineException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldbRead.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			try { ldbWrite.Disconnect(); } catch (Throwable e1) {}
+			try { Engine.popNameSpace(); } catch (JewelEngineException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			ldbWrite.Disconnect();
+		}
+		catch (Throwable e)
+		{
+			try { Engine.popNameSpace(); } catch (JewelEngineException e1) {}
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		try
+		{
+			Engine.popNameSpace();
+		}
+		catch (Throwable e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+	}
 }
