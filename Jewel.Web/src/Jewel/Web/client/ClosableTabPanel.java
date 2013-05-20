@@ -1,9 +1,16 @@
 package Jewel.Web.client;
 
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.logical.shared.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.TabBar;
+import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class ClosableTabPanel
 	extends TabPanel
@@ -28,12 +35,12 @@ public class ClosableTabPanel
 		ltmpV.remove(ltmpBar);
 		ltmpH = new HorizontalPanel();
 		ltmpH.setStylePrimaryName("jewel-ClosableTabBar");
-		ltmpH.add(ltmpBar);
-		ltmpBar.getElement().getParentElement().setClassName("jewel-ClosableTabBar-TabBar-wrapper");
 		mbtnCloseAll = new Button("Close All");
 		mbtnCloseAll.setStylePrimaryName("jewel-ClosableTabBar-CloseAll");
 		ltmpH.add(mbtnCloseAll);
 		mbtnCloseAll.getElement().getParentElement().setClassName("jewel-ClosableTabBar-CloseAll-wrapper");
+		ltmpH.add(ltmpBar);
+		ltmpBar.getElement().getParentElement().setClassName("jewel-ClosableTabBar-TabBar-wrapper");
 		ltmpV.insert(ltmpH, 0);
 
 		mbtnCloseAll.addClickHandler(new ClickHandler()

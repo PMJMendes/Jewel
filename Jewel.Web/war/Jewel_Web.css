@@ -25,6 +25,10 @@ img
 	display: block;
 }
 
+select {
+	height:25px;
+}
+
 button {
 	padding: 4px 12px;
 	line-height: 14px;
@@ -52,6 +56,24 @@ button:focus {
 	background: #358fcc;
 	cursor: pointer;
 }
+
+button[disabled] {
+	padding: 4px 12px;
+	line-height: 14px;
+	font-weight: bold;
+	border: 1px solid #aaaaaa;
+	/*color: #0c161d;*/
+	color: white;
+	white-space: nowrap;
+	margin: 0;
+	cursor: default;
+
+	background: #cccccc;
+
+	-webkit-border-radius: 2px;
+    border-radius: 2px;
+}
+
 
 /*****************************************************************************************************/
 /* Login screen                                                                                      */
@@ -352,7 +374,7 @@ button:focus {
 
 .jewel-ClosableTabBar-CloseAll
 {
-	
+	margin-right:10px;
 	white-space: nowrap;
 }
 
