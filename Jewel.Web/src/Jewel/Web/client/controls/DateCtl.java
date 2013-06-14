@@ -38,11 +38,11 @@ public class DateCtl
 
 		mtxtDisplay = new TextBox();
 		mtxtDisplay.setReadOnly(true);
-		now = new Timestamp(new java.util.Date().getTime());
-		now.setHours(0);
-		now.setMinutes(0);
-		now.setSeconds(0);
-		mtxtDisplay.setText(formatter.format(now));
+//		now = new Timestamp(new java.util.Date().getTime());
+//		now.setHours(0);
+//		now.setMinutes(0);
+//		now.setSeconds(0);
+//		mtxtDisplay.setText(formatter.format(now));
 		mtxtDisplay.setStylePrimaryName("jewel-Datebox-Display");
 		louter.add(mtxtDisplay);
 

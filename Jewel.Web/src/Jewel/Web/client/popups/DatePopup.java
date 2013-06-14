@@ -151,7 +151,8 @@ public class DatePopup
 
 		if ( (pstrValue == null) || (pstrValue.equals("")) )
 		{
-			mdtMain.setValue(new Timestamp(0), false);
+			ltAux = new Timestamp(new java.util.Date().getTime());
+			mdtMain.setValue(ltAux, false);
 			mtxtHours.setText("00");
 			mtxtMinutes.setText("00");
 			mtxtSeconds.setText("00");
