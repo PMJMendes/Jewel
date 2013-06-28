@@ -1,0 +1,12 @@
+.metadata
+.classpath
+.project
+.settings
+bin
+lib
+gwt-unitCache
+classes
+deploy
+Jewel.Web/war/jewel_web
+Jewel.Batch/Jewel.Batch.jar
+Jewel.Web/Jewel.Web.jar
