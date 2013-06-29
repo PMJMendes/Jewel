@@ -25,7 +25,7 @@ public class DateCtl
 	private Timestamp now;
 	private DateTimeFormat formatter;
 
-	@SuppressWarnings("deprecation" )
+//	@SuppressWarnings("deprecation" )
 	public DateCtl()
 	{
 		formatter = DateTimeFormat.getFormat(ENHANCED_DATE_FORMAT);
