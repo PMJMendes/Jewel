@@ -49,6 +49,31 @@ public abstract class Operation
 		return lobjResult;
 	}
 
+	public static FileXfer buildOperation(Operation pobjOp)
+		throws JewelPetriException
+	{
+		ByteArrayOutputStream lstream;
+		ObjectOutputStream lstreamObj;
+		FileXfer lobjFile;
+
+		try
+		{
+			lstream = new ByteArrayOutputStream();
+			lstreamObj = new ObjectOutputStream(lstream);
+			lstreamObj.writeObject(pobjOp);
+			lstreamObj.close();
+			lstream.close();
+			lobjFile = new FileXfer((int)lstream.size(), "application/octet-stream", "log",
+					new ByteArrayInputStream(lstream.toByteArray()));
+		}
+        catch (Throwable e)
+        {
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		return lobjFile;
+	}
+
 	private static class QueuedOp
 	{
 		public Operation mobjQueued;
@@ -358,9 +383,6 @@ public abstract class Operation
 		throws JewelPetriException
 	{
 		PNLog lobjLog;
-		ByteArrayOutputStream lstream;
-		ObjectOutputStream lstreamObj;
-		FileXfer lobjFile;
 
 		if ( IsSilent() )
 			return;
@@ -369,21 +391,13 @@ public abstract class Operation
 
 		try
 		{
-			lstream = new ByteArrayOutputStream();
-			lstreamObj = new ObjectOutputStream(lstream);
-			lstreamObj.writeObject(this);
-			lstreamObj.close();
-			lstream.close();
-			lobjFile = new FileXfer((int)lstream.size(), "application/octet-stream", "log",
-					new ByteArrayInputStream(lstream.toByteArray()));
-
 			lobjLog.setAt(0, midProcess);
 			lobjLog.setAt(1, OpID());
 			lobjLog.setAt(2, new Timestamp(new java.util.Date().getTime()));
 			lobjLog.setAt(3, Engine.getCurrentUser());
 			lobjLog.setAt(4, pidSource);
 			lobjLog.setAt(5, false);
-			lobjLog.setAt(6, lobjFile);
+			lobjLog.setAt(6, buildOperation(this));
 			lobjLog.setAt(7, GetExternalProcess());
 			lobjLog.SaveToDb(pdb);
 		}

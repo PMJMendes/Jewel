@@ -68,6 +68,21 @@ public class PNLog
 		return mobjData;
 	}
 
+	public void replaceOperationData(Operation pobjData)
+		throws JewelPetriException
+	{
+		try
+		{
+			setAt(6, Operation.buildOperation(pobjData));
+		}
+		catch (JewelEngineException e)
+		{
+			throw new JewelPetriException(e.getMessage(), e);
+		}
+
+		mobjData = null;
+	}
+
 	public IOperation GetOperation()
 		throws JewelPetriException
 	{
