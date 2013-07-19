@@ -2,6 +2,9 @@ package Jewel.Engine.SysObjects;
 
 import java.io.*;
 import java.nio.charset.*;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 public class FileXfer
 {
@@ -39,17 +42,32 @@ public class FileXfer
 
 	public byte[] GetVarData()
 	{
+		Deflater lobjDef;
+		ByteArrayOutputStream lout;
+		byte[] larrAux, larrData, larrContentType, larrFileName;
+		int llngLen, llngStart;
 		Charset lobjEncoder;
-		byte[] larrAux, larrContentType, larrFileName;
-        int llngStart;
 
+        lobjDef = new Deflater();
+        lobjDef.setInput(marrData);
+        lout = new ByteArrayOutputStream(mlngLen);
+        lobjDef.finish();
+        larrAux = new byte[1024];
+        while (!lobjDef.finished() )
+        {
+        	llngLen = lobjDef.deflate(larrAux);
+        	lout.write(larrAux, 0, llngLen);
+        }
+//        try { lsAux.close(); } catch (Throwable e) {} // JMMM: Closing a ByteArrayOutputStream has no effect anyway
+        larrData = lout.toByteArray();
+        llngLen = larrData.length;
 		lobjEncoder = Charset.forName("UTF-8");
-		larrContentType = mstrContentType.getBytes(lobjEncoder);
+		larrContentType = ("!" + mstrContentType).getBytes(lobjEncoder);
 		larrFileName = mstrFileName.getBytes(lobjEncoder);
-		larrAux = new byte[mlngLen + 3*SIZEOFINT + larrContentType.length + larrFileName.length];
+		larrAux = new byte[llngLen + 3*SIZEOFINT + larrContentType.length + larrFileName.length];
         llngStart = 0;
 
-        System.arraycopy(new byte[] {(byte)mlngLen, (byte)(mlngLen >>> 8), (byte)(mlngLen >>> 16), (byte)(mlngLen >>> 24)},
+        System.arraycopy(new byte[] {(byte)llngLen, (byte)(llngLen >>> 8), (byte)(llngLen >>> 16), (byte)(llngLen >>> 24)},
         		0, larrAux, llngStart, SIZEOFINT);
         llngStart += SIZEOFINT;
 
@@ -67,8 +85,8 @@ public class FileXfer
         System.arraycopy(larrFileName, 0, larrAux, llngStart, larrFileName.length);
         llngStart += larrFileName.length;
 
-        System.arraycopy(marrData, 0, larrAux, llngStart, mlngLen);
-        llngStart += mlngLen;
+        System.arraycopy(larrData, 0, larrAux, llngStart, llngLen);
+        llngStart += llngLen;
 
 		return larrAux;
 	}
@@ -76,8 +94,10 @@ public class FileXfer
 	public void LoadFromVarData(byte[] parrData)
 	{
 		Charset lobjEncoder;
-		byte[] larrAux;
-		int llngTypeLen, llngNameLen, llngStart;
+		byte[] larrAux, larrData;
+		int llngLen, llngTypeLen, llngNameLen, llngStart;
+		Inflater lobjInf;
+		ByteArrayOutputStream lout;
 
 		lobjEncoder = Charset.forName("UTF-8");
         llngStart = 0;
@@ -85,7 +105,7 @@ public class FileXfer
 		larrAux = new byte[SIZEOFINT];
 		System.arraycopy(parrData, llngStart, larrAux, 0, SIZEOFINT);
         llngStart += SIZEOFINT;
-		mlngLen = ((larrAux[3] & 0xFF) << 24) + ((larrAux[2] & 0xFF) << 16) + ((larrAux[1] & 0xFF) << 8) + (larrAux[0] & 0xFF);
+		llngLen = ((larrAux[3] & 0xFF) << 24) + ((larrAux[2] & 0xFF) << 16) + ((larrAux[1] & 0xFF) << 8) + (larrAux[0] & 0xFF);
 
 		larrAux = new byte[SIZEOFINT];
 		System.arraycopy(parrData, llngStart, larrAux, 0, SIZEOFINT);
@@ -107,9 +127,32 @@ public class FileXfer
         llngStart += llngNameLen;
 		mstrFileName = new String(larrAux, lobjEncoder);
 
-		marrData = new byte[mlngLen];
-		System.arraycopy(parrData, llngStart, marrData, 0, mlngLen);
-        llngStart += mlngLen;
+		larrData = new byte[llngLen];
+		System.arraycopy(parrData, llngStart, larrData, 0, llngLen);
+        llngStart += llngLen;
+
+        if ( mstrContentType.startsWith("!") )
+        {
+        	mstrContentType = mstrContentType.substring(1);
+        	lobjInf = new Inflater();
+        	lobjInf.setInput(larrData);
+        	lout = new ByteArrayOutputStream(llngLen);
+        	larrAux = new byte[1024];
+        	while ( !lobjInf.finished() )
+        	{
+        		try { llngLen = lobjInf.inflate(larrAux); } catch (DataFormatException e) {}
+        		// TODO Figure out a way to handle this exception without failing LoadFromVarData, which is never meant to fail
+        		lout.write(larrAux, 0, llngLen);
+        	}
+//          try { lsAux.close(); } catch (Throwable e) {} // JMMM: Closing a ByteArrayOutputStream has no effect anyway
+        	marrData = lout.toByteArray();
+        	mlngLen = marrData.length;
+        }
+        else
+        {
+        	marrData = larrData;
+        	mlngLen = llngLen;
+        }
     }
 
 	public String getContentType()
