@@ -14,11 +14,14 @@ public class FileXfer
 	protected String mstrContentType;
 	protected String mstrFileName;
 	protected byte[] marrData;
+	private transient boolean mbWasCompacted;
 
 	public FileXfer(int plngLen, String pstrContentType, String pstrFileName, InputStream prefData)
 		throws IOException
 	{
         int llngRead, llngAux;
+
+        mbWasCompacted = false;
 
 		mlngLen = plngLen;
 		mstrContentType = pstrContentType;
@@ -133,6 +136,8 @@ public class FileXfer
 
         if ( mstrContentType.startsWith("!") )
         {
+            mbWasCompacted = true;
+
         	mstrContentType = mstrContentType.substring(1);
         	lobjInf = new Inflater();
         	lobjInf.setInput(larrData);
@@ -150,6 +155,8 @@ public class FileXfer
         }
         else
         {
+            mbWasCompacted = false;
+
         	marrData = larrData;
         	mlngLen = llngLen;
         }
@@ -173,5 +180,10 @@ public class FileXfer
 	public byte[] getData()
 	{
 		return marrData;
+	}
+
+	public boolean wasCompacted()
+	{
+		return mbWasCompacted;
 	}
 }

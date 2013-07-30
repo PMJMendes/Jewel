@@ -23,8 +23,8 @@ public class SQLServer
 				mstrDB = pstrDB;
 				mstrUser = pstrUser;
 				mstrPassword = pstrPassword;
-				mcon = DriverManager.getConnection("jdbc:sqlserver://" + pstrServer + ";databaseName=" + pstrDB,
-						pstrUser, pstrPassword);
+				mcon = DriverManager.getConnection("jdbc:sqlserver://" + pstrServer + ";databaseName=" + pstrDB +
+						";responseBuffering=adaptive;selectMethod=cursor", pstrUser, pstrPassword);
 				mbFree = true;
 			}
 
@@ -206,7 +206,7 @@ public class SQLServer
 	{
 		Statement lcmd;
 
-		lcmd = mcon.createStatement();
+		lcmd = mcon.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 		return lcmd.executeQuery(pstrSQL);
 	}
 
