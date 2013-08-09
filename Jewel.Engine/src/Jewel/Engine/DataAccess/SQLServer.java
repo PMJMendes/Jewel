@@ -23,8 +23,10 @@ public class SQLServer
 				mstrDB = pstrDB;
 				mstrUser = pstrUser;
 				mstrPassword = pstrPassword;
-				mcon = DriverManager.getConnection("jdbc:sqlserver://" + pstrServer + ";databaseName=" + pstrDB +
-						";responseBuffering=adaptive;selectMethod=cursor", pstrUser, pstrPassword);
+//				mcon = DriverManager.getConnection("jdbc:sqlserver://" + pstrServer + ";databaseName=" + pstrDB +
+//						";responseBuffering=adaptive;selectMethod=cursor", pstrUser, pstrPassword);
+				mcon = DriverManager.getConnection("jdbc:jtds:sqlserver://" + pstrServer + "/" + pstrDB +
+						";useLOBs=false;maxStatements=0", pstrUser, pstrPassword);
 				mbFree = true;
 			}
 
@@ -60,7 +62,8 @@ public class SQLServer
 			{
 				try
 				{
-					Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//					Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+					Class.forName("net.sourceforge.jtds.jdbc.Driver");
 				}
 				catch (ClassNotFoundException e)
 				{
