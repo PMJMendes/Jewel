@@ -7,7 +7,7 @@ import Jewel.Engine.SysObjects.JewelWorkerThread;
 public class WebServerThread
 	extends JewelWorkerThread
 {
-	private Runnable mrefTarget;
+	protected Runnable mrefTarget;
 	private HttpSession mrefSession;
 
 	protected WebServerThread(Runnable prefTarget, HttpSession prefSession)
