@@ -7,6 +7,15 @@
     ] >
 
 <web-app>
+	<!-- Log4J -->
+    <listener>
+    	<listener-class>Jewel.Web.server.ContextLog4jListener</listener-class>
+    </listener>
+    <context-param>
+    	<param-name>logger-config</param-name>
+    	<param-value>log4j.properties</param-value>
+    </context-param>
+
 	<!-- Listeners -->
 	<listener>
 		<listener-class>Jewel.Web.server.Global</listener-class>
