@@ -10,3 +10,5 @@ deploy
 Jewel.Web/war/jewel_web
 Jewel.Batch/Jewel.Batch.jar
 Jewel.Web/Jewel.Web.jar
+Jewel.Engine/Jewel.Engine.jar
+Jewel.Petri/Jewel.Petri.jar

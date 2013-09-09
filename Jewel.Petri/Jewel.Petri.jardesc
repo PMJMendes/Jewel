@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="Jewel.Web/war/WEB-INF/lib/Jewel.Petri.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/Jewel.Petri/Jewel.Petri.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="Jewel.Petri/Jewel.Petri.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Jewel.Petri/Jewel.Petri.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="false" manifestLocation="/Jewel.Petri/Jewel.Petri.Manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">

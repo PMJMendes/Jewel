@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
     <jar path="Jewel.Web/Jewel.Web.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/Jewel.Web/Jewel.Web.jardesc" exportErrors="false" exportWarnings="false" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Jewel.Web/Jewel.Web.jardesc" exportErrors="false" exportWarnings="false" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="false" manifestLocation="/Jewel.Web/Jewel.Web.Manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
