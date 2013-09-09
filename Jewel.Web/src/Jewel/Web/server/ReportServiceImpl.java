@@ -1,18 +1,21 @@
 package Jewel.Web.server;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.ecs.*;
+import org.apache.ecs.Document;
 
 import Jewel.Engine.Engine;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Web.shared.*;
+import Jewel.Engine.Implementation.Report;
+import Jewel.Engine.Interfaces.IReport;
+import Jewel.Engine.SysObjects.CodeExecuter;
+import Jewel.Web.shared.JewelWebException;
+import Jewel.Web.shared.ReportID;
 
 public class ReportServiceImpl
 	extends EngineImplementor
@@ -20,17 +23,17 @@ public class ReportServiceImpl
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unchecked")
-	public static Hashtable<UUID, ReportID> GetReportParamStorage()
+	public static ConcurrentHashMap<UUID, ReportID> GetReportParamStorage()
 	{
-		Hashtable<UUID, ReportID> larrAux;
+		ConcurrentHashMap<UUID, ReportID> larrAux;
 
         if (getSession() == null)
             return null;
 
-        larrAux = (Hashtable<UUID, ReportID>)getSession().getAttribute("MADDS_ReportParam_Storage");
+        larrAux = (ConcurrentHashMap<UUID, ReportID>)getSession().getAttribute("MADDS_ReportParam_Storage");
         if (larrAux == null)
         {
-        	larrAux = new Hashtable<UUID, ReportID>();
+        	larrAux = new ConcurrentHashMap<UUID, ReportID>();
             getSession().setAttribute("MADDS_ReportParam_Storage", larrAux);
         }
 

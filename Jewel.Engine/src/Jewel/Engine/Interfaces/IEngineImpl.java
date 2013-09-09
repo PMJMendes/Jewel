@@ -1,8 +1,12 @@
 package Jewel.Engine.Interfaces;
 
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 
-import Jewel.Engine.SysObjects.*;
+import Jewel.Engine.SysObjects.Cache;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Engine.SysObjects.JewelEngineException;
+import Jewel.Engine.SysObjects.JewelWorkerThread;
 
 public interface IEngineImpl
 {
@@ -11,7 +15,7 @@ public interface IEngineImpl
 
     UUID getCurrentUser();
     UUID getCurrentNameSpace();
-    Hashtable<String, Object> getUserData();
+    Map<String, Object> getUserData();
 
     void pushNameSpace(UUID pidNameSpace) throws JewelEngineException;
     void popNameSpace() throws JewelEngineException;

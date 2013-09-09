@@ -4,8 +4,8 @@ import java.lang.reflect.Constructor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.Constants.DBConstants;
@@ -21,11 +21,11 @@ public class Cache
 {
     private static class TypeMapper
     {
-        private Hashtable<UUID, Class<?>> garrGlobalTypes;
+        private ConcurrentHashMap<UUID, Class<?>> garrGlobalTypes;
 
         public TypeMapper()
         {
-            garrGlobalTypes = new Hashtable<UUID, Class<?>>();
+            garrGlobalTypes = new ConcurrentHashMap<UUID, Class<?>>();
 
             garrGlobalTypes.put(EntityGUIDs.E_Object,      Jewel.Engine.Implementation.Object.class);
             garrGlobalTypes.put(EntityGUIDs.E_NameSpace,   NameSpace.class);
@@ -42,8 +42,8 @@ public class Cache
     }
 
     private HashMap<UUID, CacheElement> marrElements;
-	private HashMap<UUID, Constructor<?>> marrConstructors;
-    private HashMap<String, UUID> marrEntities;
+	private ConcurrentHashMap<UUID, Constructor<?>> marrConstructors;
+    private ConcurrentHashMap<String, UUID> marrEntities;
 	private boolean mbIsGlobal;
 
     private static Class<?>[] garrTypes = {};
@@ -70,34 +70,30 @@ public class Cache
 
     		if ( mobjObject == null )
     		{
-    			synchronized(marrConstructors)
-    			{
-	                lrefConst = marrConstructors.get(midEntity);
+                lrefConst = marrConstructors.get(midEntity);
 
-	                try
-	                {
-	    	            if (lrefConst == null)
-	    	            {
-	    	                lrefTheType = garrMap.Map(midEntity);
-	    	                if (lrefTheType == null)
-	    	                    lrefTheType = Entity.GetInstance(midEntity).getDefObject().getClassType();
-	    	                if (lrefTheType == null)
-	    	                    lrefTheType = ObjectMaster.class;
-	    	                lrefConst = lrefTheType.getConstructor(garrTypes);
-    	
-	    	                marrConstructors.put(midEntity, lrefConst);
-	    	            }
-	                }
-	                catch(JewelEngineException e)
-	                {
-	                	mobjObject = null;
-	                	throw e;
-	                }
-	                catch(Exception e)
-	                {
-	                	mobjObject = null;
-	                	throw new JewelEngineException("Unexpected error in inner Cache.GetObject", e);
-	                }
+                try
+                {
+    	            if (lrefConst == null)
+    	            {
+    	                lrefTheType = garrMap.Map(midEntity);
+    	                if (lrefTheType == null)
+    	                    lrefTheType = Entity.GetInstance(midEntity).getDefObject().getClassType();
+    	                if (lrefTheType == null)
+    	                    lrefTheType = ObjectMaster.class;
+    	                lrefConst = lrefTheType.getConstructor(garrTypes);
+    	                marrConstructors.put(midEntity, lrefConst);
+    	            }
+                }
+                catch(JewelEngineException e)
+                {
+                	mobjObject = null;
+                	throw e;
+                }
+                catch(Exception e)
+                {
+                	mobjObject = null;
+                	throw new JewelEngineException("Unexpected error in inner Cache.GetObject", e);
                 }
 
                 try
@@ -182,23 +178,23 @@ public class Cache
         	if ( "1".equals(System.getenv(DBConstants.Env_LargeCache)) )
         	{
         		marrElements = new HashMap<UUID, CacheElement>(50000000);
-            	marrConstructors = new HashMap<UUID, Constructor<?>>(1000);
+            	marrConstructors = new ConcurrentHashMap<UUID, Constructor<?>>(1000);
         	}
         	else
         	{
         		marrElements = new HashMap<UUID, CacheElement>();
-            	marrConstructors = new HashMap<UUID, Constructor<?>>();
+            	marrConstructors = new ConcurrentHashMap<UUID, Constructor<?>>();
         	}
         }
         else
         {
     		marrElements = new HashMap<UUID, CacheElement>();
-        	marrConstructors = new HashMap<UUID, Constructor<?>>();
+        	marrConstructors = new ConcurrentHashMap<UUID, Constructor<?>>();
         }
 
         if (mbIsGlobal)
         {
-            marrEntities = new HashMap<String, UUID>();
+            marrEntities = new ConcurrentHashMap<String, UUID>();
 
             for (i = 0; i < GUIDArrays.N_Entities; i++)
                 Entity.RawCreate(GUIDArrays.A_Entities[i]);
@@ -257,27 +253,24 @@ public class Cache
     public UUID FindEntity(UUID pidNSpace, UUID pidObject)
     	throws JewelEngineException
     {
+        java.lang.Object lobjAux;
+        UUID lidAux;
+
     	synchronized(this)
     	{
     		if ( marrEntities == null )
     			throw new JewelEngineException("Unexpected: Cache not initialized!");
     	}
 
-    	synchronized(marrEntities)
-    	{
-            java.lang.Object lobjAux;
-            UUID lidAux;
+        lobjAux = marrEntities.get(pidNSpace.toString() + "." + pidObject.toString());
+        if (lobjAux != null)
+            return (UUID)lobjAux;
 
-            lobjAux = marrEntities.get(pidNSpace.toString() + "." + pidObject.toString());
-            if (lobjAux != null)
-                return (UUID)lobjAux;
+        lidAux = Engine.InternalFindEntity(pidNSpace, pidObject);
 
-            lidAux = Engine.InternalFindEntity(pidNSpace, pidObject);
+        if ( lidAux != null )
+        	marrEntities.put(pidNSpace.toString() + "." + pidObject.toString(), lidAux);
 
-            if ( lidAux != null )
-            	marrEntities.put(pidNSpace.toString() + "." + pidObject.toString(), lidAux);
-
-            return lidAux;
-    	}
+        return lidAux;
     }
 }

@@ -1,19 +1,24 @@
 package Jewel.Web.server;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.*;
-import org.apache.commons.fileupload.disk.*;
-import org.apache.commons.fileupload.servlet.*;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.FileCleanerCleanup;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import Jewel.Engine.Engine;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Web.interfaces.*;
-import Jewel.Web.shared.*;
+import Jewel.Engine.SysObjects.FileXfer;
+import Jewel.Web.interfaces.FileService;
+import Jewel.Web.shared.JewelWebException;
 
 public class FileServiceImpl
 	extends EngineImplementor
@@ -22,17 +27,17 @@ public class FileServiceImpl
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unchecked")
-	public static Hashtable<UUID, FileXfer> GetFileXferStorage()
+	public static ConcurrentHashMap<UUID, FileXfer> GetFileXferStorage()
 	{
-		Hashtable<UUID, FileXfer> larrAux;
+		ConcurrentHashMap<UUID, FileXfer> larrAux;
 
         if (getSession() == null)
             return null;
 
-        larrAux = (Hashtable<UUID, FileXfer>)getSession().getAttribute("MADDS_FileXfer_Storage");
+        larrAux = (ConcurrentHashMap<UUID, FileXfer>)getSession().getAttribute("MADDS_FileXfer_Storage");
         if (larrAux == null)
         {
-        	larrAux = new Hashtable<UUID, FileXfer>();
+        	larrAux = new ConcurrentHashMap<UUID, FileXfer>();
             getSession().setAttribute("MADDS_FileXfer_Storage", larrAux);
         }
 

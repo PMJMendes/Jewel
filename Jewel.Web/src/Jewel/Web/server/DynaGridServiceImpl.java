@@ -1,17 +1,39 @@
 package Jewel.Web.server;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-import Jewel.Engine.*;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.DataAccess.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Engine.SysObjects.*;
-import Jewel.Web.interfaces.*;
-import Jewel.Web.shared.*;
+import Jewel.Engine.Engine;
+import Jewel.Engine.Constants.QueryTypeGUIDs;
+import Jewel.Engine.DataAccess.MasterDB;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.Form;
+import Jewel.Engine.Implementation.QueryDef;
+import Jewel.Engine.Implementation.TypeDef;
+import Jewel.Engine.Implementation.View;
+import Jewel.Engine.Interfaces.IEntity;
+import Jewel.Engine.Interfaces.IFormAction;
+import Jewel.Engine.Interfaces.IObject;
+import Jewel.Engine.Interfaces.IQueryDef;
+import Jewel.Engine.Interfaces.IQueryField;
+import Jewel.Engine.Interfaces.IQueryParam;
+import Jewel.Engine.Interfaces.ITypeDef;
+import Jewel.Engine.SysObjects.ObjectBase;
+import Jewel.Engine.SysObjects.ObjectMaster;
+import Jewel.Web.interfaces.DynaGridService;
+import Jewel.Web.shared.DataObject;
+import Jewel.Web.shared.DynaGridResponse;
+import Jewel.Web.shared.DynaGridSaveResponse;
+import Jewel.Web.shared.GridActionResponse;
+import Jewel.Web.shared.JewelWebException;
+import Jewel.Web.shared.ParamInfo;
+import Jewel.Web.shared.QueryColumnObj;
 
 public class DynaGridServiceImpl
 	extends EngineImplementor
@@ -563,17 +585,17 @@ public class DynaGridServiceImpl
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Hashtable<UUID, QueryWSpace> GetQueryWSStorage()
+	public static ConcurrentHashMap<UUID, QueryWSpace> GetQueryWSStorage()
 	{
-		Hashtable<UUID, QueryWSpace> larrAux;
+		ConcurrentHashMap<UUID, QueryWSpace> larrAux;
 
         if (getSession() == null)
             return null;
 
-        larrAux = (Hashtable<UUID, QueryWSpace>)getSession().getAttribute("MADDS_Query_Storage");
+        larrAux = (ConcurrentHashMap<UUID, QueryWSpace>)getSession().getAttribute("MADDS_Query_Storage");
         if (larrAux == null)
         {
-        	larrAux = new Hashtable<UUID, QueryWSpace>();
+        	larrAux = new ConcurrentHashMap<UUID, QueryWSpace>();
             getSession().setAttribute("MADDS_Query_Storage", larrAux);
         }
 

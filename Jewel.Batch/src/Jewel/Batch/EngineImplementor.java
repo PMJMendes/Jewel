@@ -1,8 +1,9 @@
 package Jewel.Batch;
 
 import java.sql.ResultSet;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.Constants.Miscellaneous;
@@ -25,7 +26,7 @@ public class EngineImplementor
 {
     private Cache marrGlobal;
     private Cache marrLocal;
-    private Hashtable<String, Object> marrUserData;
+    private ConcurrentHashMap<String, Object> marrUserData;
     private IUser mrefCurrentUser;
     private INameSpace mrefCurrentNSpace;
     private IUser mrefPushedUser;
@@ -85,10 +86,10 @@ public class EngineImplementor
 		return mrefCurrentNSpace.getKey();
 	}
 
-	public Hashtable<String, Object> getUserData()
+	public Map<String, Object> getUserData()
 	{
         if (marrUserData == null)
-            marrUserData = new Hashtable<String, Object>();
+            marrUserData = new ConcurrentHashMap<String, Object>();
 
         return marrUserData;
 	}

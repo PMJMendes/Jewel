@@ -3,7 +3,7 @@ package Jewel.Engine;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.UUID;
 
 import Jewel.Engine.Constants.EntityGUIDs;
@@ -142,7 +142,7 @@ public class Engine
     	grefEngine.popNameSpace();
 	}
 
-    public static Hashtable<String, java.lang.Object> getUserData()
+    public static Map<String, java.lang.Object> getUserData()
     {
         return grefEngine.getUserData();
     }

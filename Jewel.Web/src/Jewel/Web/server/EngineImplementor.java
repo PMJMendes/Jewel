@@ -1,8 +1,9 @@
 package Jewel.Web.server;
 
 import java.sql.ResultSet;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -161,17 +162,17 @@ public class EngineImplementor
     }
 
     @SuppressWarnings("unchecked")
-	public Hashtable<String, Object> getUserData()
+	public Map<String, Object> getUserData()
     {
-        Hashtable<String, Object> larrUserData;
+        ConcurrentHashMap<String, Object> larrUserData;
 
         if (getSession() == null)
-            return new Hashtable<String, Object>();
+            return new ConcurrentHashMap<String, Object>();
 
-        larrUserData = (Hashtable<String, Object>)getSession().getAttribute("MADDS_User_Data");
+        larrUserData = (ConcurrentHashMap<String, Object>)getSession().getAttribute("MADDS_User_Data");
         if (larrUserData == null)
         {
-            larrUserData = new Hashtable<String, Object>();
+            larrUserData = new ConcurrentHashMap<String, Object>();
             getSession().setAttribute("MADDS_User_Data", larrUserData);
         }
 
