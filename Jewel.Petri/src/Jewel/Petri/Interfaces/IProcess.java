@@ -22,6 +22,8 @@ public interface IProcess
     public UUID GetManagerID();
     public void SetManagerID(UUID pidManager, SQLServer pdb) throws JewelPetriException;
 	public boolean Lock();
+	public boolean Lock(long plngTimeout);
+	public boolean ForceLock();
 	public void Unlock();
 	public void RecalcSteps(SQLServer pdb) throws JewelPetriException;
 	public void Setup(SQLServer pdb, Operation.QueueContext pobjContext, boolean pbInitialize) throws JewelPetriException;

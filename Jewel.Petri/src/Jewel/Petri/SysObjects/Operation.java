@@ -212,7 +212,8 @@ public abstract class Operation
 				&& !Jewel.Petri.Constants.LevelID_Override.equals(GetDefinition().getDefaultLevel()) )
 			throw new NotRunnableException("Error: Attempt to run operation on stopped process.");
 
-		LockProcess();
+		if ( !mrefProcess.Lock(10000) )
+			throw new JewelPetriException("Erro: Processo bloqueado por outro utilizador.");
 
 		try
 		{
@@ -299,20 +300,20 @@ public abstract class Operation
 		}
 		catch (JewelPetriException e)
 		{
-			ForceLock();
+			mrefProcess.ForceLock();
 			mrefStep.RollbackSafeRun();
 			mrefProcess.Unlock();
 			throw e;
 		}
 		catch (Throwable e)
 		{
-			ForceLock();
+			mrefProcess.ForceLock();
 			mrefStep.RollbackSafeRun();
 			mrefProcess.Unlock();
 			throw new JewelPetriException(e.getMessage(), e);
 		}
 
-		ForceLock();
+		mrefProcess.ForceLock();
 
 		try
 		{
@@ -337,32 +338,6 @@ public abstract class Operation
 	public ILog getLog()
 	{
 		return mobjLog;
-	}
-
-	private void LockProcess()
-		throws JewelPetriException
-	{
-		int i;
-
-		i = 0;
-		while ( !mrefProcess.Lock() )
-		{
-			i++;
-			if ( i>10000 )
-				throw new JewelPetriException("Erro: Processo bloqueado por outro utilizador.");
-			try
-			{
-				Thread.sleep(1);
-			}
-			catch (InterruptedException e)
-			{
-			}
-		}
-	}
-
-	private void ForceLock()
-	{
-		while ( !mrefProcess.Lock() );
 	}
 
 	private void CheckRunnable(SQLServer pdb)

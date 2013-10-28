@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.DataAccess.MasterDB;
@@ -32,7 +34,7 @@ public class PNProcess
 	private INode[] marrNodes;
 	private IStep[] marrSteps;
 	private IProcess mrefParent;
-	private int mlngLock;
+	private ReentrantLock mrefLock;
 
     public static PNProcess GetInstance(UUID pidNameSpace, UUID pidKey)
 		throws JewelPetriException
@@ -65,7 +67,6 @@ public class PNProcess
 	{
 		mrefScript = null;
 		mrefParent = null;
-		mlngLock = 0;
 		marrNodes = null;
 		marrSteps = null;
 	}
@@ -366,18 +367,65 @@ public class PNProcess
 		}
     }
 
-
-	public synchronized final boolean Lock()
+	public final boolean Lock()
 	{
-		if ( mlngLock > 0 )
+		synchronized(this)
+		{
+			if ( mrefLock == null )
+				mrefLock = new ReentrantLock();
+		}
+
+		return mrefLock.tryLock();
+	}
+
+	public final boolean Lock(long plngTimeout)
+	{
+		synchronized(this)
+		{
+			if ( mrefLock == null )
+				mrefLock = new ReentrantLock();
+		}
+
+		try
+		{
+			return mrefLock.tryLock(plngTimeout, TimeUnit.MILLISECONDS);
+		}
+		catch (InterruptedException e)
+		{
+		}
+
+		return false;
+	}
+
+	public final boolean ForceLock()
+	{
+		synchronized(this)
+		{
+			if ( mrefLock == null )
+				mrefLock = new ReentrantLock();
+		}
+
+		try
+		{
+			mrefLock.lockInterruptibly();
+		}
+		catch (InterruptedException e)
+		{
 			return false;
-		mlngLock++;
+		}
+
 		return true;
 	}
 
-	public synchronized final void Unlock()
+	public final void Unlock()
 	{
-		mlngLock = 0;
+		synchronized(this)
+		{
+			if ( mrefLock == null )
+				mrefLock = new ReentrantLock();
+		}
+
+		mrefLock.unlock();
 	}
 
 	public void RecalcSteps(SQLServer pdb)
@@ -489,7 +537,6 @@ public class PNProcess
 					!Constants.LevelID_Invalid.equals(marrSteps[i].GetLevel()) )
 			{
 				lobjOp = marrSteps[i].GetOperation().GetNewInstance(getKey());
-				Unlock();
 
 				if ( pobjContext == null )
 					lobjOp.Execute(pdb);
