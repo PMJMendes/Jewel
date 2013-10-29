@@ -367,17 +367,6 @@ public class PNProcess
 		}
     }
 
-	public final boolean Lock()
-	{
-		synchronized(this)
-		{
-			if ( mrefLock == null )
-				mrefLock = new ReentrantLock();
-		}
-
-		return mrefLock.tryLock();
-	}
-
 	public final boolean Lock(long plngTimeout)
 	{
 		synchronized(this)
@@ -395,26 +384,6 @@ public class PNProcess
 		}
 
 		return false;
-	}
-
-	public final boolean ForceLock()
-	{
-		synchronized(this)
-		{
-			if ( mrefLock == null )
-				mrefLock = new ReentrantLock();
-		}
-
-		try
-		{
-			mrefLock.lockInterruptibly();
-		}
-		catch (InterruptedException e)
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	public final void Unlock()
@@ -452,7 +421,7 @@ public class PNProcess
 		IOperation[] larrOps;
 		PNStep lobjStep;
 
-		if ( !Lock() )
+		if ( !Lock(0) )
 			throw new JewelPetriException("Unexpected: Process locked during setup.");
 
 		try

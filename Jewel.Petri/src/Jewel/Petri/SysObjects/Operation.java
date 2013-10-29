@@ -217,120 +217,95 @@ public abstract class Operation
 
 		try
 		{
-			CheckRunnable(pdb);
-		}
-		catch (JewelPetriException e)
-		{
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (NotRunnableException e)
-		{
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
+			try
+			{
+				CheckRunnable(pdb);
+			}
+			catch (JewelPetriException e)
+			{
+				throw e;
+			}
+			catch (NotRunnableException e)
+			{
+				throw e;
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
 
-		marrTriggers = parrTriggers;
+			marrTriggers = parrTriggers;
 
-		try
-		{
-			Run(pdb);
-		}
-		catch (JewelPetriException e)
-		{
-			marrTriggers = null;
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			marrTriggers = null;
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
+			try
+			{
+				try
+				{
+					Run(pdb);
+				}
+				catch (JewelPetriException e)
+				{
+					throw e;
+				}
+				catch (Throwable e)
+				{
+					throw new JewelPetriException(e.getMessage(), e);
+				}
+			}
+			finally
+			{
+				marrTriggers = null;
+			}
 
-		marrTriggers = null;
+			try
+			{
+				BuildLog(pdb, pidSourceLog);
+	
+				mrefStep.DoSafeRun();
+			}
+			catch (JewelPetriException e)
+			{
+				throw e;
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+	
+			try
+			{
+				mrefProcess.RecalcSteps(pdb);
 
-		try
-		{
-			BuildLog(pdb, pidSourceLog);
-
-			mrefStep.DoSafeRun();
+				mrefProcess.RunAutoSteps(parrTriggers, pdb);
+				RunTriggers(parrTriggers, pdb);
+			}
+			catch (JewelPetriException e)
+			{
+				mrefStep.RollbackSafeRun();
+				throw e;
+			}
+			catch (Throwable e)
+			{
+				mrefStep.RollbackSafeRun();
+				throw new JewelPetriException(e.getMessage(), e);
+			}
+	
+			try
+			{
+				mrefStep.CommitSafeRun(pdb);
+			}
+			catch (JewelPetriException e)
+			{
+				throw e;
+			}
+			catch (Throwable e)
+			{
+				throw new JewelPetriException(e.getMessage(), e);
+			}
 		}
-		catch (JewelPetriException e)
-		{
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		try
-		{
-			mrefProcess.RecalcSteps(pdb);
-
-			mrefProcess.RunAutoSteps(parrTriggers, pdb);
-		}
-		catch (JewelPetriException e)
-		{
-			mrefStep.RollbackSafeRun();
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			mrefStep.RollbackSafeRun();
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		mrefProcess.Unlock();
-
-		try
-		{
-			RunTriggers(parrTriggers, pdb);
-		}
-		catch (JewelPetriException e)
-		{
-			mrefProcess.ForceLock();
-			mrefStep.RollbackSafeRun();
-			mrefProcess.Unlock();
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			mrefProcess.ForceLock();
-			mrefStep.RollbackSafeRun();
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		mrefProcess.ForceLock();
-
-		try
-		{
-			mrefStep.CommitSafeRun(pdb);
-		}
-		catch (JewelPetriException e)
+		finally
 		{
 			mrefProcess.Unlock();
-			throw e;
 		}
-		catch (Throwable e)
-		{
-			mrefProcess.Unlock();
-			throw new JewelPetriException(e.getMessage(), e);
-		}
-
-		mrefProcess.Unlock();
 
 		mbDone = true;
 	}
