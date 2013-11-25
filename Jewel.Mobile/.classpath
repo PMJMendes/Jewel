@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding=".svn/|Jewel/.svn/|Jewel/Mobile/.svn/|Jewel/Mobile/Jewel_Mobile.gwt.xml|Jewel/Mobile/client/.svn/|Jewel/Mobile/client/controls/.svn/|Jewel/Mobile/client/events/.svn/|Jewel/Mobile/client/popups/.svn/|Jewel/Mobile/interfaces/.svn/|Jewel/Mobile/server/.svn/|Jewel/Mobile/shared/.svn/" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Jewel.Engine"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/ecs-1.4.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/core-renderer.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xml-apis.jar"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>

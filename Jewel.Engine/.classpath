@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/*.xml|**/.svn/" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/commons-net-ftp-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.7-beta3-20100924.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-3.7-beta3-20100924.jar"/>
+	<classpathentry kind="lib" path="lib/jtds-1.2.8.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
