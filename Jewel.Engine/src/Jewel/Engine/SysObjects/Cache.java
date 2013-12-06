@@ -143,6 +143,9 @@ public class Cache
     {
     	CacheElement lobjAux;
 
+    	if ( pidKey == null )
+    		return new CacheElement(pidEntity, pidKey);
+
     	lobjAux = marrElements.get(pidKey);
 
     	if ( lobjAux == null )
