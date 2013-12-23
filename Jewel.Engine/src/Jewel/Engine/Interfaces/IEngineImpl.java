@@ -17,7 +17,7 @@ public interface IEngineImpl
     UUID getCurrentNameSpace();
     Map<String, Object> getUserData();
 
-    void pushNameSpace(UUID pidNameSpace) throws JewelEngineException;
+    void pushNameSpace(UUID pidNameSpace, UUID pidUser) throws JewelEngineException;
     void popNameSpace() throws JewelEngineException;
 
     String getCurrentPath();

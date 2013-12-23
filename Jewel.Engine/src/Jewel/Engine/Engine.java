@@ -130,10 +130,10 @@ public class Engine
         return grefEngine.getCurrentNameSpace();
     }
 
-    public static void pushNameSpace(UUID pidNameSpace)
+    public static void pushNameSpace(UUID pidNameSpace, UUID pidUser)
     	throws JewelEngineException
 	{
-    	grefEngine.pushNameSpace(pidNameSpace);
+    	grefEngine.pushNameSpace(pidNameSpace, pidUser);
 	}
 
     public static void popNameSpace()

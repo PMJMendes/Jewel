@@ -26,7 +26,7 @@ public class PetriEngine
 		try
 		{
 			lrefProcesses = Entity.GetInstance(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNProcess));
-			Engine.pushNameSpace(pidNameSpace);
+			Engine.pushNameSpace(pidNameSpace, null);
 		}
 		catch (Throwable e)
 		{
@@ -152,7 +152,7 @@ public class PetriEngine
 		try
 		{
 			lrefProcesses = Entity.GetInstance(Engine.FindEntity(pidNameSpace, Constants.ObjID_PNProcess));
-			Engine.pushNameSpace(pidNameSpace);
+			Engine.pushNameSpace(pidNameSpace, null);
 		}
 		catch (Throwable e)
 		{

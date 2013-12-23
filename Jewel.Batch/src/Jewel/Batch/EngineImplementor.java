@@ -94,7 +94,7 @@ public class EngineImplementor
         return marrUserData;
 	}
 
-	public void pushNameSpace(UUID pidNameSpace)
+	public void pushNameSpace(UUID pidNameSpace, UUID pidUser)
 		throws JewelEngineException
 	{
         IUser lobjAux;
@@ -109,6 +109,13 @@ public class EngineImplementor
 		{
 			mrefPushedNSpace = mrefCurrentNSpace;
 			mrefCurrentNSpace = NameSpace.GetInstance(pidNameSpace);
+
+			if ( pidUser != null )
+			{
+				mrefCurrentUser = User.GetInstance(mrefCurrentNSpace.getKey(), pidUser);
+		        mrefCurrentNSpace.DoLogin(mrefCurrentUser.getKey(), true);
+			}
+
 			mbPushed = true;
 			return;
 		}
