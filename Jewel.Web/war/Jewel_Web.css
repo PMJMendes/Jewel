@@ -639,7 +639,7 @@ table.jewel-DynaForm-Form td,
 	overflow: hidden;
 	padding: 8px;
 	color: #111;
-	width: 100px !important;
+	width: 100px;
 }
 
 .jewel-DynaGrid-Grid td {
