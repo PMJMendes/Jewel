@@ -155,7 +155,7 @@ public class EngineImplementor
         return larrUserData;
     }
 
-	public void pushNameSpace(UUID pidNameSpace)
+	public void pushNameSpace(UUID pidNameSpace, UUID pidUser)
 		throws JewelEngineException
 	{
 		User lobjUser;
@@ -173,7 +173,7 @@ public class EngineImplementor
 			throw new JewelEngineException("Unexpected: Inconsistent internal state during Name Space push.");
 
 		lrefNSpace = NameSpace.GetInstance(getCurrentNameSpace());
-		lobjUser = User.GetInstance(lrefNSpace.getKey(), getCurrentUser());
+		lobjUser = User.GetInstance(lrefNSpace.getKey(), (pidUser == null ? getCurrentUser() : pidUser));
 
         lidUser = null;
 
