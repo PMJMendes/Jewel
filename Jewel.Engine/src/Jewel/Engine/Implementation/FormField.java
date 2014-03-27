@@ -105,4 +105,14 @@ public class FormField
 
         return Engine.FindEntity(pidNSpace, (UUID)getAt(6));
     }
+
+	public String getDefaultText()
+	{
+		return (String)getAt(10);
+	}
+
+	public String getDefaultValue()
+	{
+		return (getAt(11) == null ? null : ((UUID)getAt(11)).toString());
+	}
 }

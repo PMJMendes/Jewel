@@ -76,13 +76,13 @@ public class EditorForm
 		return formSvc;
 	}
 
-	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData, int plngEventOrder)
+	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData, int plngEventOrder, boolean pbUseDefaults)
 	{
 		mstrFormID = pstrFormID;
 		mstrNameSpace = pstrNameSpace;
 		mlngEventOrder = plngEventOrder;
 
-		mfrmData.InitForm(mstrFormID, mstrNameSpace, parrData);
+		mfrmData.InitForm(mstrFormID, mstrNameSpace, parrData, pbUseDefaults);
 		msetCommands.InitSet(mstrFormID);
 	}
 
@@ -121,9 +121,9 @@ public class EditorForm
 		return mfrmData.GetData();
 	}
 
-	public void SetData(String[] parrData)
+	public void SetData(String[] parrData, boolean pbUseDefaults)
 	{
-		mfrmData.SetData(parrData);
+		mfrmData.SetData(parrData, pbUseDefaults);
 	}
 
 	public void DoClose()

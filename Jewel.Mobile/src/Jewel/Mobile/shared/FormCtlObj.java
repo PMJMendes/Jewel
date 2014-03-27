@@ -26,4 +26,5 @@ public class FormCtlObj
 //	public int mlngColSpan;
 	public String mstrParamTag;
 	public String mstrFormID;
+	public String mstrDefault;
 }

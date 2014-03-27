@@ -83,6 +83,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.TEXTBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
         
@@ -90,6 +91,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.LABELBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -97,6 +99,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.CALENDAR;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -104,6 +107,7 @@ public class DynaFormServiceImpl
         {
         	lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.INTBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -111,6 +115,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.DECBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -118,22 +123,76 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.TRICHECKBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
         if (FieldTypeGUIDs.FT_Lookup.equals(prefField.getType()))
         {
+        	UUID lidForm;
+        	IObjMember lidObj;
+
+        	lidForm = prefField.getSearchForm();
+        	lidObj = prefField.getObjMemberRef();
+
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.LOOKUP;
-        	lobjAux.mstrFormID = prefField.getSearchForm().toString();
+        	lobjAux.mstrFormID = (lidForm == null ? null : lidForm.toString());
+
+        	try
+        	{
+				lobjAux.mstrDefault = prefField.getDefaultValue();
+				if ( lobjAux.mstrDefault != null )
+					lobjAux.mstrDefault = lobjAux.mstrDefault + "!" +
+							(lidForm == null ?
+									(((lidObj == null) || (lidObj.getRefersToObj() == null)) ? "{value}" :
+											Engine.GetWorkInstance(
+													Engine.FindEntity(pidNameSpace, prefField.getObjMemberRef().getRefersToObj()),
+													UUID.fromString(lobjAux.mstrDefault)).getLabel()) :
+									Engine.GetWorkInstance(
+											Engine.FindEntity(pidNameSpace, Form.GetInstance(lidForm).getEditedObject().getKey()),
+											UUID.fromString(lobjAux.mstrDefault)).getLabel());
+			}
+        	catch (Throwable e)
+        	{
+        		throw new JewelWebException(e.getMessage(), e);
+			}
+
         	return lobjAux;
         }
 
         if (FieldTypeGUIDs.FT_DropdownList.equals(prefField.getType()))
         {
+        	UUID lidForm;
+        	IObjMember lidObj;
+
+        	lidForm = prefField.getSearchForm();
+        	lidObj = prefField.getObjMemberRef();
+
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.DROPDOWN;
 			lobjAux.mstrObjID = prefField.getObjMemberRef().getRefersToObj().toString();
+
+        	try
+        	{
+				lobjAux.mstrDefault = prefField.getDefaultValue();
+				if ( lobjAux.mstrDefault != null )
+					lobjAux.mstrDefault = lobjAux.mstrDefault + "!" +
+							(((lidObj == null) || (lidObj.getRefersToObj() == null)) ?
+									(lidForm == null ? "{value}" :
+											Engine.GetWorkInstance(
+													Engine.FindEntity(pidNameSpace,
+															Form.GetInstance(lidForm).getEditedObject().getKey()),
+													UUID.fromString(lobjAux.mstrDefault)).getLabel()) :
+									Engine.GetWorkInstance(
+											Engine.FindEntity(pidNameSpace, prefField.getObjMemberRef().getRefersToObj()),
+											UUID.fromString(lobjAux.mstrDefault)).getLabel());
+			}
+        	catch (Throwable e)
+        	{
+        		throw new JewelWebException(e.getMessage(), e);
+			}
+
         	return lobjAux;
         }
 
@@ -141,6 +200,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.FILEXFER;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 
@@ -148,6 +208,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.PWDBOX;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 
@@ -155,6 +216,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.VALUELOOKUP;
+        	lobjAux.mstrDefault = prefField.getDefaultValue();
         	return lobjAux;
         }
 
@@ -169,7 +231,7 @@ public class DynaFormServiceImpl
 		IForm lrefSearch;
 
 		lrefMember = prefField.getObjMemberRef();
-		lobjAux = PrepDefaultControl(lrefMember.getTypeDefRef());
+		lobjAux = PrepDefaultControl(lrefMember.getTypeDefRef(), prefField.getDefaultText(), prefField.getDefaultValue());
 		if ( lobjAux == null )
 			return null;
 		lobjAux.mbCanBeNull = lrefMember.getCanBeNull();
@@ -178,19 +240,33 @@ public class DynaFormServiceImpl
 			try
 			{
 				lrefSearch = Entity.GetInstance(Engine.FindEntity(pidNameSpace, lrefMember.getRefersToObj())).getDefaultSearchForm();
+				if ( lrefSearch != null )
+				{
+					if ( lobjAux.mstrDefault != null )
+						lobjAux.mstrDefault = lobjAux.mstrDefault + "!" +
+								Engine.GetWorkInstance(
+										Engine.FindEntity(pidNameSpace,
+												Form.GetInstance(lrefSearch.getKey()).getEditedObject().getKey()),
+										UUID.fromString(lobjAux.mstrDefault)).getLabel();
+					lobjAux.mstrFormID = lrefSearch.getKey().toString();
+				}
+				else
+					if ( lobjAux.mstrDefault != null )
+						lobjAux.mstrDefault = lobjAux.mstrDefault + "!" +
+								Engine.GetWorkInstance(
+										Engine.FindEntity(pidNameSpace, lrefMember.getRefersToObj()),
+										UUID.fromString(lobjAux.mstrDefault)).getLabel();
 			}
 			catch (Throwable e)
 			{
 				throw new JewelWebException(e.getMessage(), e);
 			}
-			if ( lrefSearch != null )
-				lobjAux.mstrFormID = lrefSearch.getKey().toString();
 		}
 
 		return lobjAux;
 	}
 
-	private FormCtlObj PrepDefaultControl(ITypeDef prefType)
+	private FormCtlObj PrepDefaultControl(ITypeDef prefType, String pstrDefaultText, String pstrDefaultValue)
 	{
 		FormCtlObj lobjAux;
 
@@ -198,6 +274,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.TEXTBOX;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -205,6 +282,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.INTBOX;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -212,6 +290,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.DECBOX;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -219,6 +298,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.PWDBOX;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 
@@ -226,6 +306,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.TRICHECKBOX;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -233,6 +314,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.LOOKUP;
+        	lobjAux.mstrDefault = pstrDefaultValue;
         	return lobjAux;
         }
 
@@ -240,6 +322,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.VALUELOOKUP;
+        	lobjAux.mstrDefault = pstrDefaultValue;
         	return lobjAux;
         }
 
@@ -247,6 +330,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.CALENDAR;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -254,6 +338,7 @@ public class DynaFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.FILEXFER;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 

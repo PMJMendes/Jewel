@@ -21,6 +21,8 @@ public class SimpleForm
 	private String[] marrTmpData;
 	private ParamInfo[] marrExtParams;
 	private boolean mbInit;
+	private String[] marrDefaults;
+	private boolean mbUseDefaults;
 
 	private Grid mtblForm;
 	private IJewelMobileCtl[] marrControls;
@@ -49,7 +51,7 @@ public class SimpleForm
 		return formSvc;
 	}
 
-	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData)
+	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData, boolean pbUseDefaults)
 	{
 		AsyncCallback<FormCtlObj[]> callback = new AsyncCallback<FormCtlObj[]>()
         {
@@ -61,9 +63,11 @@ public class SimpleForm
 					mbInit = true;
 					if ( marrTmpData != null )
 					{
-						SetData(marrTmpData);
+						SetData(marrTmpData, mbUseDefaults);
 						marrTmpData = null;
 					}
+					else if ( mbUseDefaults )
+						SetData(new String[marrControls.length], mbUseDefaults);
 					mrefEventMgr.fireEvent(new InitEvent());
 				}
 				else
@@ -84,6 +88,7 @@ public class SimpleForm
 		mstrFormID = pstrFormID;
 		mstrNameSpace = pstrNameSpace;
 		marrTmpData = parrData;
+		mbUseDefaults = pbUseDefaults;
         getService().GetControls(mstrFormID, mstrNameSpace, callback);
 	}
 
@@ -105,13 +110,18 @@ public class SimpleForm
 
 	public void SetData(String[] parrData)
 	{
+		SetData(parrData, mbUseDefaults);
+	}
+
+	public void SetData(String[] parrData, boolean pbUseDefaults)
+	{
 		int i;
 
 		if ( !mbInit )
 			return;
 
 		for ( i = 0; i < marrControls.length; i++ )
-			marrControls[i].setJValue(parrData[i]);
+			marrControls[i].setJValue(((mbUseDefaults && (parrData[i] == null)) ? marrDefaults[i] : parrData[i]));
 	}
 
 	public void ClearData()
@@ -152,6 +162,7 @@ public class SimpleForm
 		mtblForm.resize(parrCtls.length, 2);
 
 		marrControls = new IJewelMobileCtl[parrCtls.length];
+		marrDefaults = new String[parrCtls.length];
 
 		llngParamCount = 0;
 		for ( i = 0; i < parrCtls.length; i++ )
@@ -236,6 +247,7 @@ public class SimpleForm
 		}
 
 		marrControls[plngIndex] = (IJewelMobileCtl)lctlAux;
+		marrDefaults[plngIndex] = prefControl.mstrDefault;
 		return lctlAux;
 	}
 

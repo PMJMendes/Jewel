@@ -40,12 +40,12 @@ public class SingleForm
 	    });
 	}
 
-	public void InitForm(String pstrFormID, String pstrNameSpace)
+	public void InitForm(String pstrFormID, String pstrNameSpace, boolean pbUseDefaults)
 	{
 		mstrFormID = pstrFormID;
 		mstrNameSpace = pstrNameSpace;
 
-		mfrmData.InitForm(mstrFormID, mstrNameSpace, null, -1);
+		mfrmData.InitForm(mstrFormID, mstrNameSpace, null, -1, pbUseDefaults);
 	}
 
 	public void DoClose()

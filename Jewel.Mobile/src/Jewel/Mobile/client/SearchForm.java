@@ -76,7 +76,7 @@ public class SearchForm
 
 	public void InitSearch(String pstrFormID, String pstrNameSpace)
 	{
-		mfrmSearch.InitForm(pstrFormID, pstrNameSpace, null);
+		mfrmSearch.InitForm(pstrFormID, pstrNameSpace, null, true);
 	}
 
 	public String[] GetData()

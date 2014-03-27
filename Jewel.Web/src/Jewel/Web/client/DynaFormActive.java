@@ -23,7 +23,7 @@ public class DynaFormActive
 		mlngOrder = plngOrder;
 	}
 
-	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData)
+	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData, boolean pbUseDefaults)
 	{
 		AsyncCallback<FormActionObj[]> callback = new AsyncCallback<FormActionObj[]>()
         {
@@ -48,7 +48,7 @@ public class DynaFormActive
 			}
         };
 
-        super.InitForm(pstrFormID, pstrNameSpace, parrData);
+        super.InitForm(pstrFormID, pstrNameSpace, parrData, pbUseDefaults);
 		mrefEventMgr.fireEvent(new JErrorEvent(null));
         getService().GetActions(mstrFormID, callback);
 	}

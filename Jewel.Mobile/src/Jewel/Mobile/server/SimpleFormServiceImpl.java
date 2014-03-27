@@ -1,13 +1,19 @@
 package Jewel.Mobile.server;
 
-import java.util.*;
+import java.util.UUID;
 
-import Jewel.Engine.*;
-import Jewel.Engine.Constants.*;
-import Jewel.Engine.Implementation.*;
-import Jewel.Engine.Interfaces.*;
-import Jewel.Mobile.interfaces.*;
-import Jewel.Mobile.shared.*;
+import Jewel.Engine.Engine;
+import Jewel.Engine.Constants.FieldTypeGUIDs;
+import Jewel.Engine.Constants.TypeDefGUIDs;
+import Jewel.Engine.Implementation.Entity;
+import Jewel.Engine.Implementation.Form;
+import Jewel.Engine.Interfaces.IForm;
+import Jewel.Engine.Interfaces.IFormField;
+import Jewel.Engine.Interfaces.IObjMember;
+import Jewel.Engine.Interfaces.ITypeDef;
+import Jewel.Mobile.interfaces.SimpleFormService;
+import Jewel.Mobile.shared.FormCtlObj;
+import Jewel.Mobile.shared.JewelMobileException;
 
 public class SimpleFormServiceImpl
 	extends EngineImplementor
@@ -73,6 +79,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.TEXTBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -80,6 +87,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.CALENDAR;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -87,6 +95,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.INTBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -94,6 +103,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.DECBOX;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
@@ -101,14 +111,41 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.BOOLDROPDOWN;
+        	lobjAux.mstrDefault = prefField.getDefaultText();
         	return lobjAux;
         }
 
         if (FieldTypeGUIDs.FT_Lookup.equals(prefField.getType()))
         {
+        	UUID lidForm;
+        	IObjMember lidObj;
+
+        	lidForm = prefField.getSearchForm();
+        	lidObj = prefField.getObjMemberRef();
+
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.LOOKUP;
         	lobjAux.mstrFormID = prefField.getSearchForm().toString();
+
+        	try
+        	{
+				lobjAux.mstrDefault = prefField.getDefaultValue();
+				if ( lobjAux.mstrDefault != null )
+					lobjAux.mstrDefault = lobjAux.mstrDefault + "!" +
+							(lidForm == null ?
+									(((lidObj == null) || (lidObj.getRefersToObj() == null)) ? "{value}" :
+											Engine.GetWorkInstance(
+													Engine.FindEntity(pidNameSpace, prefField.getObjMemberRef().getRefersToObj()),
+													UUID.fromString(lobjAux.mstrDefault)).getLabel()) :
+									Engine.GetWorkInstance(
+											Engine.FindEntity(pidNameSpace, Form.GetInstance(lidForm).getEditedObject().getKey()),
+											UUID.fromString(lobjAux.mstrDefault)).getLabel());
+			}
+        	catch (Throwable e)
+        	{
+        		throw new JewelMobileException(e.getMessage(), e);
+			}
+
         	return lobjAux;
         }
 
@@ -116,6 +153,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.FILEXFER;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 
@@ -123,6 +161,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.PWDBOX;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 
@@ -137,7 +176,7 @@ public class SimpleFormServiceImpl
 		IForm lrefSearch;
 
 		lrefMember = prefField.getObjMemberRef();
-		lobjAux = PrepDefaultControl(lrefMember.getTypeDefRef());
+		lobjAux = PrepDefaultControl(lrefMember.getTypeDefRef(), prefField.getDefaultText(), prefField.getDefaultValue());
 		if ( lobjAux == null )
 			return null;
 		lobjAux.mbCanBeNull = lrefMember.getCanBeNull();
@@ -146,19 +185,33 @@ public class SimpleFormServiceImpl
 			try
 			{
 				lrefSearch = Entity.GetInstance(Engine.FindEntity(pidNameSpace, lrefMember.getRefersToObj())).getDefaultSearchForm();
+				if ( lrefSearch != null )
+				{
+					if ( lobjAux.mstrDefault != null )
+						lobjAux.mstrDefault = lobjAux.mstrDefault + "!" +
+								Engine.GetWorkInstance(
+										Engine.FindEntity(pidNameSpace,
+												Form.GetInstance(lrefSearch.getKey()).getEditedObject().getKey()),
+										UUID.fromString(lobjAux.mstrDefault)).getLabel();
+					lobjAux.mstrFormID = lrefSearch.getKey().toString();
+				}
+				else
+					if ( lobjAux.mstrDefault != null )
+						lobjAux.mstrDefault = lobjAux.mstrDefault + "!" +
+								Engine.GetWorkInstance(
+										Engine.FindEntity(pidNameSpace, lrefMember.getRefersToObj()),
+										UUID.fromString(lobjAux.mstrDefault)).getLabel();
 			}
 			catch (Throwable e)
 			{
 				throw new JewelMobileException(e.getMessage(), e);
 			}
-			if ( lrefSearch != null )
-				lobjAux.mstrFormID = lrefSearch.getKey().toString();
 		}
 
 		return lobjAux;
 	}
 
-	private FormCtlObj PrepDefaultControl(ITypeDef prefType)
+	private FormCtlObj PrepDefaultControl(ITypeDef prefType, String pstrDefaultText, String pstrDefaultValue)
 	{
 		FormCtlObj lobjAux;
 
@@ -166,6 +219,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.TEXTBOX;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -173,6 +227,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.INTBOX;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -180,6 +235,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.DECBOX;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -187,6 +243,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.PWDBOX;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 
@@ -194,6 +251,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.BOOLDROPDOWN;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -201,6 +259,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.LOOKUP;
+        	lobjAux.mstrDefault = pstrDefaultValue;
         	return lobjAux;
         }
 
@@ -208,6 +267,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.VALUELOOKUP;
+        	lobjAux.mstrDefault = pstrDefaultValue;
         	return lobjAux;
         }
 
@@ -215,6 +275,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.CALENDAR;
+        	lobjAux.mstrDefault = pstrDefaultText;
         	return lobjAux;
         }
 
@@ -222,6 +283,7 @@ public class SimpleFormServiceImpl
         {
     		lobjAux = new FormCtlObj();
         	lobjAux.mlngType = FormCtlObj.FILEXFER;
+        	lobjAux.mstrDefault = null;
         	return lobjAux;
         }
 

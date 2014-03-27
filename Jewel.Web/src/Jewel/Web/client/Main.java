@@ -117,7 +117,7 @@ public class Main
 					SetError(event.getError());
 				}
 			});
-			lrefForm.InitForm(pobjResp.mstrID, pobjResp.mstrNSpace, null);
+			lrefForm.InitForm(pobjResp.mstrID, pobjResp.mstrNSpace, null, true);
 			mtabs.add(lrefForm, new ClosableTab(pobjResp.mstrTitle, mtabs, lrefForm));
 			break;
 

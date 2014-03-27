@@ -166,7 +166,7 @@ public class DynaSearch
         	mbGridInit = false;
 	        mstrFormID = pstrFormID;
 	        mstrNameSpace = pstrNameSpace;
-			mobjSearchForm.InitForm(mstrFormID, pstrNameSpace, null);
+			mobjSearchForm.InitForm(mstrFormID, pstrNameSpace, null, true);
 			mstrTmpInitValue = pstrInitialValue;
 			mstrTmpFormID = pstrParamFormID;
 			marrTmpParams = parrExtParams;

@@ -39,6 +39,8 @@ public class DynaForm
 	protected String mstrNameSpace;
 	private String[] marrTmpData;
 	private ParamInfo[] marrExtParams;
+	private String[] marrDefaults;
+	private boolean mbUseDefaults;
 
 	protected VerticalPanel mpnOuter;
 	private FlexTable mtblForm;
@@ -62,7 +64,7 @@ public class DynaForm
 		mrefEventMgr = new HandlerManager(this);
 	}
 
-	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData)
+	public void InitForm(String pstrFormID, String pstrNameSpace, String[] parrData, boolean pbUseDefaults)
 	{
 		AsyncCallback<FormCtlObj[]> callback = new AsyncCallback<FormCtlObj[]>()
         {
@@ -73,9 +75,11 @@ public class DynaForm
 					BuildForm(result);
 					if ( marrTmpData != null )
 					{
-						SetData(marrTmpData);
+						SetData(marrTmpData, mbUseDefaults);
 						marrTmpData = null;
 					}
+					else if ( mbUseDefaults )
+						SetData(new String[marrControls.length], mbUseDefaults);
 					mrefEventMgr.fireEvent(new InitEvent());
 				}
 				else
@@ -97,6 +101,7 @@ public class DynaForm
 		mstrNameSpace = pstrNameSpace;
 		marrTmpData = parrData;
 		mrefEventMgr.fireEvent(new JErrorEvent(null));
+		mbUseDefaults = pbUseDefaults;
         getService().GetControls(mstrFormID, mstrNameSpace, callback);
 	}
 
@@ -115,12 +120,19 @@ public class DynaForm
 
 	public void SetData(String[] parrData)
 	{
+		SetData(parrData, mbUseDefaults);
+	}
+
+	public void SetData(String[] parrData, boolean pbUseDefaults)
+	{
 		int i;
 
+		mbUseDefaults = pbUseDefaults;
+
 		for ( i = 0; i < marrControls.length; i++ )
-			marrControls[i].setJValue(parrData[i]);
+			marrControls[i].setJValue(((mbUseDefaults && (parrData[i] == null)) ? marrDefaults[i] : parrData[i]));
 	}
-	
+
 	public ParamInfo[] GetExternalParams()
 	{
 		int i;
@@ -154,6 +166,7 @@ public class DynaForm
 		mtblForm.insertRow(0);
 
 		marrControls = new IJewelWebCtl[parrCtls.length];
+		marrDefaults = new String[parrCtls.length];
 
 		llngTblCols = 0;
 		llngParamCount = 0;
@@ -302,6 +315,7 @@ public class DynaForm
 		}
 
 		marrControls[plngIndex] = (IJewelWebCtl)lctlAux;
+		marrDefaults[plngIndex] = prefControl.mstrDefault;
 		return lctlAux;
 	}
 

@@ -562,7 +562,7 @@ public class FormDataBridge
         if (FieldTypeGUIDs.FT_Lookup.equals(prefField.getType()))
         {
 			try
-        	{
+			{
 					return ((UUID)pobjValue).toString() + "!" +
 							Engine.GetWorkInstance(Engine.FindEntity(pidNSpace,
 							Form.GetInstance(prefField.getSearchForm()).getEditedObject().getKey()),

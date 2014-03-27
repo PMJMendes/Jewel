@@ -29,4 +29,5 @@ public class FormCtlObj
 	public String mstrParamTag;
 	public String mstrFormID;
 	public String mstrObjID;
+	public String mstrDefault;
 }

@@ -72,7 +72,7 @@ public class DynaReport
 				if (result != null)
 				{
 					mstrFormID = result;
-					mobjParamForm.InitForm(mstrFormID, mstrNameSpace, null);
+					mobjParamForm.InitForm(mstrFormID, mstrNameSpace, null, true);
 				}
 				else
 				{

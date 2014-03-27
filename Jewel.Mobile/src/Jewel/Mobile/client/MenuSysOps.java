@@ -115,7 +115,7 @@ public class MenuSysOps
 		{
 		case MenuResponse.FORM:
 			lrefForm = new SingleForm(pobjResp.mstrTitle);
-			lrefForm.InitForm(pobjResp.mstrID, pobjResp.mstrNSpace);
+			lrefForm.InitForm(pobjResp.mstrID, pobjResp.mstrNSpace, true);
         	Jewel_Mobile.getReference().setSingleFormScreen(lrefForm);
 			break;
 		}

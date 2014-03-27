@@ -190,7 +190,7 @@ public class MultiEditor
 		for ( i = 0; i < mpnContent.getWidgetCount(); i++ )
 		{
 			if ( mpnContent.getWidget(i) instanceof EditorForm )
-				((EditorForm)mpnContent.getWidget(i)).SetData(pobjData.marrData[i]);
+				((EditorForm)mpnContent.getWidget(i)).SetData(pobjData.marrData[i], pobjData.mstrID == null);
 			if ( mpnContent.getWidget(i) instanceof SingleGrid )
 				((SingleGrid)mpnContent.getWidget(i)).ReloadAt(true, pobjData.mstrID);
 		}
@@ -249,7 +249,7 @@ public class MultiEditor
 				lform = new EditorForm();
 				mpnContent.add(lform);
 				lform.setVisible(i == 0);
-				lform.InitForm(prefResult.marrTabs[i].mstrID, mstrNameSpace, pobjData.marrData[i], i);
+				lform.InitForm(prefResult.marrTabs[i].mstrID, mstrNameSpace, pobjData.marrData[i], i, pobjData.mstrID == null);
 				mlbxSelector.addItem(prefResult.marrTabs[i].mstrCaption);
 				lform.addInitHandler(new InitEvent.Handler()
 				{

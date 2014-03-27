@@ -94,7 +94,7 @@ public class SimpleReport
 				if (result != null)
 				{
 					mstrFormID = result;
-					mfrmParams.InitForm(mstrFormID, mstrNameSpace, null);
+					mfrmParams.InitForm(mstrFormID, mstrNameSpace, null, true);
 				}
 				else
 				{

@@ -19,5 +19,7 @@ public interface IFormField
     String getParamTag();
     UUID getSearchForm();
     UUID AuxEntity(UUID pidNSpace) throws SQLException, JewelEngineException;
+    String getDefaultText();
+    String getDefaultValue();
 //    IMADDSCtl BuildControl(UUID pidNSpace);
 }

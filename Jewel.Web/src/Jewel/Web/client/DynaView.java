@@ -171,7 +171,7 @@ public class DynaView
 		for ( i = 0; i < getWidgetCount(); i++ )
 		{
 			if ( getWidget(i) instanceof DynaForm )
-				((DynaForm)getWidget(i)).SetData(pobjData.marrData[i]);
+				((DynaForm)getWidget(i)).SetData(pobjData.marrData[i], pobjData.mstrID == null);
 			if ( getWidget(i) instanceof DynaGrid )
 				((DynaGrid)getWidget(i)).ReloadAt(true, pobjData.mstrID);
 		}
@@ -232,7 +232,7 @@ public class DynaView
 					}
 				});
 				add(lform, prefResult.marrTabs[i].mstrCaption);
-				lform.InitForm(prefResult.marrTabs[i].mstrID, mstrNameSpace, pobjData.marrData[i]);
+				lform.InitForm(prefResult.marrTabs[i].mstrID, mstrNameSpace, pobjData.marrData[i], pobjData.mstrID == null);
 			}
 			if ( prefResult.marrTabs[i].mlngType == TabObj.GRIDTAB )
 			{
