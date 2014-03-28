@@ -70,7 +70,11 @@ public class DynaSearch
 			public void onInit(InitEvent event)
 			{
 				if (mbGridInit)
+				{
 					mrefEventMgr.fireEvent(new InitEvent());
+					if (mobjSearchForm.HasDefaults())
+						doSearch();
+				}
 				mbFormInit = true;
 			}
 		});
@@ -87,7 +91,11 @@ public class DynaSearch
 			public void onInit(InitEvent event)
 			{
 				if (mbFormInit)
+				{
 					mrefEventMgr.fireEvent(new InitEvent());
+					if (mobjSearchForm.HasDefaults())
+						doSearch();
+				}
 				mbGridInit = true;
 			}
 		});

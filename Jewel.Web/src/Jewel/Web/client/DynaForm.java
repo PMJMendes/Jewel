@@ -145,6 +145,17 @@ public class DynaForm
 
 		return marrExtParams;
 	}
+
+	public boolean HasDefaults()
+	{
+		int i;
+
+		for ( i = 0; i < marrDefaults.length; i++ )
+			if ( marrDefaults[i] != null )
+				return true;
+
+		return false;
+	}
 	
 	private DynaFormServiceAsync getService()
 	{

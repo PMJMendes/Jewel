@@ -54,6 +54,8 @@ public class SearchForm
 			{
 				mbtnSearch.setEnabled(true);
 				mbtnClear.setEnabled(true);
+				if ( mfrmSearch.HasDefaults() )
+					mrefEventMgr.fireEvent(new OkEvent());
 			}
 		});
 		mbtnClear.addClickHandler(new ClickHandler()

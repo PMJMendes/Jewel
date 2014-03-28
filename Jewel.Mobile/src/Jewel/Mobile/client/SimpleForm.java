@@ -151,6 +151,17 @@ public class SimpleForm
 		return marrExtParams;
 	}
 
+	public boolean HasDefaults()
+	{
+		int i;
+
+		for ( i = 0; i < marrDefaults.length; i++ )
+			if ( marrDefaults[i] != null )
+				return true;
+
+		return false;
+	}
+
 	private void BuildForm(FormCtlObj[] parrCtls)
 	{
 		int llngParamCount;
