@@ -5,6 +5,6 @@
 	<classpathentry kind="lib" path="lib/commons-net-ftp-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.7-beta3-20100924.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.7-beta3-20100924.jar"/>
-	<classpathentry kind="lib" path="lib/jtds-1.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/jtds-1.2.8.jar" sourcepath="C:/Users/jmendes/.m2/repository/net/sourceforge/jtds/jtds/1.2.8/jtds-1.2.8-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
