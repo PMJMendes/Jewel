@@ -913,11 +913,14 @@ public class DynaGridServiceImpl
 		ViewDataBridge.ClientToServer(lidView, lobjLocal, pobjData);
 		larrNonObject = ViewDataBridge.GetNonObjectParams(lidView, plngOrder, lobjLocal, pobjData);
 
+    	laux = new GridActionResponse();
+    	laux.mstrResult = "";
+    	laux.mobjData = null;
+
 		try
 		{
 			lrefAction = Form.GetInstance(View.GetInstance(lidView).getTabs()[plngOrder].getFormID()).getActions()[plngAction];
 			lrefAction.Run(lobjData, larrNonObject);
-			lobjLocal.setDataRange(larrNonObject);
 		}
 		catch (InvocationTargetException e)
 		{
@@ -927,22 +930,27 @@ public class DynaGridServiceImpl
         	while( x.getCause() != null )
         		x = x.getCause();
 
-        	laux = new GridActionResponse();
         	laux.mstrResult = x.getMessage();
         	if ( laux.mstrResult == null )
         		laux.mstrResult = x.getClass().getName();
-        	laux.mobjData = null;
-        	return laux;
 		}
 		catch (Throwable e)
 		{
         	throw new JewelWebException(e.getMessage(), e);
 		}
 
-    	laux = new GridActionResponse();
-    	laux.mstrResult = "";
+		try
+		{
+			lobjLocal.setDataRange(larrNonObject);
+		}
+		catch (Throwable e)
+		{
+			throw new JewelWebException(e.getMessage(), e);
+		}
+
     	laux.mobjData = ViewDataBridge.ServerToClient(lidView, lobjLocal, lrefWSpace.GetNameSpace());
     	ViewDataBridge.SetNonObjectParams(lidView, plngOrder, lobjLocal, laux.mobjData, larrNonObject, lobjData.getNameSpace());
+
     	return laux;
 	}
 
