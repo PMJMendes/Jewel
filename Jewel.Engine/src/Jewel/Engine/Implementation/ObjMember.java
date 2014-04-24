@@ -240,8 +240,9 @@ public class ObjMember
 			{
 				lrefEntity = (IEntity)Entity.GetInstance(Engine.FindEntity(pidNSpace, (UUID)getAt(6)));
 				lstrAux = lstrJoin + lrefEntity.Storage() + " [t" + plngNextTbl.toString() + "]" +
-						" ON [t" + Integer.toString(plngTblNum) + "].[" + (String)getAt(9) + "] = " +
-						"[t" + plngNextTbl.toString() + "].[PK]" + lrefEntity.SQLTablesForMultiSelect(plngNextTbl, pbRecurse);
+						" ON [t" + plngNextTbl.toString() + "].[PK] = " +
+						"[t" + Integer.toString(plngTblNum) + "].[" + (String)getAt(9) + "]" +
+						lrefEntity.SQLTablesForMultiSelect(plngNextTbl, pbRecurse);
 			}
 		}
 		else if ( pbRecurse )
@@ -250,8 +251,9 @@ public class ObjMember
 			{
 				lrefEntity = (IEntity)Entity.GetInstance(Engine.FindEntity(pidNSpace, (UUID)getAt(6)));
 				lstrAux = " LEFT JOIN " + lrefEntity.Storage() + " [t" + plngNextTbl.toString() + "]" +
-						" ON [t" + Integer.toString(plngTblNum) + "].[" + (String)getAt(9) + "] = " +
-					"[t" + plngNextTbl.toString() + "].[PK]" + lrefEntity.SQLTablesForMultiSelect(plngNextTbl, false);
+						" ON [t" + plngNextTbl.toString() + "].[PK] = " +
+						"[t" + Integer.toString(plngTblNum) + "].[" + (String)getAt(9) + "]" +
+						lrefEntity.SQLTablesForMultiSelect(plngNextTbl, false);
 			}
 		}
 
