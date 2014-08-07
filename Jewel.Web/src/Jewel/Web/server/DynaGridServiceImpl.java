@@ -950,6 +950,8 @@ public class DynaGridServiceImpl
 
     	laux.mobjData = ViewDataBridge.ServerToClient(lidView, lobjLocal, lrefWSpace.GetNameSpace());
     	ViewDataBridge.SetNonObjectParams(lidView, plngOrder, lobjLocal, laux.mobjData, larrNonObject, lobjData.getNameSpace());
+    	laux.mlngRow = plngRow;
+    	laux.marrRow = lrefWSpace.RefreshRow(plngRow, lobjData);
 
     	return laux;
 	}

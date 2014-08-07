@@ -871,6 +871,7 @@ public class DynaGrid
 			{
 				if (result != null)
 				{
+					RenderRow(result.mlngRow, result.marrRow);
 					if ( result.mstrResult != null )
 						mrefEventMgr.fireEvent(new JErrorEvent(result.mstrResult));
 					if ( result.mobjData != null )

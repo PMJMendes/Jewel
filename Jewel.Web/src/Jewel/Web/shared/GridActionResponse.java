@@ -9,4 +9,6 @@ public class GridActionResponse
 
 	public String mstrResult;
 	public DataObject mobjData;
+	public int mlngRow;
+	public String[] marrRow;
 }
