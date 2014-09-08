@@ -478,7 +478,7 @@ public class DynaGridServiceImpl
         	
             lrefRow = GetRow(plngRow);
 
-            if ( lrefRow == null )
+            if ( (lrefRow == null) || (pobjData == null) || (pobjData.getKey() == null) )
             	return null;
 
             try
