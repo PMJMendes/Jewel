@@ -24,6 +24,7 @@ public interface IEntity
     String SQLForSelectForReports(String[] parrColAliases, String[] parrCriteria, String[] parrSorts) throws JewelEngineException, SQLException;
     String SQLForSelectNew(Timestamp pdtMark);
     String SQLForSelectChanged(Timestamp pdtMark);
+    String SQLColumnFromAlias(String pstrAlias) throws JewelEngineException, SQLException;
 
 	UUID Insert(SQLServer pdb, Object[] parrData) throws SQLException, JewelEngineException;
 	void Update(SQLServer pdb, UUID pidKey, Object[] parrData) throws SQLException, JewelEngineException;

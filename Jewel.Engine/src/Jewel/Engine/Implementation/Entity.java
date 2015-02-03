@@ -272,6 +272,15 @@ public class Entity
 		return SQLForSelect("[t1]") + " WHERE [t1].[_TSUpdate] > '" + pdtMark.toString() + "'";
 	}
 
+	public String SQLColumnFromAlias(String pstrAlias)
+		throws JewelEngineException, SQLException
+	{
+		R<Integer> llngCurrTbl;
+
+		llngCurrTbl = new R<Integer>(new Integer(1));
+		return mrefObject.ColumnForReportFilter(mrefSpace.getKey(), pstrAlias, "", llngCurrTbl, true);
+	}
+
 	public UUID Insert(SQLServer pdb, java.lang.Object[] parrData)
 		throws SQLException, JewelEngineException
 	{
