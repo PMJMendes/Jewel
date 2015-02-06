@@ -540,7 +540,7 @@ public class FormDataBridge
         	return (String)pobjValue;
         
         if (FieldTypeGUIDs.FT_LabelBox.equals(prefField.getType()))
-        	return (String)pobjValue;
+        	return pobjValue.toString();
 
         if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
         	return ((Timestamp)pobjValue).toString();
