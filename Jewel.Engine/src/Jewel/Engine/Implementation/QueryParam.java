@@ -70,10 +70,10 @@ public class QueryParam
 
                     case 'p':
                         if (parrValues == null)
-                            return " " + pstrSeparator + "1=1";
+                            return " " + pstrSeparator + " 1=1";
                         lobjParam = parrValues.get(lstrToken.substring(2));
                         if (lobjParam == null)
-                            return " " + pstrSeparator + "1=1";
+                            return " " + pstrSeparator + " 1=1";
                         lstrToken = lrefType.TranslateValue(lobjParam, true, null);
                         break;
                 }
