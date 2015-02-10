@@ -10,5 +10,6 @@ public class ReportID
 	public String mstrReportID;
 	public String mstrNameSpace;
 	public String mstrFormID;
+	public String mstrRefObj;
 	public String[] marrValues;
 }

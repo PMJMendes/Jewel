@@ -143,7 +143,7 @@ public class Main
 					SetError(event.getError());
 				}
 			});
-			lrefReport.InitReport(pobjResp.mstrID, pobjResp.mstrNSpace);
+			lrefReport.InitReport(pobjResp.mstrID, pobjResp.mstrNSpace, null);
 			mtabs.add(lrefReport, new ClosableTab(pobjResp.mstrTitle, mtabs, lrefReport));
 			break;
 

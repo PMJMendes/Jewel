@@ -87,7 +87,7 @@ public class ReportServiceImpl
     private Document BuildReport(ReportID pobjReport)
     	throws JewelWebException
     {
-    	UUID lidReport, lidForm;
+    	UUID lidReport, lidForm, lidRefObj;
     	IReport lrefReport;
     	int[] larrIndexes;
     	java.lang.Object[] larrValues;
@@ -103,10 +103,12 @@ public class ReportServiceImpl
     		larrIndexes = FormDataBridge.GetParamIndexes(lidForm, pobjReport.marrValues);
     		larrValues = FormDataBridge.GetParamData(lidForm, pobjReport.marrValues);
 
+    		lidRefObj = pobjReport.mstrRefObj == null ? null : UUID.fromString(pobjReport.mstrRefObj);
+
     		ldoc = new Document();
 
     		lstrRes = CodeExecuter.ExecuteReport(lrefReport.getAssembly(), lrefReport.getClassName(), lrefReport.getMethod(),
-    				UUID.fromString(pobjReport.mstrNameSpace), larrIndexes, larrValues, ldoc.getBody());
+    				UUID.fromString(pobjReport.mstrNameSpace), larrIndexes, larrValues, lidRefObj, ldoc.getBody());
     	}
     	catch (Throwable e)
     	{

@@ -7,8 +7,9 @@ public class TabObj
 {
 	private static final long serialVersionUID = 1L;
 
-	public static final int FORMTAB = 0;
-	public static final int GRIDTAB = 1;
+	public static final int FORMTAB    = 0;
+	public static final int GRIDTAB    = 1;
+	public static final int PREVIEWTAB = 2;
 
 	public int mlngType;
 	public String mstrCaption;

@@ -6,4 +6,5 @@ public final class ViewTypeGUIDs
 {
 	public static final UUID VT_Form = UUID.fromString("1FEBE70F-5461-48EE-B3A4-191BC47DB3C5");
 	public static final UUID VT_Grid = UUID.fromString("524E9894-F2D5-4F3F-B270-759A8AE6BBE8");
+	public static final UUID VT_Preview = UUID.fromString("41C5AE0D-54AC-4003-A103-A43B00BE74FA");
 }

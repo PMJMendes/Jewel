@@ -37,6 +37,9 @@ public class ViewDataBridge
 			if ( ViewTypeGUIDs.VT_Grid.equals(larrTabs[i].getType()) )
 			{
 			}
+			if ( ViewTypeGUIDs.VT_Preview.equals(larrTabs[i].getType()) )
+			{
+			}
 		}
 	}
 
@@ -73,6 +76,10 @@ public class ViewDataBridge
 				lobjRes.marrData[i] = FormDataBridge.ReadFromObject(larrTabs[i].getFormID(), prefSource, pidNSpace);
 			}
 			if ( ViewTypeGUIDs.VT_Grid.equals(larrTabs[i].getType()) )
+			{
+				lobjRes.marrData[i] = null;
+			}
+			if ( ViewTypeGUIDs.VT_Preview.equals(larrTabs[i].getType()) )
 			{
 				lobjRes.marrData[i] = null;
 			}

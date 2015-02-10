@@ -59,6 +59,11 @@ public class DynaViewServiceImpl
 				lobjRes.marrTabs[i].mlngType = TabObj.GRIDTAB;
 				lobjRes.marrTabs[i].mstrID = larrTabs[i].getQueryID().toString();
 			}
+			if ( ViewTypeGUIDs.VT_Preview.equals(larrTabs[i].getType()) )
+			{
+				lobjRes.marrTabs[i].mlngType = TabObj.PREVIEWTAB;
+				lobjRes.marrTabs[i].mstrID = larrTabs[i].getReportID().toString();
+			}
 		}
 
 		return lobjRes;

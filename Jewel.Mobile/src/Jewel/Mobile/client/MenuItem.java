@@ -107,7 +107,7 @@ public class MenuItem
 
 		case MenuResponse.REPORT:
 			lrefReport = new SimpleReport(pobjResp.mstrTitle);
-			lrefReport.InitReport(pobjResp.mstrID, pobjResp.mstrNSpace);
+			lrefReport.InitReport(pobjResp.mstrID, pobjResp.mstrNSpace, null);
         	Jewel_Mobile.getReference().setSimpleReportScreen(lrefReport);
 			break;
 

@@ -9,4 +9,5 @@ public interface IViewTab
 	UUID getType();
 	UUID getFormID();
 	UUID getQueryID();
+	UUID getReportID();
 }

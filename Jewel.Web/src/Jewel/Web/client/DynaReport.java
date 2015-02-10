@@ -21,6 +21,7 @@ public class DynaReport
 	private String mstrReportID;
 	private String mstrNameSpace;
 	private String mstrFormID;
+	private String mstrRefObj;
 
 	private DynaForm mobjParamForm;
 
@@ -63,7 +64,7 @@ public class DynaReport
 		return reportSvc;
 	}
 
-	public void InitReport(String pstrReportID, String pstrNameSpace)
+	public void InitReport(String pstrReportID, String pstrNameSpace, String pstrRefObj)
 	{
 		AsyncCallback<String> callback = new AsyncCallback<String>()
         {
@@ -91,6 +92,7 @@ public class DynaReport
 
         mstrReportID = pstrReportID;
         mstrNameSpace = pstrNameSpace;
+        mstrRefObj = pstrRefObj;
 		mrefEventMgr.fireEvent(new JErrorEvent(null));
         getService().GetParamFormID(mstrReportID, callback);
 	}
@@ -127,6 +129,7 @@ public class DynaReport
 		lobjReport.mstrReportID = mstrReportID;
 		lobjReport.mstrNameSpace = mstrNameSpace;
 		lobjReport.mstrFormID = mstrFormID;
+		lobjReport.mstrRefObj = mstrRefObj;
 		lobjReport.marrValues = mobjParamForm.GetData();
 		mrefEventMgr.fireEvent(new JErrorEvent(null));
 		getService().OpenReport(lobjReport, callback);

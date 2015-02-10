@@ -114,22 +114,24 @@ public class CodeExecuter
         return ExecuteGeneral(pstrAssembly, pstrType, pstrMethod, larrTypes, larrParams);
     }
 
-	public static String ExecuteReport(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, int[] parrMembers, Object[] parrValues, Object pobjResults)
+	public static String ExecuteReport(String pstrAssembly, String pstrType, String pstrMethod, UUID pidNameSpace, int[] parrMembers, Object[] parrValues, UUID pidRefObj, Object pobjResults)
 	{
 		Class<?>[] larrTypes;
 		java.lang.Object[] larrParams;
 
-		larrTypes = new Class<?>[4];
+		larrTypes = new Class<?>[5];
 		larrTypes[0] = UUID.class;
 		larrTypes[1] = int[].class;
 		larrTypes[2] = java.lang.Object[].class;
-        larrTypes[3] = java.lang.Object.class;
+		larrTypes[3] = UUID.class;
+        larrTypes[4] = java.lang.Object.class;
 
-		larrParams = new java.lang.Object[4];
+		larrParams = new java.lang.Object[5];
 		larrParams[0] = pidNameSpace;
 		larrParams[1] = parrMembers;
 		larrParams[2] = parrValues;
-        larrParams[3] = pobjResults;
+		larrParams[3] = pidRefObj;
+        larrParams[4] = pobjResults;
 
         return ExecuteGeneral(pstrAssembly, pstrType, pstrMethod, larrTypes, larrParams);
     }

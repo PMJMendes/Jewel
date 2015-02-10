@@ -47,4 +47,9 @@ public class ViewTab
 	{
 		return (UUID)getAt(5);
 	}
+
+	public UUID getReportID()
+	{
+		return (UUID)getAt(6);
+	}
 }

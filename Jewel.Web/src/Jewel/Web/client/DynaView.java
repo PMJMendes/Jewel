@@ -210,6 +210,7 @@ public class DynaView
 	{
 		DynaFormActive lform;
 		DynaGrid lgrid;
+		DynaReport lreport;
 		int i;
 
 		for ( i = 0; i < prefResult.marrTabs.length; i++ )
@@ -246,6 +247,19 @@ public class DynaView
 				});
 				add(lgrid, prefResult.marrTabs[i].mstrCaption);
 				lgrid.InitGrid(prefResult.marrTabs[i].mstrID, mstrNameSpace, true, pobjData.mstrID, null, null, null, mbAlternateColor);
+			}
+			if ( prefResult.marrTabs[i].mlngType == TabObj.PREVIEWTAB )
+			{
+				lreport = new DynaReport();
+				lreport.addJErrorHandler(new JErrorEvent.Handler()
+				{
+					public void onJError(JErrorEvent event)
+					{
+						mrefEventMgr.fireEvent(event);
+					}
+				});
+				add(lreport, prefResult.marrTabs[i].mstrCaption);
+				lreport.InitReport(prefResult.marrTabs[i].mstrID, mstrNameSpace, pobjData.mstrID);
 			}
 		}
 

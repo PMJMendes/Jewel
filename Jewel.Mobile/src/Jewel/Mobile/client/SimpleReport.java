@@ -23,6 +23,7 @@ public class SimpleReport
 	private String mstrReportID;
 	private String mstrNameSpace;
 	private String mstrFormID;
+	private String mstrRefObj;
 
 	private SimpleForm mfrmParams;
 	private Button mbtnOpenReport;
@@ -85,7 +86,7 @@ public class SimpleReport
 		return reportSvc;
 	}
 
-	public void InitReport(String pstrReportID, String pstrNameSpace)
+	public void InitReport(String pstrReportID, String pstrNameSpace, String pstrRefObj)
 	{
 		AsyncCallback<String> callback = new AsyncCallback<String>()
         {
@@ -113,6 +114,7 @@ public class SimpleReport
 
         mstrReportID = pstrReportID;
         mstrNameSpace = pstrNameSpace;
+        mstrRefObj = pstrRefObj;
         getService().GetParamFormID(mstrReportID, callback);
 	}
 
@@ -148,6 +150,7 @@ public class SimpleReport
 		lobjReport.mstrReportID = mstrReportID;
 		lobjReport.mstrNameSpace = mstrNameSpace;
 		lobjReport.mstrFormID = mstrFormID;
+		lobjReport.mstrRefObj = mstrRefObj;
 		lobjReport.marrValues = mfrmParams.GetData();
 		getService().OpenReport(lobjReport, callback);
     }
