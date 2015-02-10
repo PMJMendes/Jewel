@@ -480,6 +480,9 @@ public class FormDataBridge
 
 	    if (FieldTypeGUIDs.FT_TextBox.equals(prefField.getType()))
 	    	return pstrValue;
+        
+        if (FieldTypeGUIDs.FT_LabelBox.equals(prefField.getType()))
+        	return pstrValue;
 
 	    if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
 	    	return Timestamp.valueOf(pstrValue);
@@ -529,6 +532,9 @@ public class FormDataBridge
 
 	    if (FieldTypeGUIDs.FT_TextBox.equals(prefField.getType()))
 	    	return (String)pobjValue;
+        
+        if (FieldTypeGUIDs.FT_LabelBox.equals(prefField.getType()))
+        	return pobjValue.toString();
 
 	    if (FieldTypeGUIDs.FT_DateBox.equals(prefField.getType()))
 	    	return ((Timestamp)pobjValue).toString();
