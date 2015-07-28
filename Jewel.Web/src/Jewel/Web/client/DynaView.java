@@ -174,6 +174,8 @@ public class DynaView
 				((DynaForm)getWidget(i)).SetData(pobjData.marrData[i], pobjData.mstrID == null);
 			if ( getWidget(i) instanceof DynaGrid )
 				((DynaGrid)getWidget(i)).ReloadAt(true, pobjData.mstrID);
+			if ( getWidget(i) instanceof DynaReport )
+				((DynaReport)getWidget(i)).SetRefObject(pobjData.mstrID);
 		}
 		
 		ResetButtons();

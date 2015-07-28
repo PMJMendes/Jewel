@@ -97,6 +97,11 @@ public class DynaReport
         getService().GetParamFormID(mstrReportID, callback);
 	}
 
+	public void SetRefObject(String pstrRefObj)
+	{
+        mstrRefObj = pstrRefObj;
+	}
+
 	private void doOpen()
 	{
 		ReportID lobjReport;
