@@ -207,4 +207,9 @@ public class EngineImplementor
 	{
 		return new BatchThread(prefThread);
 	}
+
+	public void Log(String pstrEntry)
+	{
+    	throw new UnsupportedOperationException();
+	}
 }

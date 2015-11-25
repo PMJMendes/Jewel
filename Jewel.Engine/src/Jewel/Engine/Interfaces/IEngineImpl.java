@@ -26,4 +26,6 @@ public interface IEngineImpl
     void OutputFile(FileXfer pobjFile);
 
     JewelWorkerThread getThread(Runnable prefThread);
+
+    void Log(String pstrEntry);
 }

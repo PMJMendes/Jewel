@@ -296,4 +296,8 @@ public class EngineImplementor
 	{
 		return new WebServerThread(prefThread, getSession());
 	}
+
+	public void Log(String pstrEntry)
+	{
+	}
 }

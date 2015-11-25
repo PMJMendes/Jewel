@@ -272,4 +272,10 @@ public class EngineImplementor
 	{
     	throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public void Log(String pstrEntry)
+	{
+    	throw new UnsupportedOperationException();
+	}
 }

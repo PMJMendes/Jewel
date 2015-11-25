@@ -166,4 +166,9 @@ public class Engine
     {
     	return grefEngine.getThread(prefThread);
     }
+
+	public static void Log(String pstrEntry)
+	{
+    	grefEngine.Log(pstrEntry);
+	}
 }
