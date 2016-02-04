@@ -25,11 +25,14 @@ public class Site
         if (parrParams[3] instanceof Integer)
             lstrConnectString += ',' + ((Integer)parrParams[3]).toString();
 
+        String lstrDB = (System.getenv(DBConstants.Env_MasterDB) == null ? DBConstants.MasterDB : System.getenv(DBConstants.Env_MasterDB));
         try
         {
-        	lsrv = new SQLServer(lstrConnectString, DBConstants.MasterDB, (String)parrParams[4], ((Password)parrParams[5]).GetClear());
+        	lsrv = new SQLServer(lstrConnectString,
+        			lstrDB,
+        			(String)parrParams[4], ((Password)parrParams[5]).GetClear());
 
-	        lsrv.ExecuteSQL("EXEC sp_addlogin '" + DBConstants.User + "', @passwd = '" + DBConstants.Password + "', @defdb = '" + DBConstants.MasterDB + "'");
+	        lsrv.ExecuteSQL("EXEC sp_addlogin '" + DBConstants.User + "', @passwd = '" + DBConstants.Password + "', @defdb = '" + lstrDB + "'");
 	        lsrv.ExecuteSQL("EXEC sp_addsrvrolemember '" + DBConstants.User + "', 'securityadmin'");
 
 	        lsrv.Disconnect();
