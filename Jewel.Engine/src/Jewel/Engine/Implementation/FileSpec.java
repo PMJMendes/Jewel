@@ -81,6 +81,14 @@ public class FileSpec
         return (UUID)getAt(1);
     }
 
+	@Override
+	public String getEncoding() {
+		if (getAt(2) == null)
+			return "Windows-1252";
+		
+		return (String)getAt(2);
+	}
+
     public IFileSection[] getSections()
     {
         return marrSections;
@@ -97,7 +105,7 @@ public class FileSpec
         if (getFormat().equals(FileFormatTypeGUIDs.FFT_Flat))
         {
             lstream = new ByteArrayInputStream(prefFile.getData());
-            lreader = new InputStreamReader(lstream, Charset.forName("Windows-1252"));
+            lreader = new InputStreamReader(lstream, Charset.forName(getEncoding()));
             return ParseFlat(new BufferedReader(lreader));
         }
 
@@ -129,7 +137,7 @@ public class FileSpec
         if (getFormat().equals(FileFormatTypeGUIDs.FFT_Flat))
         {
             lstream = new ByteArrayOutputStream();
-            lbuf = new BufferedWriter(new OutputStreamWriter(lstream, Charset.forName("Windows-1252")));
+            lbuf = new BufferedWriter(new OutputStreamWriter(lstream, Charset.forName(getEncoding())));
             BuildFlat(lbuf, pobjFile);
             try
             {

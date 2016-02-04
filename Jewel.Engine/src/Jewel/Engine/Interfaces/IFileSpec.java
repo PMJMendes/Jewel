@@ -9,6 +9,7 @@ public interface IFileSpec
 {
     String getName();
     UUID getFormat();
+    String getEncoding();
     IFileSection[] getSections();
     FileData ParseFile(FileXfer prefFile) throws JewelEngineException;
     FileXfer BuildFile(FileData pobjFile, String pstrFName) throws JewelEngineException;
