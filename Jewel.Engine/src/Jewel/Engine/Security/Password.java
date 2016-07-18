@@ -41,22 +41,21 @@ public final class Password
     	return ( (obj != null) && (obj instanceof Password) && (mstrPwd.equals(((Password)obj).mstrPwd)) );
     }
 
-    public boolean equalsShort(Password obj)
+    public boolean equalsWrong(Password obj)
     	throws JewelEngineException
     {
-    	return ( (obj != null) &&
-    			(SecureFunctions.EncryptShort(SecureFunctions.Decrypt(obj.mstrPwd)).equals(mstrPwd)) );
+    	return ( (obj != null) && (SecureFunctions.EncryptWrong(SecureFunctions.Decrypt(obj.mstrPwd)).equals(mstrPwd)) );
     }
 
-    public void setShort(String pstrPwd)
+    public void setWrong(String pstrPwd)
     	throws JewelEngineException
     {
-        mstrPwd = SecureFunctions.EncryptShort(pstrPwd);
+        mstrPwd = SecureFunctions.EncryptWrong(pstrPwd);
     }
 
-    public String getShort()
+    public String getWrong()
     	throws JewelEngineException
     {
-    	return SecureFunctions.EncryptShort(SecureFunctions.Decrypt(mstrPwd));
+    	return SecureFunctions.EncryptWrong(SecureFunctions.Decrypt(mstrPwd));
     }
 }

@@ -101,37 +101,6 @@ public final class SecureFunctions
 	    return BitConverter(lbuffer);
 	}
 
-    public static String EncryptShort(String pstrInput)
-    	throws JewelEngineException
-    {
-    	ByteArrayOutputStream ms;
-    	CipherOutputStream encStream;
-    	OutputStreamWriter sw;
-    	byte[] buffer, buffer2;
-
-        ms = new ByteArrayOutputStream();
-        encStream = new CipherOutputStream(ms, getEncCipher());
-        sw = new OutputStreamWriter(encStream);
-
-        try
-        {
-			sw.write(pstrInput);
-			sw.write("\r\n");
-	        sw.close();
-	        encStream.close();
-	        buffer = ms.toByteArray();
-	        buffer2 = new byte[16]; //JMMM: Esta truncagem apareceu por causa da migração de C# para Java. Não tirar!
-	        System.arraycopy(buffer, 0, buffer2, 0, 16);
-	        ms.close();
-		}
-        catch (IOException e)
-        {
-        	throw new JewelEngineException("Unexpected IO errors in Security Encrypt", e);
-		}
-
-        return BitConverter(buffer2);
-    }
-
     public static String Encrypt(String pstrInput)
     	throws JewelEngineException
     {
@@ -149,9 +118,7 @@ public final class SecureFunctions
 			sw.write(pstrInput);
 			sw.write("\r\n");
 	        sw.close();
-	        encStream.close();
 	        buffer = ms.toByteArray();
-	        ms.close();
 		}
         catch (IOException e)
         {
@@ -200,5 +167,11 @@ public final class SecureFunctions
 		}
 
         return val;
+    }
+
+    public static String EncryptWrong(String pstrInput)
+    	throws JewelEngineException
+    {
+    	return Encrypt(pstrInput) + "-43-9E-0B-2D-D2-9D-FF-FC";
     }
 }

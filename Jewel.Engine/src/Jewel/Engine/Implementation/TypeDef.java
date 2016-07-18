@@ -39,8 +39,7 @@ public class TypeDef extends ObjectBase implements ITypeDef {
 		if (pobjValue == null)
 			return "NULL";
 
-		if ((TypeDefGUIDs.T_ObjRef.equals(getKey()))
-				|| (TypeDefGUIDs.T_ValueRef.equals(getKey()))) {
+		if ((TypeDefGUIDs.T_ObjRef.equals(getKey())) || (TypeDefGUIDs.T_ValueRef.equals(getKey()))) {
 			if (pobjValue instanceof UUID)
 				lidAux = (UUID) pobjValue;
 			else
@@ -51,14 +50,10 @@ public class TypeDef extends ObjectBase implements ITypeDef {
 
 		if (TypeDefGUIDs.T_String.equals(getKey())) {
 			if (pbForFilter)
-				if ((((String) pobjValue).length() > 0)
-						&& (((String) pobjValue).charAt(0) == '!'))
-					return "N'"
-							+ ((String) pobjValue).substring(1).replace("'",
-									"''") + "'";
+				if ((((String) pobjValue).length() > 0) && (((String) pobjValue).charAt(0) == '!'))
+					return "N'" + ((String) pobjValue).substring(1).replace("'", "''") + "'";
 				else
-					return "N'%" + ((String) pobjValue).replace("'", "''")
-							+ "%'";
+					return "N'%" + ((String) pobjValue).replace("'", "''") + "%'";
 			else
 				return "N'" + ((String) pobjValue).replace("'", "''") + "'";
 		}
@@ -71,8 +66,7 @@ public class TypeDef extends ObjectBase implements ITypeDef {
 					return "0";
 			}
 
-			if ((((String) pobjValue).equalsIgnoreCase("True"))
-					|| (((String) pobjValue).equals("1")))
+			if ((((String) pobjValue).equalsIgnoreCase("True")) || (((String) pobjValue).equals("1")))
 				return "1";
 			else
 				return "0";
@@ -106,9 +100,7 @@ public class TypeDef extends ObjectBase implements ITypeDef {
 
 		if (TypeDefGUIDs.T_Passwd.equals(getKey())) {
 			if (pobjValue instanceof Password)
-				return "N'"
-						+ ((Password) pobjValue).GetEncrypted().replace("'",
-								"''") + "'";
+				return "N'" + ((Password) pobjValue).GetEncrypted().replace("'", "''") + "'";
 			else
 				return "N'" + ((String) pobjValue).replace("'", "''") + "'";
 		}
@@ -122,14 +114,11 @@ public class TypeDef extends ObjectBase implements ITypeDef {
 
 			try {
 				if (pobjValue instanceof FileXfer)
-					parrParams.add(new SerialBlob(((FileXfer) pobjValue)
-							.GetVarData()));
+					parrParams.add(new SerialBlob(((FileXfer) pobjValue).GetVarData()));
 				else
 					parrParams.add(new SerialBlob((byte[]) pobjValue));
 			} catch (Throwable e) {
-				throw new JewelEngineException(
-						"Unexpected exception building Blob in TypeDef TranslateValue",
-						e);
+				throw new JewelEngineException("Unexpected exception building Blob in TypeDef TranslateValue", e);
 			}
 			return "?";
 		}

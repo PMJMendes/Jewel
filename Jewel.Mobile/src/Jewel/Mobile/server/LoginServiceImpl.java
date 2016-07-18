@@ -135,7 +135,7 @@ public class LoginServiceImpl
 
 	        if ( (lidUser == null) && (larrParams[1] != null) )
 	        {
-				((Password)larrParams[1]).setShort(pobjResp.mstrPasswd);
+				((Password)larrParams[1]).setWrong(pobjResp.mstrPasswd);
 				lrs = lrefUser.SelectByMembers(ldb, larrMembers, larrParams, new int[0]);
 				if (lrs.next())
 				{
