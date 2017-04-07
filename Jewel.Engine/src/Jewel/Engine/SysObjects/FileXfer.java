@@ -6,6 +6,8 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import org.apache.poi.util.IOUtils;
+
 public class FileXfer
 {
 	private static final int SIZEOFINT = 4;
@@ -19,23 +21,12 @@ public class FileXfer
 	public FileXfer(int plngLen, String pstrContentType, String pstrFileName, InputStream prefData)
 		throws IOException
 	{
-        int llngRead, llngAux;
-
         mbWasCompacted = false;
 
 		mlngLen = plngLen;
 		mstrContentType = pstrContentType;
 		mstrFileName = pstrFileName;
-		marrData = new byte[mlngLen];
-
-        llngRead = 0;
-        while (llngRead < mlngLen)
-        {
-            llngAux = prefData.read(marrData, llngRead, mlngLen - llngRead);
-            llngRead += llngAux;
-            if (llngAux == 0)
-                break;
-        }
+		marrData = IOUtils.toByteArray(prefData);
 	}
 
 	public FileXfer(byte[] parrData)
