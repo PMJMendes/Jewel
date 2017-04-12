@@ -22,7 +22,7 @@ public class ReportServiceImpl
 	extends EngineImplementor
 {
 	private static final long serialVersionUID = 1L;
-	final static String STYLESHEET_PATH = "../stylesheets/report-styles.css";
+	private static final String STYLESHEET_PATH = "../stylesheets/report-styles.css";
 
 	@SuppressWarnings("unchecked")
 	public static ConcurrentHashMap<UUID, ReportID> GetReportParamStorage()
@@ -135,6 +135,5 @@ public class ReportServiceImpl
 		css.setHref(STYLESHEET_PATH);
 		
 		doc.getHead().addElement(css);
-
     }
 }
