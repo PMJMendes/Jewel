@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ecs.Document;
+import org.apache.ecs.html.Link;
 
 import Jewel.Engine.Engine;
 import Jewel.Engine.Implementation.Report;
@@ -21,6 +22,7 @@ public class ReportServiceImpl
 	extends EngineImplementor
 {
 	private static final long serialVersionUID = 1L;
+	final static String STYLESHEET_PATH = "../stylesheets/report-styles.css";
 
 	@SuppressWarnings("unchecked")
 	public static ConcurrentHashMap<UUID, ReportID> GetReportParamStorage()
@@ -107,6 +109,8 @@ public class ReportServiceImpl
 
     		ldoc = new Document();
 
+    		linkCSSByMethod(ldoc, lrefReport.getAssembly(), lrefReport.getClassName(), lrefReport.getMethod());
+    		
     		lstrRes = CodeExecuter.ExecuteReport(lrefReport.getAssembly(), lrefReport.getClassName(), lrefReport.getMethod(),
     				UUID.fromString(pobjReport.mstrNameSpace), larrIndexes, larrValues, lidRefObj, ldoc.getBody());
     	}
@@ -119,5 +123,18 @@ public class ReportServiceImpl
 			throw new JewelWebException("Error building report: " + lstrRes);
 
 		return ldoc;
+    }
+    
+    private void linkCSSByMethod(Document doc, String assembly, String className, String methodName) {
+    	if(!className.replace(assembly + ".", "").equals(new String("Objects.Incident")) || !methodName.equals(new String("PrintReport")))
+    		return;
+    	
+		Link css = new Link();
+		css.setType("text/css");
+		css.setRel("stylesheet");
+		css.setHref(STYLESHEET_PATH);
+		
+		doc.getHead().addElement(css);
+
     }
 }
