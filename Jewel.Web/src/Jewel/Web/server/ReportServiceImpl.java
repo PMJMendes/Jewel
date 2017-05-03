@@ -1,5 +1,6 @@
 package Jewel.Web.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +23,8 @@ public class ReportServiceImpl
 	extends EngineImplementor
 {
 	private static final long serialVersionUID = 1L;
-	private static final String STYLESHEET_PATH = "../stylesheets/report-styles.css";
+	private static final String STYLESHEET_PATH = "../stylesheets/";
+	private static final String STYLESHEET_ABS_PATH = "stylesheets/";
 
 	@SuppressWarnings("unchecked")
 	public static ConcurrentHashMap<UUID, ReportID> GetReportParamStorage()
@@ -126,13 +128,16 @@ public class ReportServiceImpl
     }
     
     private void linkCSSByMethod(Document doc, String assembly, String className, String methodName) {
-    	if(!className.replace(assembly + ".", "").equals(new String("Objects.Incident")) || !methodName.equals(new String("PrintReport")))
+    	String cssReportFilename = (className.replace(assembly + ".", "") + "." + methodName + ".styles.css").toLowerCase();
+        File cssReportFile = new File(this.getServletContext().getRealPath(STYLESHEET_ABS_PATH + cssReportFilename));
+
+    	if(!(cssReportFile.isFile()))
     		return;
     	
 		Link css = new Link();
 		css.setType("text/css");
 		css.setRel("stylesheet");
-		css.setHref(STYLESHEET_PATH);
+		css.setHref(STYLESHEET_PATH + cssReportFilename);
 		
 		doc.getHead().addElement(css);
     }
