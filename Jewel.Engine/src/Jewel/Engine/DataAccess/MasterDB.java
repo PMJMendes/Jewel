@@ -6,6 +6,7 @@ import Jewel.Engine.Constants.*;
 
 public class MasterDB extends SQLServer
 {
+	
 	private static String gstrServer =
 			( System.getenv(DBConstants.Env_DBServer) == null ? DBConstants.DBServer : System.getenv(DBConstants.Env_DBServer) );
 	private static String gstrMasterDB =
@@ -14,6 +15,6 @@ public class MasterDB extends SQLServer
 	public MasterDB()
 		throws SQLException
 	{
-		super(gstrServer, gstrMasterDB, DBConstants.User, DBConstants.Password);
+		super(gstrServer, gstrMasterDB, DBConstants.User, DBConstants.Password);		
 	}
 }
