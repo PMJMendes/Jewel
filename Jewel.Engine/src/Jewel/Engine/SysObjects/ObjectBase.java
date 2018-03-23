@@ -54,7 +54,6 @@ public abstract class ObjectBase
         }
 
         InitObject(pidEntity, pidKey);
-
         ldb = new MasterDB();
         lrsObject = mrefDefinition.SelectByKey(ldb, midKey);
 

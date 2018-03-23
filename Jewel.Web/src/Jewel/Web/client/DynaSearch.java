@@ -43,6 +43,19 @@ public class DynaSearch
 		mpnMain.setStylePrimaryName("jewel-DynaSearch");
 
 		mobjSearchForm = new DynaForm();
+		
+		// let the form react to enter key press
+		KeyPressHandler handler = new KeyPressHandler() {
+			
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == '\r') {
+					doSearch();
+				}								
+			}
+		};
+		mobjSearchForm.addDomHandler(handler, KeyPressEvent.getType());
+		
 		mpnMain.add(mobjSearchForm);
 
 		lbtn = new Button();
@@ -56,7 +69,7 @@ public class DynaSearch
 		mobjResultsGrid.getElement().getParentElement().addClassName("alternate");
 
 		initWidget(mpnMain);
-
+		
 		lbtn.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
