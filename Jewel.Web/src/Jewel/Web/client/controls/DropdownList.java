@@ -33,7 +33,7 @@ public class DropdownList
 
 	public DropdownList(String pstrNSpace, String pstrObjID)
 	{
-		super(false);
+		super(null);
 
 		clear();
 		addItem("-", (String)null);
