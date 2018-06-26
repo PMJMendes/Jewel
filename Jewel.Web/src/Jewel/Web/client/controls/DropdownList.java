@@ -31,9 +31,10 @@ public class DropdownList
 
 	private HandlerManager mrefEventMgr;
 
+	@SuppressWarnings("deprecation")
 	public DropdownList(String pstrNSpace, String pstrObjID)
 	{
-		super(null);
+		super(false);
 
 		clear();
 		addItem("-", (String)null);
